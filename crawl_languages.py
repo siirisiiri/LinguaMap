@@ -4,7 +4,8 @@ Lightweight homepage language classifier for Wales OSM websites.
 
 Fetches only the start of each homepage, takes the first N visible words,
 and scores English vs Welsh using distinctive function-word hits.
-Does not follow internal pages or look for language-switcher tags.
+Also checks for Welsh/English language-switch signals (hreflang + nav links)
+and maps those to english+welsh. Does not follow internal pages.
 """
 
 from __future__ import annotations
@@ -39,6 +40,9 @@ USER_AGENT = (
     "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 )
 RATE_LIMIT_BACKOFF_S = 1.0
+
+GOOD_LABELS = frozenset({"english", "welsh", "english+welsh"})
+WEAK_LABELS = frozenset({"fetch_failed", "too_little_text", "unknown"})
 
 # Distinctive tokens only. Shared/ambiguous words (a, i, o, am, on, to, in,
 # is, at, an, or, as, be, no, me, if, can, all, dan, pan, dim, gall, hon)
@@ -82,6 +86,20 @@ ENTITY_RE = re.compile(r"&(?:[a-z]+|#\d+|#x[0-9a-f]+);", re.I)
 WORD_RE = re.compile(r"[a-zA-ZâêîôûŵŷäëïöüáéíóúẃỳÀ-ÖØ-öø-ÿ']{2,}")
 BODY_RE = re.compile(r"(?is)<body[^>]*>")
 
+HREFLANG_RE = re.compile(
+    r"(?is)<link[^>]*hreflang=[\"']([^\"']+)[\"'][^>]*href=[\"']([^\"']+)[\"']|"
+    r"<link[^>]*href=[\"']([^\"']+)[\"'][^>]*hreflang=[\"']([^\"']+)[\"']"
+)
+ANCHOR_RE = re.compile(r"(?is)<a\b([^>]*)>(.*?)</a>")
+SWITCH_LABEL_RE = re.compile(
+    r"(?is)^\s*(?:"
+    r"cymraeg|gymraeg|saesneg|english|welsh|"
+    r"language\s*[:\-]?\s*(?:cymraeg|gymraeg|english|welsh|saesneg)|"
+    r"(?:view\s+)?(?:in\s+)?(?:cymraeg|english|welsh)|"
+    r"newid\s+iaith|change\s+language"
+    r")\s*$"
+)
+
 MIN_HITS = 2
 BILINGUAL_HITS = 3
 BILINGUAL_RATIO = 0.35
@@ -123,6 +141,38 @@ def visible_words(html: str, n: int) -> list[str]:
     return words[:n]
 
 
+def has_cy_en_language_switch(html: str) -> bool:
+    """True if HTML advertises separate Welsh and English versions."""
+    codes: set[str] = set()
+    for m in HREFLANG_RE.finditer(html):
+        raw = m.group(1) or m.group(4) or ""
+        codes.add(raw.lower().split("-", 1)[0])
+    if "cy" in codes and "en" in codes:
+        return True
+
+    for m in ANCHOR_RE.finditer(html):
+        attrs, inner = m.group(1), m.group(2)
+        text = TAG_RE.sub(" ", inner)
+        text = re.sub(r"\s+", " ", text).strip()
+        if len(text) > 48 or not SWITCH_LABEL_RE.match(text):
+            continue
+        href_m = re.search(r"href=[\"']([^\"']+)[\"']", attrs, re.I)
+        href = (href_m.group(1) if href_m else "").lower()
+        hreflang_m = re.search(r"hreflang=[\"']([^\"']+)[\"']", attrs, re.I)
+        hreflang = (hreflang_m.group(1) if hreflang_m else "").lower()[:2]
+        low = text.lower()
+        # Clear language-control labels; prefer locale-looking hrefs.
+        if hreflang in ("cy", "en"):
+            return True
+        if re.search(r"(?:^|/)(?:cy|en)(?:/|$|\?)", href):
+            return True
+        if "cymraeg" in low or "gymraeg" in low or "saesneg" in low or "welsh" in low:
+            return True
+        if low == "english" or low.startswith("language"):
+            return True
+    return False
+
+
 def classify(words: list[str]) -> str:
     if not words:
         return "unknown"
@@ -145,6 +195,22 @@ def classify(words: list[str]) -> str:
     if en >= MIN_HITS:
         return "english"
     return "unknown"
+
+
+def classify_html(html: str) -> str:
+    if has_cy_en_language_switch(html):
+        return "english+welsh"
+    label = classify(visible_words(html, N_WORDS))
+    if label == "unknown":
+        return "too_little_text"
+    return label
+
+
+def merge_label(new_label: str, prev_label: str | None) -> str:
+    """Keep a prior good classification if this run failed or had no text."""
+    if new_label in WEAK_LABELS and prev_label in GOOD_LABELS:
+        return prev_label
+    return new_label
 
 
 async def fetch_prefix(session: aiohttp.ClientSession, url: str) -> tuple[str | None, str]:
@@ -189,10 +255,7 @@ async def classify_url(session: aiohttp.ClientSession, url: str, sem: asyncio.Se
         html, status = await fetch_prefix(session, url)
         if status != "ok" or not html:
             return "fetch_failed"
-        label = classify(visible_words(html, N_WORDS))
-        if label == "unknown":
-            return "too_little_text"
-        return label
+        return classify_html(html)
 
 
 async def crawl(urls: list[str], workers: int, batch_size: int = 500) -> list[str]:
@@ -255,14 +318,32 @@ def unique_urls(records: list[dict], limit: int | None) -> list[str]:
     return urls
 
 
-def annotate_records(records: list[dict], url_to_lang: dict[str, str]) -> Counter:
+def previous_url_labels(records: list[dict]) -> dict[str, str]:
+    prev: dict[str, str] = {}
+    for rec in records:
+        url = normalize_url(rec.get("website", ""))
+        lang = rec.get("language")
+        if url and lang in GOOD_LABELS:
+            prev.setdefault(url, lang)
+    return prev
+
+
+def annotate_records(
+    records: list[dict],
+    url_to_lang: dict[str, str],
+    prev_url_to_lang: dict[str, str] | None = None,
+) -> Counter:
+    prev_url_to_lang = prev_url_to_lang or {}
     counts: Counter = Counter()
     for rec in records:
         url = normalize_url(rec.get("website", ""))
         if not url:
-            lang = "fetch_failed"
+            new_lang = "fetch_failed"
+            prev = None
         else:
-            lang = url_to_lang.get(url, "fetch_failed")
+            new_lang = url_to_lang.get(url, "fetch_failed")
+            prev = prev_url_to_lang.get(url)
+        lang = merge_label(new_lang, prev)
         rec["language"] = lang
         counts[lang] += 1
     return counts
@@ -277,10 +358,19 @@ def main() -> None:
     args = parser.parse_args()
 
     records = load_records(args.data)
+    prev_url_to_lang = previous_url_labels(records)
+    prev_record_counts = Counter(
+        r.get("language") for r in records if r.get("language") in GOOD_LABELS | WEAK_LABELS
+    )
     urls = unique_urls(records, args.limit)
     print(
         f"Crawling {len(urls)} unique homepages "
         f"({len(records)} records) with {args.workers} workers...",
+        flush=True,
+    )
+    print(
+        f"Prior good labels available for {len(prev_url_to_lang)} URLs "
+        f"(kept on fetch_failed / too_little_text).",
         flush=True,
     )
 
@@ -288,20 +378,30 @@ def main() -> None:
     labels = asyncio.run(crawl(urls, args.workers))
     elapsed = time.perf_counter() - started
 
-    url_to_lang = dict(zip(urls, labels))
-    # If --limit was set, only annotate records whose URL was crawled;
-    # otherwise annotate every record.
+    url_to_lang: dict[str, str] = {}
+    raw_counts: Counter = Counter()
+    kept_urls = 0
+    upgraded_to_bilingual = 0
+    for url, new_label in zip(urls, labels):
+        raw_counts[new_label] += 1
+        prev = prev_url_to_lang.get(url)
+        merged = merge_label(new_label, prev)
+        if merged != new_label:
+            kept_urls += 1
+        if new_label == "english+welsh" and prev in ("english", "welsh"):
+            upgraded_to_bilingual += 1
+        url_to_lang[url] = merged
+
     if args.limit is None:
-        counts = annotate_records(records, url_to_lang)
+        counts = annotate_records(records, url_to_lang, prev_url_to_lang)
         out_path = args.output or args.data
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(records, f, indent=2, ensure_ascii=False)
             f.write("\n")
         print(f"\nWrote language field to {out_path}", flush=True)
     else:
-        counts = Counter(labels)
+        counts = Counter(url_to_lang[u] for u in urls)
         if args.output:
-            # Annotate only crawled URLs; leave others without the field.
             for rec in records:
                 url = normalize_url(rec.get("website", ""))
                 if url in url_to_lang:
@@ -312,6 +412,16 @@ def main() -> None:
             print(f"\nWrote partial language field to {args.output}", flush=True)
 
     buckets = ("english", "welsh", "english+welsh", "too_little_text", "fetch_failed")
+    print("\nPrevious record counts")
+    for key in buckets:
+        print(f"  {key:16s} {prev_record_counts.get(key, 0)}")
+
+    print("\nRaw crawl counts (unique URLs, before keep-previous)")
+    for key in buckets:
+        print(f"  {key:16s} {raw_counts.get(key, 0)}")
+    print(f"\nKept previous good label on {kept_urls} unique URLs")
+    print(f"Upgraded english/welsh -> english+welsh via switch: {upgraded_to_bilingual} URLs")
+
     print("\nLanguage counts (records)" if args.limit is None else "\nLanguage counts (unique URLs)")
     for key in buckets:
         print(f"  {key:16s} {counts.get(key, 0)}")
