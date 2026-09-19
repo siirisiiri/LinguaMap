@@ -72,6 +72,140 @@
         color: #6b6558;
         white-space: nowrap;
       }
+      .mode-toggle {
+        display: none;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .mode-toggle.visible {
+        display: flex;
+      }
+      .mode-toggle button {
+        border: none;
+        background: transparent;
+        padding: 6px 12px;
+        font-size: 13px;
+        cursor: pointer;
+        color: var(--ink);
+      }
+      .mode-toggle button.active {
+        background: var(--accent);
+        color: #fff;
+      }
+      .legend-note {
+        font-size: 12px;
+        color: #6b6558;
+        line-height: 1.4;
+        margin: 0 0 12px;
+      }
+      .choropleth-lang {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #6b6558;
+        flex-shrink: 0;
+      }
+      .choropleth-lang.visible {
+        display: flex;
+      }
+      .choropleth-lang select,
+      .parent-area input {
+        font: inherit;
+        color: var(--ink);
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 5px 8px;
+      }
+      .parent-area {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #6b6558;
+        flex-shrink: 0;
+      }
+      .parent-area.visible {
+        display: flex;
+      }
+      .parent-area input {
+        width: 140px;
+      }
+      .parent-area button {
+        font: inherit;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink);
+        border-radius: 6px;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      .share-scale {
+        height: 10px;
+        border-radius: 999px;
+        margin: 8px 0 4px;
+        border: 1px solid var(--line);
+      }
+      .share-scale-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #8a8375;
+      }
+      #breadcrumb {
+        display: none;
+        width: 100%;
+        font-size: 13px;
+        color: #6b6558;
+        flex-basis: 100%;
+        gap: 6px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      #breadcrumb.visible {
+        display: flex;
+      }
+      #breadcrumb button {
+        border: none;
+        background: none;
+        color: var(--accent);
+        cursor: pointer;
+        font: inherit;
+        padding: 0;
+      }
+      #breadcrumb button:disabled {
+        color: var(--ink);
+        cursor: default;
+        font-weight: 600;
+      }
+      #breadcrumb .sep {
+        color: #c4beB0;
+      }
+      #mapMessage {
+        display: none;
+        width: 100%;
+        flex-basis: 100%;
+        font-size: 13px;
+        color: #8a3b2b;
+        background: #f3e4dc;
+        border: 1px solid #e2c4b4;
+        border-radius: 6px;
+        padding: 8px 10px;
+      }
+      #mapMessage.visible {
+        display: block;
+      }
+      .missing-swatch {
+        width: 11px;
+        height: 11px;
+        border-radius: 2px;
+        background: #c8c2b6;
+        border: 1px dashed #8a8375;
+        flex-shrink: 0;
+      }
       #main {
         flex: 1;
         display: flex;
@@ -82,12 +216,13 @@
         inset: 0;
       }
       #sidebar {
-        width: 240px;
+        width: 260px;
         border-left: 1px solid var(--line);
         overflow-y: auto;
         padding: 14px;
         font-size: 13px;
         display: none;
+        flex-shrink: 0;
       }
       #sidebar.visible {
         display: block;
@@ -98,6 +233,23 @@
         letter-spacing: 0.04em;
         color: #6b6558;
         margin: 0 0 10px;
+      }
+      .legend-section + .legend-section {
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
+      }
+      .legend-check {
+        width: 12px;
+        height: 12px;
+        border: 1.5px solid var(--line);
+        border-radius: 3px;
+        flex-shrink: 0;
+        background: #fff;
+      }
+      .legend-item:not(.off) .legend-check {
+        background: var(--accent);
+        border-color: var(--accent);
       }
       .legend-item {
         display: flex;
@@ -129,6 +281,9 @@
         color: var(--accent);
         word-break: break-all;
       }
+      .leaflet-interactive {
+        cursor: pointer;
+      }
       #empty {
         position: absolute;
         inset: 0;
@@ -142,6 +297,17 @@
       input[type="file"] {
         display: none;
       }
+      @media (max-width: 720px) {
+        #main {
+          flex-direction: column;
+        }
+        #sidebar {
+          width: 100%;
+          border-left: none;
+          border-top: 1px solid var(--line);
+          max-height: 42%;
+        }
+      }
     </style>
   </head>
   <body>
@@ -153,7 +319,22 @@
           <code>languages.json</code> here, or click to choose a file</label
         >
         <input type="file" id="fileInput" accept="application/json" />
+        <div class="mode-toggle" id="modeToggle" role="group" aria-label="Map view">
+          <button type="button" id="modePoints" class="active">Points</button>
+          <button type="button" id="modeAuthorities">Municipalities</button>
+        </div>
+        <form class="parent-area" id="parentAreaWrap">
+          <label for="parentArea">In area</label>
+          <input id="parentArea" type="text" placeholder="e.g. Wales" autocomplete="off" />
+          <button type="submit">Apply</button>
+        </form>
+        <label class="choropleth-lang" id="choroplethLangWrap" for="choroplethLang">
+          Language
+          <select id="choroplethLang"></select>
+        </label>
         <div id="stats"></div>
+        <nav id="breadcrumb" aria-label="Area hierarchy"></nav>
+        <div id="mapMessage" role="status"></div>
       </header>
       <div id="main">
         <div style="position: relative; flex: 1">
@@ -176,16 +357,20 @@
         other: "#6b6558",
       };
 
-      // Dynamic palette for language coloring — assigned on first sight of each
-      // language code, so it works for however many distinct languages appear.
+      const LANGUAGE_COLORS = {
+        english: "#3a5ba0",
+        welsh: "#c94277",
+        "english+welsh": "#9c5fb5",
+        too_little_text: "#8a8375",
+        fetch_failed: "#b0aaa0",
+        unknown: "#999999",
+        "not crawled": "#999999",
+        "no language detected": "#999999",
+      };
       const LANGUAGE_PALETTE = [
         "#c9622a",
         "#2c6e49",
-        "#3a5ba0",
-        "#9c5fb5",
-        "#c94277",
         "#2ba7a0",
-        "#b0392b",
         "#d4a72c",
         "#4d7c8a",
         "#7a8a3a",
@@ -195,12 +380,32 @@
         "#b5456e",
         "#2c7ab0",
       ];
-      const NO_LANGUAGE_COLOR = "#999999";
+      const LANGUAGE_LABELS = {
+        english: "English",
+        welsh: "Welsh",
+        "english+welsh": "English + Welsh",
+        too_little_text: "Too little text",
+        fetch_failed: "Fetch failed",
+        unknown: "Unknown",
+        "not crawled": "Not crawled",
+        "no language detected": "No language detected",
+      };
+      const NON_LANGUAGE_KEYS = new Set([
+        "fetch_failed",
+        "too_little_text",
+        "unknown",
+        "not crawled",
+        "no language detected",
+      ]);
+      const OVERPASS_URLS = [
+        "https://lz4.overpass-api.de/api/interpreter",
+        "https://overpass.kumi.systems/api/interpreter",
+        "https://overpass-api.de/api/interpreter",
+      ];
       const languageColorMap = new Map();
 
       function colorForLanguage(key) {
-        if (key === "not crawled" || key === "no language detected")
-          return NO_LANGUAGE_COLOR;
+        if (LANGUAGE_COLORS[key]) return LANGUAGE_COLORS[key];
         if (!languageColorMap.has(key)) {
           languageColorMap.set(
             key,
@@ -210,45 +415,270 @@
         return languageColorMap.get(key);
       }
 
-      let map = L.map("map", { zoomControl: true }).setView([20, 0], 2);
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
+      function languageLabel(key) {
+        return LANGUAGE_LABELS[key] || key;
+      }
 
-      let markersByCategory = {}; // group key -> array of markers
-      let layerGroups = {}; // group key -> L.layerGroup currently on map
-      let isLanguageMode = false;
+      function languageKey(b) {
+        if (b.language) return b.language;
+        if (b.cc_status === "found" && b.detected_language)
+          return b.detected_language;
+        if (b.cc_status === "not_found") return "not crawled";
+        if ("cc_status" in b) return "no language detected";
+        return "unknown";
+      }
 
       function topLevelCategory(catString) {
         const key = (catString || "").split("=")[0];
         return CATEGORY_COLORS[key] ? key : "other";
       }
 
-      function groupKeyAndColor(b, languageMode) {
-        if (languageMode) {
-          let key;
-          if (b.cc_status === "found" && b.detected_language)
-            key = b.detected_language;
-          else if (b.cc_status === "not_found") key = "not crawled";
-          else key = "no language detected";
-          return { key, color: colorForLanguage(key) };
+      function languageParts(lang) {
+        if (!lang || NON_LANGUAGE_KEYS.has(lang)) return [];
+        return lang
+          .split(/\s*(?:\+|\/|&|,| and )\s*/i)
+          .map((part) => part.trim().toLowerCase())
+          .filter((part) => part && !NON_LANGUAGE_KEYS.has(part));
+      }
+
+      function coordsEqual(a, b) {
+        return Math.abs(a[0] - b[0]) < 1e-9 && Math.abs(a[1] - b[1]) < 1e-9;
+      }
+
+      function mergeWaysToRings(ways) {
+        const segs = ways.filter((w) => w.length >= 2).map((w) => w.slice());
+        const rings = [];
+        while (segs.length) {
+          const ring = segs.pop();
+          let closed = coordsEqual(ring[0], ring[ring.length - 1]);
+          let grew = true;
+          while (!closed && grew) {
+            grew = false;
+            for (let i = segs.length - 1; i >= 0; i--) {
+              const s = segs[i];
+              if (coordsEqual(ring[ring.length - 1], s[0])) ring.push(...s.slice(1));
+              else if (coordsEqual(ring[ring.length - 1], s[s.length - 1]))
+                ring.push(...s.slice(0, -1).reverse());
+              else if (coordsEqual(ring[0], s[s.length - 1])) ring.unshift(...s.slice(0, -1));
+              else if (coordsEqual(ring[0], s[0])) ring.unshift(...s.slice(1).reverse());
+              else continue;
+              segs.splice(i, 1);
+              grew = true;
+              closed = coordsEqual(ring[0], ring[ring.length - 1]);
+              break;
+            }
+          }
+          if (ring.length >= 4) {
+            if (!coordsEqual(ring[0], ring[ring.length - 1])) ring.push(ring[0]);
+            rings.push(ring);
+          }
         }
-        const key = topLevelCategory(b.category);
-        return { key, color: CATEGORY_COLORS[key] };
+        return rings;
+      }
+
+      function pointInRing(lon, lat, ring) {
+        let inside = false;
+        for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+          const xi = ring[i][0],
+            yi = ring[i][1];
+          const xj = ring[j][0],
+            yj = ring[j][1];
+          if (yi > lat !== yj > lat && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) {
+            inside = !inside;
+          }
+        }
+        return inside;
+      }
+
+      function pointInPolygonCoords(lon, lat, coords) {
+        if (!pointInRing(lon, lat, coords[0])) return false;
+        for (let i = 1; i < coords.length; i++) {
+          if (pointInRing(lon, lat, coords[i])) return false;
+        }
+        return true;
+      }
+
+      function pointInGeometry(lon, lat, geom) {
+        if (!geom) return false;
+        if (geom.type === "Polygon") return pointInPolygonCoords(lon, lat, geom.coordinates);
+        if (geom.type === "MultiPolygon") {
+          return geom.coordinates.some((poly) => pointInPolygonCoords(lon, lat, poly));
+        }
+        return false;
+      }
+
+      function geomBBox(geom) {
+        let minX = 180,
+          minY = 90,
+          maxX = -180,
+          maxY = -90;
+        const walk = (c) => {
+          if (typeof c[0] === "number") {
+            minX = Math.min(minX, c[0]);
+            maxX = Math.max(maxX, c[0]);
+            minY = Math.min(minY, c[1]);
+            maxY = Math.max(maxY, c[1]);
+          } else {
+            c.forEach(walk);
+          }
+        };
+        walk(geom.coordinates);
+        return [minX, minY, maxX, maxY];
+      }
+
+      function geomBBoxArea(geom) {
+        let minX = 180,
+          minY = 90,
+          maxX = -180,
+          maxY = -90;
+        const walk = (c) => {
+          if (typeof c[0] === "number") {
+            minX = Math.min(minX, c[0]);
+            maxX = Math.max(maxX, c[0]);
+            minY = Math.min(minY, c[1]);
+            maxY = Math.max(maxY, c[1]);
+          } else {
+            c.forEach(walk);
+          }
+        };
+        walk(geom.coordinates);
+        return Math.max(0, maxX - minX) * Math.max(0, maxY - minY);
+      }
+
+      function relationToGeometry(el) {
+        const outers = [];
+        const inners = [];
+        (el.members || []).forEach((member) => {
+          if (!member.geometry || member.geometry.length < 2) return;
+          const line = member.geometry.map((p) => [p.lon, p.lat]);
+          (member.role === "inner" ? inners : outers).push(line);
+        });
+        const outerRings = mergeWaysToRings(outers);
+        const innerRings = mergeWaysToRings(inners);
+        if (!outerRings.length) return null;
+        const leftover = innerRings.slice();
+        const polygons = outerRings.map((outer) => {
+          const holes = leftover.filter((h) => pointInRing(h[0][0], h[0][1], outer));
+          holes.forEach((h) => leftover.splice(leftover.indexOf(h), 1));
+          return [outer, ...holes];
+        });
+        return polygons.length === 1
+          ? { type: "Polygon", coordinates: polygons[0] }
+          : { type: "MultiPolygon", coordinates: polygons };
+      }
+
+      function osmToGeoJSON(osm) {
+        const features = [];
+        (osm.elements || []).forEach((el) => {
+          if (el.type !== "relation") return;
+          const tags = el.tags || {};
+          const geometry = relationToGeometry(el);
+          if (!geometry || !tags.name) return;
+          features.push({
+            type: "Feature",
+            properties: {
+              name: tags.name || tags["name:en"] || `relation/${el.id}`,
+              admin_level: tags.admin_level,
+              designation: tags.designation,
+              osm_type: el.type,
+              osm_id: el.id,
+            },
+            geometry,
+          });
+        });
+        return { type: "FeatureCollection", features };
+      }
+
+      let map = L.map("map", { zoomControl: true }).setView([20, 0], 2);
+      window.addEventListener("resize", () => map.invalidateSize());
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      let points = [];
+      let markerLayer = L.layerGroup().addTo(map);
+      let enabledLanguages = new Set();
+      let enabledCategories = new Set();
+      let viewMode = "points";
+      let authorityFeatures = [];
+      let choroplethLayer = null;
+      let selectedChoroplethLang = null;
+      let parentAreaName = "";
+      let parentAreaInfo = null;
+      const authorityCache = new Map();
+      let hierarchy = [];
+      const MISSING_FILL = "#c8c2b6";
+
+      function classifiedLanguages() {
+        const counts = new Map();
+        points.forEach((p) => {
+          languageParts(p.lang).forEach((part) => {
+            counts.set(part, (counts.get(part) || 0) + 1);
+          });
+        });
+        return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+      }
+
+      function isMunicipalityPoint(p) {
+        return (
+          enabledCategories.has(p.category) &&
+          languageParts(p.lang).length > 0
+        );
+      }
+
+      function mixTowardPaper(hex, t) {
+        const raw = (hex || "#6b6558").replace("#", "");
+        const r = parseInt(raw.slice(0, 2), 16);
+        const g = parseInt(raw.slice(2, 4), 16);
+        const b = parseInt(raw.slice(4, 6), 16);
+        const mix = (c) => Math.round(247 + (c - 247) * t);
+        return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
+      }
+
+      function populateChoroplethLangSelect() {
+        const select = document.getElementById("choroplethLang");
+        const langs = classifiedLanguages();
+        if (!langs.length) {
+          selectedChoroplethLang = null;
+          select.innerHTML = "";
+          return;
+        }
+        if (!selectedChoroplethLang || !langs.some(([lang]) => lang === selectedChoroplethLang)) {
+          selectedChoroplethLang = langs[0][0];
+        }
+        select.innerHTML = langs
+          .map(
+            ([lang]) =>
+              `<option value="${lang}"${lang === selectedChoroplethLang ? " selected" : ""}>${languageLabel(lang)}</option>`,
+          )
+          .join("");
+      }
+
+      function clearChoropleth() {
+        if (choroplethLayer) {
+          map.removeLayer(choroplethLayer);
+          choroplethLayer = null;
+        }
       }
 
       function clearMap() {
-        Object.values(layerGroups).forEach((g) => map.removeLayer(g));
-        markersByCategory = {};
-        layerGroups = {};
+        markerLayer.clearLayers();
+        clearChoropleth();
+        points = [];
+        enabledLanguages = new Set();
+        enabledCategories = new Set();
         languageColorMap.clear();
+        authorityFeatures = [];
+        hierarchy = [];
+        parentAreaName = "";
+        parentAreaInfo = null;
+        showMapMessage("");
       }
 
       function renderData(businesses) {
         clearMap();
-        isLanguageMode = businesses.some((b) => "cc_status" in b);
         document.getElementById("empty").style.display = businesses.length
           ? "none"
           : "flex";
@@ -256,8 +686,9 @@
         const bounds = [];
         businesses.forEach((b) => {
           if (typeof b.lat !== "number" || typeof b.lon !== "number") return;
-          const { key: groupKey, color } = groupKeyAndColor(b, isLanguageMode);
-          if (!markersByCategory[groupKey]) markersByCategory[groupKey] = [];
+          const lang = languageKey(b);
+          const category = topLevelCategory(b.category);
+          const color = colorForLanguage(lang);
 
           const marker = L.circleMarker([b.lat, b.lon], {
             radius: 6,
@@ -271,73 +702,670 @@
           const website = b.website || "";
           const safeWebsite = website.replace(/"/g, "&quot;");
           let popupHtml = `<b>${name}</b>`;
-          if (isLanguageMode) {
-            if (b.cc_status === "found") {
-              popupHtml += `Language: ${b.detected_language || "unknown"}`;
-              if (typeof b.language_confidence === "number")
-                popupHtml += ` (${Math.round(b.language_confidence * 100)}% confidence)`;
-              popupHtml += `<br>`;
-            } else if (b.cc_status === "not_found") {
-              popupHtml += `Not found in Common Crawl<br>`;
-            } else {
-              popupHtml += `${b.cc_status}<br>`;
-            }
-          } else if (b.category) {
-            popupHtml += `${b.category}<br>`;
+          popupHtml += `Language: ${languageLabel(lang)}<br>`;
+          if (typeof b.language_confidence === "number") {
+            popupHtml += `Confidence: ${Math.round(b.language_confidence * 100)}%<br>`;
           }
+          if (b.category) popupHtml += `${b.category}<br>`;
           popupHtml += website
             ? `<a href="${safeWebsite}" target="_blank" rel="noopener">${website}</a>`
             : "no website";
           marker.bindPopup(popupHtml);
 
-          markersByCategory[groupKey].push(marker);
+          points.push({ marker, lang, category, lat: b.lat, lon: b.lon });
+          enabledLanguages.add(lang);
+          enabledCategories.add(category);
           bounds.push([b.lat, b.lon]);
         });
 
-        Object.keys(markersByCategory).forEach((cat) => {
-          const group = L.layerGroup(markersByCategory[cat]).addTo(map);
-          layerGroups[cat] = group;
-        });
-
+        document.getElementById("modeToggle").classList.add("visible");
+        populateChoroplethLangSelect();
         if (bounds.length)
           map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15 });
 
-        renderSidebar();
+        if (viewMode === "authorities") {
+          setViewMode("authorities");
+        } else {
+          applyFilters();
+          renderSidebar();
+          updateStats();
+        }
+      }
+
+      function isPointVisible(p) {
+        return enabledLanguages.has(p.lang) && enabledCategories.has(p.category);
+      }
+
+      function applyFilters() {
+        if (viewMode === "authorities") {
+          markerLayer.clearLayers();
+          updateChoropleth();
+        } else {
+          clearChoropleth();
+          markerLayer.clearLayers();
+          points.forEach((p) => {
+            if (isPointVisible(p)) markerLayer.addLayer(p.marker);
+          });
+        }
+        updateStats();
+        refreshSidebarCounts();
+      }
+
+      function updateStats() {
+        if (!points.length) {
+          document.getElementById("stats").textContent = "";
+          return;
+        }
+        const visible = points.filter(isPointVisible).length;
+        if (viewMode === "authorities") {
+          const used = points.filter((p) => isMunicipalityPoint(p) && p.authorityId);
+          const label = selectedChoroplethLang
+            ? languageLabel(selectedChoroplethLang)
+            : "language";
+          const withData = [...authorityStats().values()].filter((r) => r.classified).length;
+          const level = hierarchy[hierarchy.length - 1];
+          if (!level || level.key === "world") {
+            document.getElementById("stats").textContent =
+              `${authorityFeatures.length} countries · ${withData} with data · showing ${label} share`;
+            return;
+          }
+          document.getElementById("stats").textContent =
+            `${authorityFeatures.length} areas in ${level.name} · ${used.length} classified sites · showing ${label} share`;
+          return;
+        }
         document.getElementById("stats").textContent =
-          `${businesses.length} ${isLanguageMode ? "sites" : "businesses"} loaded`;
+          `${visible} of ${points.length} businesses visible`;
+      }
+
+      function uniqueSorted(getter) {
+        const counts = new Map();
+        points.forEach((p) => {
+          const key = getter(p);
+          counts.set(key, (counts.get(key) || 0) + 1);
+        });
+        return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+      }
+
+      function countForLanguage(lang) {
+        return points.filter(
+          (p) => p.lang === lang && enabledCategories.has(p.category),
+        ).length;
+      }
+
+      function countForCategory(category) {
+        return points.filter(
+          (p) => p.category === category && enabledLanguages.has(p.lang),
+        ).length;
+      }
+
+      function assignAuthorities() {
+        const ranked = authorityFeatures
+          .map((f) => {
+            const bbox = geomBBox(f.geometry);
+            return {
+              f,
+              bbox,
+              area: Math.max(0, bbox[2] - bbox[0]) * Math.max(0, bbox[3] - bbox[1]),
+            };
+          })
+          .sort((a, b) => a.area - b.area);
+        points.forEach((p) => {
+          p.authorityId = null;
+          p.authorityName = null;
+          let fallback = null;
+          for (const { f, bbox } of ranked) {
+            if (p.lon < bbox[0] || p.lon > bbox[2] || p.lat < bbox[1] || p.lat > bbox[3]) {
+              continue;
+            }
+            if (!fallback) fallback = f;
+            if (pointInGeometry(p.lon, p.lat, f.geometry)) {
+              p.authorityId = `${f.properties.osm_type}/${f.properties.osm_id}`;
+              p.authorityName = f.properties.name;
+              fallback = null;
+              break;
+            }
+          }
+          if (fallback) {
+            p.authorityId = `${fallback.properties.osm_type}/${fallback.properties.osm_id}`;
+            p.authorityName = fallback.properties.name;
+          }
+        });
+      }
+
+      function authorityStats() {
+        const byId = new Map();
+        authorityFeatures.forEach((f) => {
+          const id = `${f.properties.osm_type}/${f.properties.osm_id}`;
+          byId.set(id, {
+            feature: f,
+            counts: new Map(),
+            classified: 0,
+            total: 0,
+          });
+        });
+        points.forEach((p) => {
+          if (!isMunicipalityPoint(p) || !p.authorityId) return;
+          const rec = byId.get(p.authorityId);
+          if (!rec) return;
+          const parts = languageParts(p.lang);
+          rec.classified += 1;
+          rec.total += 1;
+          parts.forEach((part) => rec.counts.set(part, (rec.counts.get(part) || 0) + 1));
+        });
+        byId.forEach((rec) => {
+          rec.selectedCount = selectedChoroplethLang
+            ? rec.counts.get(selectedChoroplethLang) || 0
+            : 0;
+          rec.share = rec.classified ? rec.selectedCount / rec.classified : 0;
+        });
+        return byId;
+      }
+
+      function updateChoropleth() {
+        clearChoropleth();
+        if (!authorityFeatures.length) return;
+        const stats = authorityStats();
+        choroplethLayer = L.geoJSON(
+          { type: "FeatureCollection", features: authorityFeatures },
+          {
+            style(feature) {
+              const rec = stats.get(
+                `${feature.properties.osm_type}/${feature.properties.osm_id}`,
+              );
+              if (!rec || !rec.classified || !selectedChoroplethLang) {
+                return {
+                  color: "#8a8375",
+                  weight: 1,
+                  dashArray: "4 3",
+                  fillColor: MISSING_FILL,
+                  fillOpacity: 0.62,
+                };
+              }
+              return {
+                color: "#ffffff",
+                weight: 1.2,
+                fillColor: mixTowardPaper(
+                  colorForLanguage(selectedChoroplethLang),
+                  rec.share,
+                ),
+                fillOpacity: 0.88,
+              };
+            },
+            onEachFeature(feature, layer) {
+              const rec = stats.get(
+                `${feature.properties.osm_type}/${feature.properties.osm_id}`,
+              );
+              const name = feature.properties.name;
+              const tip = rec && rec.classified
+                ? `${name}: ${Math.round(rec.share * 100)}% ${languageLabel(selectedChoroplethLang)} (${rec.classified} sites)`
+                : `${name}: no classified language data`;
+              layer.bindTooltip(tip);
+              layer.on("click", () => {
+                drillIntoFeature(feature).catch((err) => {
+                  showMapMessage(err.message || `Could not open ${name}.`);
+                });
+              });
+            },
+          },
+        ).addTo(map);
+      }
+
+      function showMapMessage(text) {
+        const el = document.getElementById("mapMessage");
+        if (!text) {
+          el.classList.remove("visible");
+          el.textContent = "";
+          return;
+        }
+        el.textContent = text;
+        el.classList.add("visible");
+      }
+
+      function renderBreadcrumb() {
+        const nav = document.getElementById("breadcrumb");
+        nav.innerHTML = "";
+        if (viewMode !== "authorities" || !hierarchy.length) {
+          nav.classList.remove("visible");
+          return;
+        }
+        nav.classList.add("visible");
+        hierarchy.forEach((level, i) => {
+          if (i) {
+            const sep = document.createElement("span");
+            sep.className = "sep";
+            sep.textContent = "›";
+            nav.appendChild(sep);
+          }
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = level.name;
+          btn.disabled = i === hierarchy.length - 1;
+          btn.addEventListener("click", () => goToHierarchyIndex(i));
+          nav.appendChild(btn);
+        });
+      }
+
+      function goToHierarchyIndex(index) {
+        showMapMessage("");
+        hierarchy = hierarchy.slice(0, index + 1);
+        const level = hierarchy[index];
+        authorityFeatures = level.features;
+        parentAreaInfo = level.osm_id
+          ? { name: level.name, osm_id: level.osm_id }
+          : null;
+        parentAreaName = "";
+        document.getElementById("parentArea").value = "";
+        assignAuthorities();
+        applyFilters();
+        renderBreadcrumb();
+        renderSidebar();
+        if (index === 0) map.setView([20, 0], 2);
+        else if (choroplethLayer && choroplethLayer.getBounds().isValid()) {
+          map.fitBounds(choroplethLayer.getBounds(), { padding: [20, 20] });
+        }
+      }
+
+      function escapeOverpass(value) {
+        return String(value)
+          .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+          .replace(/"/g, '\\"');
+      }
+
+      async function postOverpass(query) {
+        for (const url of OVERPASS_URLS) {
+          try {
+            const resp = await fetch(url, {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: "data=" + encodeURIComponent(query),
+            });
+            if (!resp.ok) continue;
+            const data = await resp.json();
+            const remark = data.remark || "";
+            if (remark && /error/i.test(remark)) continue;
+            return data;
+          } catch (err) {
+            console.warn("Overpass failed", url, err);
+          }
+        }
+        return null;
+      }
+
+      function scoreParentRelation(el, query) {
+        const tags = el.tags || {};
+        const q = query.toLowerCase();
+        let score = 0;
+        if (tags.boundary === "administrative") score += 20;
+        const lvl = parseInt(tags.admin_level || "99", 10);
+        if (lvl <= 6) score += 20 - lvl;
+        if (tags["ISO3166-1"] || tags["ISO3166-2"]) score += 8;
+        if (tags.wikidata) score += 2;
+        if (tags.end_date || tags.historic) score -= 40;
+        const names = [tags.name, tags["name:en"], tags["name:cy"], tags["name:fr"]]
+          .filter(Boolean)
+          .map((n) => n.toLowerCase());
+        if (names.some((n) => n === q)) score += 10;
+        return score;
+      }
+
+      async function findParentRelation(name) {
+        const q = escapeOverpass(name.trim());
+        const data = await postOverpass(`
+          [out:json][timeout:30];
+          (
+            rel["boundary"="administrative"]["name"~"^${q}$",i];
+            rel["boundary"="administrative"]["name:en"~"^${q}$",i];
+            rel["boundary"="administrative"]["name:cy"~"^${q}$",i];
+            rel["boundary"="administrative"]["name:fr"~"^${q}$",i];
+            rel["boundary"="administrative"]["name:de"~"^${q}$",i];
+          );
+          out tags;
+        `);
+        const rels = ((data && data.elements) || []).filter((el) => el.type === "relation" && el.tags);
+        if (!rels.length) return null;
+        rels.sort((a, b) => scoreParentRelation(b, name) - scoreParentRelation(a, name));
+        const best = rels[0];
+        return {
+          osm_id: best.id,
+          name: best.tags.name || best.tags["name:en"] || name,
+          admin_level: best.tags.admin_level,
+        };
+      }
+
+      async function fetchChildRelationIds(parentId) {
+        const data = await postOverpass(`
+          [out:json][timeout:30];
+          rel(${parentId});
+          rel(r)["boundary"="administrative"]["name"];
+          out tags;
+        `);
+        return ((data && data.elements) || [])
+          .filter((el) => el.type === "relation" && el.id !== parentId)
+          .map((el) => el.id);
+      }
+
+      async function fetchRelationsGeom(ids) {
+        if (!ids.length) return [];
+        const features = [];
+        for (let i = 0; i < ids.length; i += 25) {
+          const chunk = ids.slice(i, i + 25);
+          const data = await postOverpass(`
+            [out:json][timeout:90];
+            rel(id:${chunk.join(",")});
+            out geom;
+          `);
+          if (data) features.push(...osmToGeoJSON(data).features);
+        }
+        return features;
+      }
+
+      async function fetchChildrenByArea(parentId, adminLevel) {
+        const data = await postOverpass(`
+          [out:json][timeout:90];
+          rel(${parentId});
+          map_to_area -> .parent;
+          rel(area.parent)["type"="boundary"]["boundary"="administrative"]["admin_level"="${adminLevel}"]["name"];
+          out geom;
+        `);
+        return data ? osmToGeoJSON(data).features : [];
+      }
+
+      async function localAuthorityFeatures() {
+        try {
+          const resp = await fetch("data/authorities.geojson");
+          if (!resp.ok) return [];
+          const gj = await resp.json();
+          return gj.features || [];
+        } catch (err) {
+          return [];
+        }
+      }
+
+      function featuresForIds(features, ids) {
+        const want = new Set(ids);
+        return features.filter((f) => want.has(f.properties.osm_id));
+      }
+
+      async function fetchChildrenOfRelation(parent) {
+        const cacheKey = "children:" + parent.osm_id;
+        if (authorityCache.has(cacheKey)) return authorityCache.get(cacheKey).features;
+        const childIds = await fetchChildRelationIds(parent.osm_id);
+        const local = await localAuthorityFeatures();
+        let features = childIds.length ? featuresForIds(local, childIds) : [];
+        if (childIds.length && features.length < childIds.length) {
+          const have = new Set(features.map((f) => f.properties.osm_id));
+          const missing = childIds.filter((id) => !have.has(id));
+          const downloaded = await fetchRelationsGeom(missing);
+          if (downloaded.length) features = features.concat(downloaded);
+        }
+        if (!features.length) {
+          const parentLevel = parseInt(parent.admin_level || "4", 10);
+          const guess = parentLevel <= 2 ? "4" : parentLevel <= 4 ? "6" : "8";
+          features = await fetchChildrenByArea(parent.osm_id, guess);
+          if (features.length < 3) {
+            const nextLevel = String(Math.min(10, parseInt(guess, 10) + 2));
+            const next = await fetchChildrenByArea(parent.osm_id, nextLevel);
+            if (next.length) features = next;
+          }
+        }
+        if (features.length) authorityCache.set(cacheKey, { info: parent, features });
+        return features;
+      }
+
+      async function loadWorldCountries() {
+        if (authorityCache.has("world")) return authorityCache.get("world").features;
+        const resp = await fetch("data/countries.geojson");
+        if (!resp.ok) throw new Error("Could not load OSM country outlines.");
+        const gj = await resp.json();
+        const features = gj.features || [];
+        if (!features.length) throw new Error("Country outline file is empty.");
+        authorityCache.set("world", { info: { name: "World" }, features });
+        return features;
+      }
+
+      let drillBusy = false;
+
+      async function drillIntoFeature(feature) {
+        if (drillBusy) return;
+        showMapMessage("");
+        const name = feature.properties.name;
+        const rec = authorityStats().get(
+          `${feature.properties.osm_type}/${feature.properties.osm_id}`,
+        );
+        if (!rec || !rec.classified) {
+          showMapMessage(`${name} has no classified language data in the loaded file.`);
+          return;
+        }
+        drillBusy = true;
+        document.getElementById("stats").textContent =
+          `Loading subdivisions of ${name}...`;
+        try {
+          const children = await fetchChildrenOfRelation({
+            osm_id: feature.properties.osm_id,
+            name,
+            admin_level: feature.properties.admin_level,
+          });
+          if (!children.length) {
+            showMapMessage(`${name} has no OSM administrative subdivisions.`);
+            updateStats();
+            return;
+          }
+          hierarchy.push({
+            key: String(feature.properties.osm_id),
+            name,
+            osm_id: feature.properties.osm_id,
+            features: children,
+          });
+          parentAreaInfo = { name, osm_id: feature.properties.osm_id };
+          authorityFeatures = children;
+          assignAuthorities();
+          applyFilters();
+          renderBreadcrumb();
+          renderSidebar();
+          if (choroplethLayer && choroplethLayer.getBounds().isValid()) {
+            map.fitBounds(choroplethLayer.getBounds(), { padding: [20, 20] });
+          }
+        } finally {
+          drillBusy = false;
+        }
+      }
+
+      async function loadAuthoritiesForParent(name) {
+        document.getElementById("stats").textContent =
+          `Finding OSM area “${name}”...`;
+        const parent = await findParentRelation(name);
+        if (!parent) {
+          throw new Error(`Could not find an OSM administrative area named “${name}”.`);
+        }
+        parentAreaInfo = parent;
+        document.getElementById("stats").textContent =
+          `Loading subdivisions of ${parent.name}...`;
+        const features = await fetchChildrenOfRelation(parent);
+        if (!features.length) {
+          throw new Error(`OSM has no administrative subdivisions for ${parent.name}.`);
+        }
+        const world = await loadWorldCountries();
+        hierarchy = [
+          { key: "world", name: "World", osm_id: null, features: world },
+          {
+            key: String(parent.osm_id),
+            name: parent.name,
+            osm_id: parent.osm_id,
+            features,
+          },
+        ];
+        authorityFeatures = features;
+        assignAuthorities();
+      }
+
+      async function fetchAuthoritiesFromOverpass(adminLevel) {
+        const lats = points.map((p) => p.lat);
+        const lons = points.map((p) => p.lon);
+        const south = Math.min(...lats) - 0.02;
+        const north = Math.max(...lats) + 0.02;
+        const west = Math.min(...lons) - 0.02;
+        const east = Math.max(...lons) + 0.02;
+        const data = await postOverpass(
+          `[out:json][timeout:120];relation["type"="boundary"]["boundary"="administrative"]["admin_level"="${adminLevel}"]["name"](${south},${west},${north},${east});out geom;`,
+        );
+        return data ? osmToGeoJSON(data).features : [];
+      }
+
+      async function ensureAuthorities() {
+        if (parentAreaName) {
+          await loadAuthoritiesForParent(parentAreaName);
+          return;
+        }
+        if (hierarchy.length && authorityFeatures.length) {
+          if (!points.some((p) => p.authorityId)) assignAuthorities();
+          return;
+        }
+        document.getElementById("stats").textContent = "Loading OSM countries...";
+        const features = await loadWorldCountries();
+        hierarchy = [{ key: "world", name: "World", osm_id: null, features }];
+        parentAreaInfo = null;
+        authorityFeatures = features;
+        assignAuthorities();
+      }
+
+      function fitCurrentView() {
+        const level = hierarchy[hierarchy.length - 1];
+        if (!level || level.key === "world") {
+          map.setView([20, 0], 2);
+          return;
+        }
+        if (choroplethLayer && choroplethLayer.getBounds().isValid()) {
+          map.fitBounds(choroplethLayer.getBounds(), { padding: [20, 20] });
+        }
+      }
+
+      async function setViewMode(mode) {
+        viewMode = mode;
+        document.getElementById("modePoints").classList.toggle("active", mode === "points");
+        document
+          .getElementById("modeAuthorities")
+          .classList.toggle("active", mode === "authorities");
+        document
+          .getElementById("choroplethLangWrap")
+          .classList.toggle("visible", mode === "authorities");
+        document
+          .getElementById("parentAreaWrap")
+          .classList.toggle("visible", mode === "authorities");
+        if (mode === "authorities") {
+          populateChoroplethLangSelect();
+          try {
+            await ensureAuthorities();
+          } catch (err) {
+            showMapMessage(err.message || "Could not load area outlines.");
+          }
+        } else {
+          showMapMessage("");
+        }
+        applyFilters();
+        renderSidebar();
+        renderBreadcrumb();
+        if (mode === "authorities") fitCurrentView();
+        else if (points.length) {
+          map.fitBounds(
+            points.map((p) => [p.lat, p.lon]),
+            { padding: [30, 30], maxZoom: 15 },
+          );
+        }
       }
 
       function renderSidebar() {
         const sidebar = document.getElementById("sidebar");
-        sidebar.innerHTML = `<h2>${isLanguageMode ? "Languages" : "Categories"}</h2>`;
+        sidebar.innerHTML = "";
         sidebar.classList.add("visible");
+        if (viewMode === "authorities") {
+          const note = document.createElement("p");
+          note.className = "legend-note";
+          const focus = selectedChoroplethLang
+            ? languageLabel(selectedChoroplethLang)
+            : "the selected language";
+          note.textContent = parentAreaInfo
+            ? `OSM members of ${parentAreaInfo.name}. Click an area to open its children. Fetch failed and too-little-text sites are ignored. Color is the share of classified sites that include ${focus}.`
+            : `Every OSM country is shown. Click a country with data to open its OSM members. Fetch failed and too-little-text sites are ignored. Color is the share of classified sites that include ${focus}.`;
+          sidebar.appendChild(note);
+          const missing = document.createElement("div");
+          missing.className = "legend-item";
+          missing.style.cursor = "default";
+          missing.innerHTML =
+            `<span class="missing-swatch"></span><span>No classified language data</span>`;
+          sidebar.appendChild(missing);
+          if (selectedChoroplethLang) {
+            const scale = document.createElement("div");
+            scale.className = "share-scale";
+            scale.style.background = `linear-gradient(to right, ${mixTowardPaper(colorForLanguage(selectedChoroplethLang), 0)}, ${colorForLanguage(selectedChoroplethLang)})`;
+            const labels = document.createElement("div");
+            labels.className = "share-scale-labels";
+            labels.innerHTML = `<span>0% ${languageLabel(selectedChoroplethLang)}</span><span>100%</span>`;
+            sidebar.appendChild(scale);
+            sidebar.appendChild(labels);
+          }
+        }
 
-        Object.keys(markersByCategory)
-          .sort(
-            (a, b) => markersByCategory[b].length - markersByCategory[a].length,
-          )
-          .forEach((cat) => {
-            const swatchColor = isLanguageMode
-              ? colorForLanguage(cat)
-              : CATEGORY_COLORS[cat];
+        if (viewMode !== "authorities") {
+          const langSection = document.createElement("div");
+          langSection.className = "legend-section";
+          langSection.innerHTML = "<h2>Languages</h2>";
+          uniqueSorted((p) => p.lang).forEach(([lang]) => {
             const item = document.createElement("div");
             item.className = "legend-item";
+            item.setAttribute("role", "button");
+            item.dataset.kind = "language";
+            item.dataset.key = lang;
+            if (!enabledLanguages.has(lang)) item.classList.add("off");
             item.innerHTML =
-              `<span class="swatch" style="background:${swatchColor}"></span>` +
-              `<span>${cat}</span>` +
-              `<span class="legend-count">${markersByCategory[cat].length}</span>`;
+              `<span class="swatch" style="background:${colorForLanguage(lang)}"></span>` +
+              `<span>${languageLabel(lang)}</span>` +
+              `<span class="legend-count">${countForLanguage(lang)}</span>`;
             item.addEventListener("click", () => {
-              const isOn = map.hasLayer(layerGroups[cat]);
-              if (isOn) {
-                map.removeLayer(layerGroups[cat]);
-                item.classList.add("off");
-              } else {
-                map.addLayer(layerGroups[cat]);
-                item.classList.remove("off");
-              }
+              if (enabledLanguages.has(lang)) enabledLanguages.delete(lang);
+              else enabledLanguages.add(lang);
+              item.classList.toggle("off", !enabledLanguages.has(lang));
+              applyFilters();
             });
-            sidebar.appendChild(item);
+            langSection.appendChild(item);
           });
+          sidebar.appendChild(langSection);
+        }
+
+        const catSection = document.createElement("div");
+        catSection.className = "legend-section";
+        catSection.innerHTML = "<h2>Categories</h2>";
+        uniqueSorted((p) => p.category).forEach(([category]) => {
+          const item = document.createElement("div");
+          item.className = "legend-item";
+          item.setAttribute("role", "button");
+          item.dataset.kind = "category";
+          item.dataset.key = category;
+          if (!enabledCategories.has(category)) item.classList.add("off");
+          item.innerHTML =
+            `<span class="legend-check"></span>` +
+            `<span>${category}</span>` +
+            `<span class="legend-count">${countForCategory(category)}</span>`;
+          item.addEventListener("click", () => {
+            if (enabledCategories.has(category)) enabledCategories.delete(category);
+            else enabledCategories.add(category);
+            item.classList.toggle("off", !enabledCategories.has(category));
+            applyFilters();
+          });
+          catSection.appendChild(item);
+        });
+        sidebar.appendChild(catSection);
+      }
+
+      function refreshSidebarCounts() {
+        document.querySelectorAll(".legend-item").forEach((item) => {
+          const key = item.dataset.key;
+          const count =
+            item.dataset.kind === "language"
+              ? countForLanguage(key)
+              : countForCategory(key);
+          const el = item.querySelector(".legend-count");
+          if (el) el.textContent = count;
+        });
       }
 
       function handleFile(file) {
@@ -380,6 +1408,54 @@
         const file = e.dataTransfer.files[0];
         if (file) handleFile(file);
       });
+
+      document.getElementById("modePoints").addEventListener("click", () => {
+        setViewMode("points");
+      });
+      document.getElementById("modeAuthorities").addEventListener("click", () => {
+        setViewMode("authorities");
+      });
+      document.getElementById("parentAreaWrap").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("parentArea").value.trim();
+        showMapMessage("");
+        parentAreaName = name;
+        parentAreaInfo = null;
+        if (!name) {
+          hierarchy = [];
+          authorityFeatures = [];
+        }
+        points.forEach((p) => {
+          p.authorityId = null;
+          p.authorityName = null;
+        });
+        if (viewMode !== "authorities") return;
+        try {
+          await ensureAuthorities();
+          applyFilters();
+          renderSidebar();
+          renderBreadcrumb();
+          fitCurrentView();
+        } catch (err) {
+          showMapMessage(err.message || String(err));
+          updateStats();
+        }
+      });
+      document.getElementById("choroplethLang").addEventListener("change", (e) => {
+        selectedChoroplethLang = e.target.value || null;
+        if (viewMode === "authorities") {
+          updateChoropleth();
+          updateStats();
+          renderSidebar();
+        }
+      });
+
+      fetch("data/businesses.json")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (Array.isArray(data)) renderData(data);
+        })
+        .catch(() => {});
     </script>
   </body>
 </html>
