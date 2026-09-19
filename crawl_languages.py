@@ -1,11 +1,22 @@
 #!/usr/bin/env python3
 """
-Lightweight homepage language classifier for Wales OSM websites.
+Lightweight multi-language homepage classifier for OSM websites.
 
-Fetches only the start of each homepage, takes the first N visible words,
-and scores English vs Welsh using distinctive function-word hits.
-Also checks for Welsh/English language-switch signals (hreflang + nav links)
-and maps those to english+welsh. Does not follow internal pages.
+Fetches a small homepage prefix, scores distinctive function-word hits for
+several languages, and detects language-switch signals (hreflang + nav links).
+
+`language` is always a list of language names, e.g.:
+  ["english"]
+  ["english", "welsh"]
+  ["english", "french"]
+  []   # unknown / fetch failed / too little text
+
+Speed features (quality-preserving):
+  - early connection close once a confident label is known
+  - short connect/DNS timeout, longer total timeout for slow bodies
+  - high global concurrency with low per-host caps
+  - skip URLs that already have a non-empty language list
+  - batch checkpoints + optional URL sharding for multi-machine runs
 """
 
 from __future__ import annotations
@@ -17,19 +28,30 @@ import re
 import sys
 import time
 from collections import Counter
+from collections.abc import Callable, Iterable
 from urllib.parse import urlparse
 
 import aiohttp
 
-# --- fetch limits (keep this tiny so we can scale) ---
-MAX_BYTES = 192_000  # 4x prior 48KB; catches late <body> on store locators
+try:
+    import uvloop
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+except ImportError:
+    pass
+
+# --- fetch limits ---
+MAX_BYTES = 192_000
 N_WORDS = 200
-CONNECT_TIMEOUT = 5
-TOTAL_TIMEOUT = 12
+CONNECT_TIMEOUT = 2.0
+SOCK_READ_TIMEOUT = 10.0
+TOTAL_TIMEOUT = 12.0
 MAX_REDIRECTS = 8
 MAX_HEADER_BYTES = 32_768
 READ_CHUNK = 8_192
-WORD_CHECK_EVERY = 24_576
+LABEL_CHECK_EVERY = 12_288
+DEFAULT_WORKERS = 250
+DEFAULT_PER_HOST = 3
+DEFAULT_BATCH_SIZE = 500
 SKIP_SUFFIXES = (
     ".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".ico",
     ".pdf", ".mp4", ".mp3", ".zip", ".css", ".js", ".xml",
@@ -41,41 +63,205 @@ USER_AGENT = (
 )
 RATE_LIMIT_BACKOFF_S = 1.0
 
-GOOD_LABELS = frozenset({"english", "welsh", "english+welsh"})
-WEAK_LABELS = frozenset({"fetch_failed", "too_little_text", "unknown"})
+MIN_HITS = 2
+BILINGUAL_HITS = 3
+BILINGUAL_RATIO = 0.35
 
-# Distinctive tokens only. Shared/ambiguous words (a, i, o, am, on, to, in,
-# is, at, an, or, as, be, no, me, if, can, all, dan, pan, dim, gall, hon)
-# are excluded so they cannot inflate both scores.
-ENGLISH_WORDS = frozenset({
-    "the", "and", "of", "for", "that", "with", "this", "from", "have",
-    "has", "not", "but", "they", "you", "was", "are", "been", "were",
-    "their", "which", "would", "could", "should", "there", "what",
-    "when", "who", "how", "will", "more", "than", "also", "about",
-    "into", "your", "our", "his", "her", "its", "these", "those",
-    "them", "then", "some", "any", "each", "other", "only", "over",
-    "after", "before", "because", "while", "where", "here", "just",
-    "most", "such", "very", "please", "welcome", "home", "contact",
-    "services", "privacy", "cookies", "opening", "hours",
-})
+# ---------------------------------------------------------------------------
+# Language packs: distinctive words + switcher labels + ISO-ish codes.
+# Shared/ambiguous short tokens across packs are avoided where possible.
+# ---------------------------------------------------------------------------
 
-# Distinctive Welsh function/content words. Ambiguous short tokens (a, i, o,
-# am, eu, na, hi, mis, dod, lle) are omitted.
-WELSH_WORDS = frozenset({
-    "yn", "yr", "mae", "yw", "oedd", "sydd", "wedi", "gyda", "neu",
-    "ond", "fel", "rhwng", "dros", "trwy", "wrth", "ein", "eich",
-    "nhw", "hwn", "hyn", "dyma", "dyna", "croeso", "diolch", "cymru",
-    "cymraeg", "arall", "hefyd", "yma", "yna", "bydd", "rhaid", "ddim",
-    "nid", "nad", "pam", "sut", "pwy", "faint", "iawn", "cyngor",
-    "llywodraeth", "cymdeithas", "cwmni", "gwasanaethau", "cysylltwch",
-    "hafan", "amdanom", "tudalen", "gwybodaeth", "newyddion", "cyswllt",
-    "chwilio", "dewiswch", "iaith", "saesneg", "gymraeg", "gyfer",
-    "pobl", "dydd", "noswaith", "prynhawn", "diwrnod", "wythnos",
-    "flwyddyn", "heddiw", "yfory", "dweud", "gwneud", "mynd", "cael",
-    "ydym", "ydych", "ydyn", "oes", "fy", "eglwys", "menter", "cynnwys",
-    "cwcis", "safle", "defnyddio", "rydych", "cytuno", "neidio", "prif",
-    "hanfodol", "ydynt", "gwella", "gwasanaeth", "tudalennau", "dewisiadau",
-})
+LANGUAGE_WORDS: dict[str, frozenset[str]] = {
+    "english": frozenset({
+        "the", "and", "of", "for", "that", "with", "this", "from", "have",
+        "has", "not", "but", "they", "you", "was", "are", "been", "were",
+        "their", "which", "would", "could", "should", "there", "what",
+        "when", "who", "how", "will", "more", "than", "also", "about",
+        "into", "your", "our", "his", "her", "its", "these", "those",
+        "them", "then", "some", "any", "each", "other", "only", "over",
+        "after", "before", "because", "while", "where", "here", "just",
+        "most", "such", "very", "please", "welcome", "home", "contact",
+        "services", "privacy", "cookies", "opening", "hours",
+    }),
+    "welsh": frozenset({
+        "yn", "yr", "mae", "yw", "oedd", "sydd", "wedi", "gyda", "neu",
+        "ond", "fel", "rhwng", "dros", "trwy", "wrth", "ein", "eich",
+        "nhw", "hwn", "hyn", "dyma", "dyna", "croeso", "diolch", "cymru",
+        "cymraeg", "arall", "hefyd", "yma", "yna", "bydd", "rhaid", "ddim",
+        "nid", "nad", "pam", "sut", "pwy", "faint", "iawn", "cyngor",
+        "llywodraeth", "cymdeithas", "cwmni", "gwasanaethau", "cysylltwch",
+        "hafan", "amdanom", "tudalen", "gwybodaeth", "newyddion", "cyswllt",
+        "chwilio", "dewiswch", "iaith", "saesneg", "gymraeg", "gyfer",
+        "pobl", "dydd", "noswaith", "prynhawn", "diwrnod", "wythnos",
+        "flwyddyn", "heddiw", "yfory", "dweud", "gwneud", "mynd", "cael",
+        "ydym", "ydych", "ydyn", "oes", "fy", "eglwys", "menter", "cynnwys",
+        "cwcis", "safle", "defnyddio", "rydych", "cytuno", "neidio", "prif",
+        "hanfodol", "ydynt", "gwella", "gwasanaeth", "tudalennau", "dewisiadau",
+    }),
+    "french": frozenset({
+        "les", "des", "une", "est", "dans", "pour", "qui", "que", "avec",
+        "nous", "vous", "sont", "cette", "tout", "plus", "mais", "comme",
+        "aussi", "bien", "être", "etre", "avoir", "faire", "merci",
+        "accueil", "contactez", "confidentialité", "confidentialite",
+        "français", "francais", "anglais", "politique", "propos", "notre",
+        "votre", "leurs", "elle", "elles", "ils", "était", "etait",
+        "étaient", "etaient", "après", "apres", "avant", "entre", "sous",
+        "chez", "donc", "alors", "où", "ou", "très", "tres", "encore",
+        "toujours", "maintenant", "aujourd", "service", "services",
+        "informations", "recherche", "connexion", "inscription",
+    }),
+    "spanish": frozenset({
+        "los", "las", "una", "del", "que", "con", "por", "para", "como",
+        "más", "mas", "pero", "todo", "esta", "este", "estos", "estas",
+        "hay", "son", "está", "esta", "también", "tambien", "gracias",
+        "inicio", "contacto", "español", "espanol", "inglés", "ingles",
+        "privacidad", "nosotros", "nuestro", "nuestra", "sobre", "desde",
+        "hasta", "entre", "cuando", "donde", "dónde", "porque", "según",
+        "segun", "muy", "más", "solo", "sólo", "todos", "todas", "aquí",
+        "aqui", "ahora", "después", "despues", "antes", "bienvenida",
+        "bienvenido", "acerca", "política", "politica", "cookies",
+    }),
+    "german": frozenset({
+        "der", "die", "das", "und", "ist", "nicht", "mit", "von", "den",
+        "dem", "auf", "für", "fur", "eine", "einer", "einem", "einen",
+        "werden", "wurde", "haben", "wird", "auch", "nach", "bei", "über",
+        "uber", "sowie", "bitte", "willkommen", "kontakt", "deutsch",
+        "impressum", "datenschutz", "startseite", "mehr", "oder", "noch",
+        "nur", "sich", "wir", "sie", "ihr", "ihre", "ihnen", "kann",
+        "können", "konnen", "durch", "zwischen", "unter", "wenn", "weil",
+        "aber", "schon", "wieder", "hier", "dort", "diese", "dieser",
+        "dieses", "alle", "vom", "zur", "zum",
+    }),
+    # Canadian Indigenous languages: sparse web function-word evidence, so
+    # packs emphasize endonyms + common portal vocabulary; switcher/hreflang
+    # detection carries most of the weight.
+    "inuktitut": frozenset({
+        "inuktitut", "inuit", "nunavut", "inuk", "inuktitutitut",
+        "ᐃᓄᒃᑎᑐᑦ", "ᐃᓄᐃᑦ", "ᓄᓇᕗᑦ",
+    }),
+    "cree": frozenset({
+        "nêhiyawêwin", "nehiyawewin", "nêhiyaw", "nehiyaw", "nehiyawak",
+        "cree", "iyiniw", "ᓀᐦᐃᔭᐍᐏᐣ",
+    }),
+    "ojibwe": frozenset({
+        "anishinaabemowin", "anishinaabe", "anishinaabeg", "ojibwe",
+        "ojibwa", "ojibway", "anishinabe",
+    }),
+    "mikmaq": frozenset({
+        "mi'kmaq", "mikmaq", "mi'kmaw", "mikmaw", "lnu", "lnuismk",
+        "miꞌkmaq", "miꞌkmaw",
+    }),
+    "mohawk": frozenset({
+        "kanien'kéha", "kanienkeha", "kanien'keha", "kanienkehaka",
+        "mohawk", "kanyen'kéha", "kanyenkeha",
+    }),
+    "innu": frozenset({
+        "innu-aimun", "innu", "aimun", "ilnu", "innush",
+    }),
+    "dene": frozenset({
+        "denesuline", "dëne", "dene", "chipewyan", "denésuliné",
+        "denesuliné", "sahtú", "sahtu", "tlicho", "tłı̨chǫ",
+    }),
+    "blackfoot": frozenset({
+        "niitsitapi", "blackfoot", "siksika", "kainai", "piikani",
+        "niitsi'powahsin",
+    }),
+}
+
+# ISO / BCP47 style codes -> language name
+CODE_TO_LANGUAGE: dict[str, str] = {
+    "en": "english",
+    "eng": "english",
+    "cy": "welsh",
+    "cym": "welsh",
+    "fr": "french",
+    "fra": "french",
+    "fre": "french",
+    "es": "spanish",
+    "spa": "spanish",
+    "de": "german",
+    "deu": "german",
+    "ger": "german",
+    "iu": "inuktitut",
+    "iku": "inuktitut",
+    "ike": "inuktitut",
+    "ikt": "inuktitut",
+    "cr": "cree",
+    "cre": "cree",
+    "cwd": "cree",
+    "csw": "cree",
+    "crk": "cree",
+    "oj": "ojibwe",
+    "oji": "ojibwe",
+    "ojg": "ojibwe",
+    "ciw": "ojibwe",
+    "mic": "mikmaq",
+    "moh": "mohawk",
+    "moe": "innu",
+    "chp": "dene",
+    "den": "dene",
+    "scs": "dene",
+    "bla": "blackfoot",
+}
+
+# Nav / switcher link labels (lowercased exact-ish matches via SWITCH_LABEL_RE)
+SWITCH_LABEL_TO_LANGUAGE: dict[str, str] = {
+    "english": "english",
+    "anglais": "english",
+    "saesneg": "english",
+    "inglés": "english",
+    "ingles": "english",
+    "englisch": "english",
+    "welsh": "welsh",
+    "cymraeg": "welsh",
+    "gymraeg": "welsh",
+    "french": "french",
+    "français": "french",
+    "francais": "french",
+    "française": "french",
+    "francaise": "french",
+    "spanish": "spanish",
+    "español": "spanish",
+    "espanol": "spanish",
+    "castellano": "spanish",
+    "german": "german",
+    "deutsch": "german",
+    "inuktitut": "inuktitut",
+    "ᐃᓄᒃᑎᑐᑦ": "inuktitut",
+    "cree": "cree",
+    "nêhiyawêwin": "cree",
+    "nehiyawewin": "cree",
+    "ojibwe": "ojibwe",
+    "ojibwa": "ojibwe",
+    "ojibway": "ojibwe",
+    "anishinaabemowin": "ojibwe",
+    "mi'kmaq": "mikmaq",
+    "mikmaq": "mikmaq",
+    "mi'kmaw": "mikmaq",
+    "mohawk": "mohawk",
+    "kanien'kéha": "mohawk",
+    "kanienkeha": "mohawk",
+    "innu": "innu",
+    "innu-aimun": "innu",
+    "dene": "dene",
+    "denesuline": "dene",
+    "chipewyan": "dene",
+    "blackfoot": "blackfoot",
+    "niitsitapi": "blackfoot",
+    "siksika": "blackfoot",
+}
+
+SUPPORTED_LANGUAGES = tuple(LANGUAGE_WORDS.keys())
+
+LEGACY_LABEL_TO_LIST: dict[str, list[str]] = {
+    "english": ["english"],
+    "welsh": ["welsh"],
+    "english+welsh": ["english", "welsh"],
+    "fetch_failed": [],
+    "too_little_text": [],
+    "unknown": [],
+}
 
 COMMENT_RE = re.compile(r"(?is)<!--.*?-->")
 BLOCK_RE = re.compile(
@@ -83,27 +269,33 @@ BLOCK_RE = re.compile(
 )
 TAG_RE = re.compile(r"<[^>]+>")
 ENTITY_RE = re.compile(r"&(?:[a-z]+|#\d+|#x[0-9a-f]+);", re.I)
-WORD_RE = re.compile(r"[a-zA-ZâêîôûŵŷäëïöüáéíóúẃỳÀ-ÖØ-öø-ÿ']{2,}")
+# Latin + accents + Canadian Aboriginal Syllabics
+WORD_RE = re.compile(
+    r"[a-zA-ZâêîôûŵŷäëïöüáéíóúẃỳàèùçñœæÀ-ÖØ-öø-ÿ᐀-ᙿ']{2,}"
+)
 BODY_RE = re.compile(r"(?is)<body[^>]*>")
+HTML_LANG_RE = re.compile(r"(?is)<html[^>]*\slang=[\"']([^\"']+)[\"']")
 
 HREFLANG_RE = re.compile(
     r"(?is)<link[^>]*hreflang=[\"']([^\"']+)[\"'][^>]*href=[\"']([^\"']+)[\"']|"
     r"<link[^>]*href=[\"']([^\"']+)[\"'][^>]*hreflang=[\"']([^\"']+)[\"']"
 )
 ANCHOR_RE = re.compile(r"(?is)<a\b([^>]*)>(.*?)</a>")
+
+_SWITCH_ALTS = "|".join(
+    re.escape(label) for label in sorted(SWITCH_LABEL_TO_LANGUAGE, key=len, reverse=True)
+)
 SWITCH_LABEL_RE = re.compile(
-    r"(?is)^\s*(?:"
-    r"cymraeg|gymraeg|saesneg|english|welsh|"
-    r"language\s*[:\-]?\s*(?:cymraeg|gymraeg|english|welsh|saesneg)|"
-    r"(?:view\s+)?(?:in\s+)?(?:cymraeg|english|welsh)|"
-    r"newid\s+iaith|change\s+language"
-    r")\s*$"
+    rf"(?is)^\s*(?:"
+    rf"{_SWITCH_ALTS}|"
+    rf"language\s*[:\-]?\s*(?:{_SWITCH_ALTS})|"
+    rf"(?:view\s+)?(?:in\s+)?(?:{_SWITCH_ALTS})|"
+    rf"newid\s+iaith|change\s+language|changer\s+de\s+langue|"
+    rf"cambiar\s+idioma|sprache\s+ändern|sprache\s+andern"
+    rf")\s*$"
 )
 
-MIN_HITS = 2
-BILINGUAL_HITS = 3
-BILINGUAL_RATIO = 0.35
-VOWELS = set("aeiouwyâêîôûŵŷäëïöüáéíóúẃỳ")
+VOWELS = set("aeiouwyâêîôûŵŷäëïöüáéíóúẃỳàèù")
 
 
 def normalize_url(url: str) -> str | None:
@@ -121,15 +313,50 @@ def normalize_url(url: str) -> str | None:
     return url
 
 
+def normalize_language_list(value: object) -> list[str]:
+    """Coerce legacy string labels or lists into a sorted unique language list."""
+    if value is None:
+        return []
+    if isinstance(value, list):
+        out: list[str] = []
+        seen: set[str] = set()
+        for item in value:
+            if not isinstance(item, str):
+                continue
+            name = item.strip().lower()
+            if name in LEGACY_LABEL_TO_LIST and name not in LANGUAGE_WORDS:
+                for part in LEGACY_LABEL_TO_LIST[name]:
+                    if part not in seen:
+                        seen.add(part)
+                        out.append(part)
+                continue
+            if name in LANGUAGE_WORDS and name not in seen:
+                seen.add(name)
+                out.append(name)
+        return sorted(out)
+    if isinstance(value, str):
+        key = value.strip().lower()
+        if key in LEGACY_LABEL_TO_LIST:
+            return list(LEGACY_LABEL_TO_LIST[key])
+        if key in LANGUAGE_WORDS:
+            return [key]
+    return []
+
+
+def is_good_label(value: object) -> bool:
+    return bool(normalize_language_list(value))
+
+
 def _keep_token(word: str) -> bool:
-    if len(word) > 24:
+    if len(word) > 32:
         return False
-    return any(ch in VOWELS for ch in word)
+    # Syllabic tokens need not contain Latin vowels.
+    if any("\u1400" <= ch <= "\u167f" for ch in word):
+        return True
+    return any(ch in VOWELS for ch in word.lower())
 
 
 def visible_words(html: str, n: int) -> list[str]:
-    # Prefer <body> so inlined <head> CSS/theme metadata cannot dominate the
-    # first N words when we only download a small prefix of the page.
     m = BODY_RE.search(html)
     if m:
         html = html[m.end():]
@@ -141,80 +368,139 @@ def visible_words(html: str, n: int) -> list[str]:
     return words[:n]
 
 
-def has_cy_en_language_switch(html: str) -> bool:
-    """True if HTML advertises separate Welsh and English versions."""
-    codes: set[str] = set()
-    for m in HREFLANG_RE.finditer(html):
-        raw = m.group(1) or m.group(4) or ""
-        codes.add(raw.lower().split("-", 1)[0])
-    if "cy" in codes and "en" in codes:
-        return True
+def _code_to_language(code: str) -> str | None:
+    raw = (code or "").strip().lower().replace("_", "-")
+    if not raw or raw == "x-default":
+        return None
+    primary = raw.split("-", 1)[0]
+    return CODE_TO_LANGUAGE.get(primary)
 
-    for m in ANCHOR_RE.finditer(html):
-        attrs, inner = m.group(1), m.group(2)
+
+def languages_from_switchers(html: str) -> set[str]:
+    """Languages advertised via hreflang, html lang, or switcher-looking links."""
+    found: set[str] = set()
+
+    m = HTML_LANG_RE.search(html)
+    if m:
+        lang = _code_to_language(m.group(1))
+        if lang:
+            found.add(lang)
+
+    for hm in HREFLANG_RE.finditer(html):
+        code = hm.group(1) or hm.group(4) or ""
+        lang = _code_to_language(code)
+        if lang:
+            found.add(lang)
+
+    for am in ANCHOR_RE.finditer(html):
+        attrs, inner = am.group(1), am.group(2)
         text = TAG_RE.sub(" ", inner)
         text = re.sub(r"\s+", " ", text).strip()
         if len(text) > 48 or not SWITCH_LABEL_RE.match(text):
             continue
+        low = text.lower()
         href_m = re.search(r"href=[\"']([^\"']+)[\"']", attrs, re.I)
         href = (href_m.group(1) if href_m else "").lower()
         hreflang_m = re.search(r"hreflang=[\"']([^\"']+)[\"']", attrs, re.I)
-        hreflang = (hreflang_m.group(1) if hreflang_m else "").lower()[:2]
-        low = text.lower()
-        # Clear language-control labels; prefer locale-looking hrefs.
-        if hreflang in ("cy", "en"):
-            return True
-        if re.search(r"(?:^|/)(?:cy|en)(?:/|$|\?)", href):
-            return True
-        if "cymraeg" in low or "gymraeg" in low or "saesneg" in low or "welsh" in low:
-            return True
-        if low == "english" or low.startswith("language"):
-            return True
-    return False
+        if hreflang_m:
+            lang = _code_to_language(hreflang_m.group(1))
+            if lang:
+                found.add(lang)
+
+        for label, lang in SWITCH_LABEL_TO_LANGUAGE.items():
+            if low == label or low.endswith(label) or label in low and len(low) <= len(label) + 12:
+                # Prefer exact / short labels; avoid "Cyrsiau Cymraeg"-style soft hits
+                if low == label or low in {
+                    f"language {label}",
+                    f"langue {label}",
+                    f"idioma {label}",
+                    f"sprache {label}",
+                    f"view in {label}",
+                    f"in {label}",
+                }:
+                    found.add(lang)
+                    break
+
+        path_m = re.search(r"(?:^|/)([a-z]{2,3})(?:/|$|\?)", href)
+        if path_m:
+            lang = _code_to_language(path_m.group(1))
+            if lang:
+                found.add(lang)
+
+    return found
 
 
-def classify(words: list[str]) -> str:
-    if not words:
-        return "unknown"
-    en = 0
-    cy = 0
+def score_languages(words: list[str]) -> dict[str, int]:
+    scores = {name: 0 for name in LANGUAGE_WORDS}
     for w in words:
-        if w in ENGLISH_WORDS:
-            en += 1
-        elif w in WELSH_WORDS:
-            cy += 1
-    if en < MIN_HITS and cy < MIN_HITS:
-        return "unknown"
-    if en >= BILINGUAL_HITS and cy >= BILINGUAL_HITS:
-        stronger = max(en, cy)
-        weaker = min(en, cy)
-        if weaker / stronger >= BILINGUAL_RATIO:
-            return "english+welsh"
-    if cy > en and cy >= MIN_HITS:
-        return "welsh"
-    if en >= MIN_HITS:
-        return "english"
-    return "unknown"
+        for name, vocab in LANGUAGE_WORDS.items():
+            if w in vocab:
+                scores[name] += 1
+                break  # first matching pack wins; packs are mostly disjoint
+    return scores
 
 
-def classify_html(html: str) -> str:
-    if has_cy_en_language_switch(html):
-        return "english+welsh"
-    label = classify(visible_words(html, N_WORDS))
-    if label == "unknown":
-        return "too_little_text"
-    return label
+def languages_from_words(words: list[str]) -> set[str]:
+    if not words:
+        return set()
+    scores = score_languages(words)
+    hits = {name: n for name, n in scores.items() if n >= MIN_HITS}
+    if not hits:
+        return set()
+    # Keep languages with solid support; if several fire, require weaker ones
+    # to be reasonably close to the strongest signal.
+    strongest = max(hits.values())
+    out: set[str] = set()
+    for name, n in hits.items():
+        if n >= BILINGUAL_HITS and n / strongest >= BILINGUAL_RATIO:
+            out.add(name)
+        elif n >= MIN_HITS and (len(hits) == 1 or n / strongest >= BILINGUAL_RATIO):
+            out.add(name)
+    return out
 
 
-def merge_label(new_label: str, prev_label: str | None) -> str:
-    """Keep a prior good classification if this run failed or had no text."""
-    if new_label in WEAK_LABELS and prev_label in GOOD_LABELS:
-        return prev_label
-    return new_label
+def classify_words(words: list[str]) -> list[str]:
+    return sorted(languages_from_words(words))
 
 
-async def fetch_prefix(session: aiohttp.ClientSession, url: str) -> tuple[str | None, str]:
-    """Return (html, 'ok') or (None, 'fetch_failed')."""
+def classify_html(html: str) -> list[str]:
+    switch = languages_from_switchers(html)
+    words = visible_words(html, N_WORDS)
+    content = languages_from_words(words)
+    return sorted(switch | content)
+
+
+def confident_label_from_prefix(html: str) -> list[str] | None:
+    """
+    Return a final language list if the prefix is enough to decide.
+
+    Switcher/hreflang can decide early. Word-list labels wait for a full
+    N_WORDS body sample so mixed-language pages are not cut off early.
+    """
+    switch = languages_from_switchers(html)
+    if len(switch) >= 2:
+        # Multiple explicit language versions advertised.
+        return sorted(switch)
+    if not BODY_RE.search(html):
+        return None
+    words = visible_words(html, N_WORDS)
+    if len(words) < N_WORDS:
+        return None
+    content = languages_from_words(words)
+    combined = switch | content
+    if combined:
+        return sorted(combined)
+    return None
+
+
+def merge_label(new_label: list[str], prev_label: list[str] | None) -> list[str]:
+    """Keep a prior non-empty classification if this run found nothing usable."""
+    if not new_label and prev_label:
+        return list(prev_label)
+    return list(new_label)
+
+
+async def fetch_and_classify(session: aiohttp.ClientSession, url: str) -> list[str]:
     for attempt in (0, 1):
         try:
             async with session.get(
@@ -224,57 +510,68 @@ async def fetch_prefix(session: aiohttp.ClientSession, url: str) -> tuple[str | 
                     await asyncio.sleep(RATE_LIMIT_BACKOFF_S)
                     continue
                 if resp.status >= 400:
-                    return None, "fetch_failed"
+                    return []
                 buf = bytearray()
                 last_check = 0
+                early: list[str] | None = None
                 async for chunk in resp.content.iter_chunked(READ_CHUNK):
                     buf.extend(chunk)
                     if len(buf) >= MAX_BYTES:
                         break
-                    if len(buf) - last_check < WORD_CHECK_EVERY:
+                    if len(buf) - last_check < LABEL_CHECK_EVERY:
                         continue
                     last_check = len(buf)
                     html = buf.decode("utf-8", errors="ignore")
-                    # Only early-stop once <body> is present, so we do not
-                    # freeze on a huge <head> before real page text.
-                    if not BODY_RE.search(html):
-                        continue
-                    if len(visible_words(html, N_WORDS)) >= N_WORDS:
+                    early = confident_label_from_prefix(html)
+                    if early is not None:
                         break
+                if early is not None:
+                    return early
                 text = buf.decode("utf-8", errors="ignore")
-                if text.strip():
-                    return text, "ok"
-                return None, "fetch_failed"
+                if not text.strip():
+                    return []
+                return classify_html(text)
         except Exception:
-            return None, "fetch_failed"
-    return None, "fetch_failed"
+            return []
+    return []
 
 
-async def classify_url(session: aiohttp.ClientSession, url: str, sem: asyncio.Semaphore) -> str:
+async def classify_url(
+    session: aiohttp.ClientSession, url: str, sem: asyncio.Semaphore
+) -> list[str]:
     async with sem:
-        html, status = await fetch_prefix(session, url)
-        if status != "ok" or not html:
-            return "fetch_failed"
-        return classify_html(html)
+        return await fetch_and_classify(session, url)
 
 
-async def crawl(urls: list[str], workers: int, batch_size: int = 500) -> list[str]:
-    timeout = aiohttp.ClientTimeout(total=TOTAL_TIMEOUT, sock_connect=CONNECT_TIMEOUT)
+async def crawl(
+    urls: list[str],
+    workers: int,
+    per_host: int = DEFAULT_PER_HOST,
+    batch_size: int = DEFAULT_BATCH_SIZE,
+    on_batch: Callable[[list[str], list[list[str]], int, int], None] | None = None,
+) -> list[list[str]]:
+    timeout = aiohttp.ClientTimeout(
+        total=TOTAL_TIMEOUT,
+        sock_connect=CONNECT_TIMEOUT,
+        sock_read=SOCK_READ_TIMEOUT,
+    )
     connector = aiohttp.TCPConnector(
         limit=workers,
-        limit_per_host=8,
-        ttl_dns_cache=300,
+        limit_per_host=per_host,
+        ttl_dns_cache=600,
         ssl=False,
         enable_cleanup_closed=True,
+        force_close=False,
     )
     headers = {
         "User-Agent": USER_AGENT,
         "Accept": "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "en-GB,en;q=0.9,cy;q=0.8",
+        "Accept-Language": "en-GB,en;q=0.9,fr;q=0.8,cy;q=0.7",
         "Accept-Encoding": "gzip, deflate",
+        "Connection": "keep-alive",
     }
     sem = asyncio.Semaphore(workers)
-    labels: list[str] = []
+    labels: list[list[str]] = []
     async with aiohttp.ClientSession(
         timeout=timeout,
         connector=connector,
@@ -296,12 +593,34 @@ async def crawl(urls: list[str], workers: int, batch_size: int = 500) -> list[st
                 f"({100.0 * done / total:.1f}%)",
                 flush=True,
             )
+            if on_batch:
+                on_batch(batch, list(batch_labels), done, total)
     return labels
 
 
 def load_records(path: str) -> list[dict]:
     with open(path, encoding="utf-8") as f:
         return json.load(f)
+
+
+def write_records(path: str, records: list[dict]) -> None:
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(records, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+
+
+def migrate_record_languages(records: list[dict]) -> int:
+    """Convert legacy string language fields to lists. Returns changed count."""
+    changed = 0
+    for rec in records:
+        raw = rec.get("language")
+        normalized = normalize_language_list(raw)
+        if raw != normalized:
+            rec["language"] = normalized
+            changed += 1
+        else:
+            rec["language"] = normalized
+    return changed
 
 
 def unique_urls(records: list[dict], limit: int | None) -> list[str]:
@@ -318,121 +637,215 @@ def unique_urls(records: list[dict], limit: int | None) -> list[str]:
     return urls
 
 
-def previous_url_labels(records: list[dict]) -> dict[str, str]:
-    prev: dict[str, str] = {}
+def apply_shard(urls: list[str], shard: str | None) -> list[str]:
+    if not shard:
+        return urls
+    try:
+        index_s, count_s = shard.split("/", 1)
+        index, count = int(index_s), int(count_s)
+    except ValueError as e:
+        raise SystemExit(f"Invalid --shard {shard!r}; expected INDEX/COUNT") from e
+    if count < 1 or index < 0 or index >= count:
+        raise SystemExit(f"Invalid --shard {shard!r}; need 0 <= INDEX < COUNT")
+    return [u for i, u in enumerate(urls) if i % count == index]
+
+
+def previous_url_labels(records: list[dict]) -> dict[str, list[str]]:
+    prev: dict[str, list[str]] = {}
     for rec in records:
         url = normalize_url(rec.get("website", ""))
-        lang = rec.get("language")
-        if url and lang in GOOD_LABELS:
-            prev.setdefault(url, lang)
+        langs = normalize_language_list(rec.get("language"))
+        if url and langs:
+            prev.setdefault(url, langs)
     return prev
 
 
 def annotate_records(
     records: list[dict],
-    url_to_lang: dict[str, str],
-    prev_url_to_lang: dict[str, str] | None = None,
+    url_to_lang: dict[str, list[str]],
+    prev_url_to_lang: dict[str, list[str]] | None = None,
 ) -> Counter:
     prev_url_to_lang = prev_url_to_lang or {}
     counts: Counter = Counter()
     for rec in records:
         url = normalize_url(rec.get("website", ""))
         if not url:
-            new_lang = "fetch_failed"
+            new_lang: list[str] = []
             prev = None
         else:
-            new_lang = url_to_lang.get(url, "fetch_failed")
+            new_lang = url_to_lang.get(url, normalize_language_list(rec.get("language")))
             prev = prev_url_to_lang.get(url)
         lang = merge_label(new_lang, prev)
         rec["language"] = lang
-        counts[lang] += 1
+        key = ",".join(lang) if lang else "unknown"
+        counts[key] += 1
     return counts
 
 
+def summarize_language_lists(records: Iterable[dict]) -> tuple[Counter, Counter]:
+    combo = Counter()
+    presence = Counter()
+    for rec in records:
+        langs = normalize_language_list(rec.get("language"))
+        combo[",".join(langs) if langs else "unknown"] += 1
+        if not langs:
+            presence["unknown"] += 1
+        for name in langs:
+            presence[name] += 1
+    return combo, presence
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Classify homepage language from OSM website list.")
+    parser = argparse.ArgumentParser(description="Classify homepage languages from OSM website list.")
     parser.add_argument("--data", default="data/businesses.json")
     parser.add_argument("--output", default=None, help="Write annotated JSON here (default: overwrite --data)")
     parser.add_argument("--limit", type=int, default=None, help="Max unique URLs (default: all)")
-    parser.add_argument("--workers", type=int, default=100)
+    parser.add_argument("--workers", type=int, default=DEFAULT_WORKERS)
+    parser.add_argument("--per-host", type=int, default=DEFAULT_PER_HOST)
+    parser.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE)
+    parser.add_argument(
+        "--skip-good",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Skip URLs that already have a non-empty language list (default: true)",
+    )
+    parser.add_argument(
+        "--refetch-all",
+        action="store_true",
+        help="Force refetch of every URL (same as --no-skip-good)",
+    )
+    parser.add_argument(
+        "--migrate-only",
+        action="store_true",
+        help="Only convert legacy language strings to lists; do not crawl",
+    )
+    parser.add_argument("--shard", default=None, help="Shard INDEX/COUNT of unique URLs, e.g. 0/8")
+    parser.add_argument(
+        "--checkpoint",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Rewrite output JSON after each batch (default: true)",
+    )
     args = parser.parse_args()
+    if args.refetch_all:
+        args.skip_good = False
 
     records = load_records(args.data)
+    changed = migrate_record_languages(records)
+    out_path = args.output or args.data
+    if changed:
+        print(f"Migrated {changed} legacy language fields to lists.", flush=True)
+
+    if args.migrate_only:
+        write_records(out_path, records)
+        combo, presence = summarize_language_lists(records)
+        print(f"Wrote {out_path}")
+        print("\nCombination counts")
+        for key, n in combo.most_common():
+            print(f"  {key:40s} {n}")
+        print("\nLanguage presence")
+        for key, n in presence.most_common():
+            print(f"  {key:40s} {n}")
+        return
+
     prev_url_to_lang = previous_url_labels(records)
-    prev_record_counts = Counter(
-        r.get("language") for r in records if r.get("language") in GOOD_LABELS | WEAK_LABELS
-    )
-    urls = unique_urls(records, args.limit)
+    prev_combo, _ = summarize_language_lists(records)
+    all_urls = unique_urls(records, args.limit)
+    all_urls = apply_shard(all_urls, args.shard)
+
+    if args.skip_good:
+        urls = [u for u in all_urls if u not in prev_url_to_lang]
+        skipped = len(all_urls) - len(urls)
+    else:
+        urls = all_urls
+        skipped = 0
+
     print(
-        f"Crawling {len(urls)} unique homepages "
-        f"({len(records)} records) with {args.workers} workers...",
+        f"Crawling {len(urls)} URLs "
+        f"(skipped {skipped} already-good; shard={args.shard or 'all'}; "
+        f"{len(records)} records) with {args.workers} workers "
+        f"(per_host={args.per_host})...",
         flush=True,
     )
-    print(
-        f"Prior good labels available for {len(prev_url_to_lang)} URLs "
-        f"(kept on fetch_failed / too_little_text).",
-        flush=True,
-    )
+    print(f"Supported languages: {', '.join(SUPPORTED_LANGUAGES)}", flush=True)
 
-    started = time.perf_counter()
-    labels = asyncio.run(crawl(urls, args.workers))
-    elapsed = time.perf_counter() - started
-
-    url_to_lang: dict[str, str] = {}
+    url_to_lang: dict[str, list[str]] = {u: list(langs) for u, langs in prev_url_to_lang.items()}
     raw_counts: Counter = Counter()
     kept_urls = 0
-    upgraded_to_bilingual = 0
-    for url, new_label in zip(urls, labels):
-        raw_counts[new_label] += 1
-        prev = prev_url_to_lang.get(url)
-        merged = merge_label(new_label, prev)
-        if merged != new_label:
-            kept_urls += 1
-        if new_label == "english+welsh" and prev in ("english", "welsh"):
-            upgraded_to_bilingual += 1
-        url_to_lang[url] = merged
+
+    def on_batch(batch: list[str], batch_labels: list[list[str]], done: int, total: int) -> None:
+        nonlocal kept_urls
+        for url, new_label in zip(batch, batch_labels):
+            key = ",".join(new_label) if new_label else "unknown"
+            raw_counts[key] += 1
+            prev = prev_url_to_lang.get(url)
+            merged = merge_label(new_label, prev)
+            if merged != new_label:
+                kept_urls += 1
+            url_to_lang[url] = merged
+        if args.checkpoint and args.limit is None:
+            annotate_records(records, url_to_lang, prev_url_to_lang)
+            write_records(out_path, records)
+            print(f"  checkpoint wrote {out_path} ({done}/{total})", flush=True)
+
+    started = time.perf_counter()
+    if urls:
+        asyncio.run(
+            crawl(
+                urls,
+                workers=args.workers,
+                per_host=args.per_host,
+                batch_size=args.batch_size,
+                on_batch=on_batch,
+            )
+        )
+    elapsed = time.perf_counter() - started
 
     if args.limit is None:
-        counts = annotate_records(records, url_to_lang, prev_url_to_lang)
-        out_path = args.output or args.data
-        with open(out_path, "w", encoding="utf-8") as f:
-            json.dump(records, f, indent=2, ensure_ascii=False)
-            f.write("\n")
+        annotate_records(records, url_to_lang, prev_url_to_lang)
+        write_records(out_path, records)
         print(f"\nWrote language field to {out_path}", flush=True)
+        combo, presence = summarize_language_lists(records)
     else:
-        counts = Counter(url_to_lang[u] for u in urls)
+        combo = Counter()
+        presence = Counter()
+        for u in all_urls:
+            langs = url_to_lang.get(u, [])
+            combo[",".join(langs) if langs else "unknown"] += 1
+            if not langs:
+                presence["unknown"] += 1
+            for name in langs:
+                presence[name] += 1
         if args.output:
             for rec in records:
                 url = normalize_url(rec.get("website", ""))
                 if url in url_to_lang:
                     rec["language"] = url_to_lang[url]
-            with open(args.output, "w", encoding="utf-8") as f:
-                json.dump(records, f, indent=2, ensure_ascii=False)
-                f.write("\n")
+            write_records(args.output, records)
             print(f"\nWrote partial language field to {args.output}", flush=True)
 
-    buckets = ("english", "welsh", "english+welsh", "too_little_text", "fetch_failed")
-    print("\nPrevious record counts")
-    for key in buckets:
-        print(f"  {key:16s} {prev_record_counts.get(key, 0)}")
+    print("\nPrevious combination counts")
+    for key, n in prev_combo.most_common():
+        print(f"  {key:40s} {n}")
 
-    print("\nRaw crawl counts (unique URLs, before keep-previous)")
-    for key in buckets:
-        print(f"  {key:16s} {raw_counts.get(key, 0)}")
-    print(f"\nKept previous good label on {kept_urls} unique URLs")
-    print(f"Upgraded english/welsh -> english+welsh via switch: {upgraded_to_bilingual} URLs")
+    print("\nRaw crawl combinations (URLs fetched this run)")
+    for key, n in raw_counts.most_common():
+        print(f"  {key:40s} {n}")
+    print(f"\nSkipped already-good URLs {skipped}")
+    print(f"Kept previous good label on {kept_urls} unique URLs")
 
-    print("\nLanguage counts (records)" if args.limit is None else "\nLanguage counts (unique URLs)")
-    for key in buckets:
-        print(f"  {key:16s} {counts.get(key, 0)}")
-    extra = set(counts) - set(buckets)
-    for key in sorted(extra):
-        print(f"  {key:16s} {counts[key]}")
-    print(f"\nTotal               {sum(counts.values())}")
-    print(f"Unique URLs crawled {len(urls)}")
-    print(f"Time taken          {elapsed:.2f}s")
-    if elapsed:
-        print(f"Throughput          {len(urls) / elapsed:.1f} sites/s")
+    print("\nCombination counts")
+    for key, n in combo.most_common():
+        print(f"  {key:40s} {n}")
+    print("\nLanguage presence (a record can count in multiple)")
+    for key, n in presence.most_common():
+        print(f"  {key:40s} {n}")
+
+    print(f"\nTotal records/URLs     {sum(combo.values())}")
+    print(f"Unique URLs fetched   {len(urls)}")
+    print(f"Time taken            {elapsed:.2f}s")
+    if elapsed and urls:
+        print(f"Throughput            {len(urls) / elapsed:.1f} sites/s")
 
 
 if __name__ == "__main__":
