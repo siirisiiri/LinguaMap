@@ -224,5 +224,4 @@ __marimo__/
 .geofabrik/
 *.osm.pbf
 
-# Local OSM / crawl outputs — keep generated datasets off the remote
-/data/
+data/
