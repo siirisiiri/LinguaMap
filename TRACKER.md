@@ -31,7 +31,7 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 | Eritrea | 🟢 |  |
 | Eswatini | 🟢 |  |
 | Ethiopia | 🟢 |  |
-| Gabon | 🟢 |  |
+| Gabon | 🟢 | 🟢 |
 | Ghana | 🟢 |  |
 | Guinea | 🟢 |  |
 | Guinea-Bissau | 🟢 |  |
@@ -72,45 +72,45 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 
 | Country | Aryan | Siiri |
 | --- | :---: | :---: |
-| Afghanistan | 🟢 |  |
-| Armenia | 🟢 |  |
-| Azerbaijan | 🟢 |  |
-| Bangladesh | 🟢 |  |
-| Bhutan | 🟢 |  |
-| Cambodia | 🟢 |  |
-| China | 🟢 |  |
-| East Timor | 🟢 |  |
+| Afghanistan | 🟢 | 🟢 |
+| Armenia | 🟢 | 🟢 |
+| Azerbaijan | 🟢 | 🟢 |
+| Bangladesh | 🟢 | 🟢 |
+| Bhutan | 🟢 | 🟢 |
+| Cambodia | 🟢 | 🟢 |
+| China | 🟢 | 🟢 |
+| East Timor | 🟢 | 🟢 |
 | GCC States |  |  |
-| India | 🟢 |  |
-| Indonesia | 🟢 |  |
-| Iran | 🟢 |  |
+| India | 🟢 | 🟢 |
+| Indonesia | 🟢 | 🟢 |
+| Iran | 🟢 | 🟢 |
 | Iraq |  |  |
-| Israel and Palestine | 🟢 |  |
+| Israel and Palestine | 🟢 | 🟢 |
 | Japan | 🟢 |  |
-| Jordan | 🟢 |  |
-| Kazakhstan | 🟢 |  |
-| Kyrgyzstan | 🟢 |  |
-| Laos | 🟢 |  |
-| Lebanon | 🟢 |  |
+| Jordan | 🟢 | 🟢 |
+| Kazakhstan | 🟢 | 🟢 |
+| Kyrgyzstan | 🟢 | 🟢 |
+| Laos | 🟢 | 🟢 |
+| Lebanon | 🟢 | 🟢 |
 | Malaysia, Singapore, and Brunei |  |  |
-| Maldives | 🟢 |  |
-| Mongolia | 🟢 |  |
-| Myanmar | 🟢 |  |
-| Nepal | 🟢 |  |
-| North Korea | 🟢 |  |
-| Pakistan | 🟢 |  |
-| Philippines | 🟢 |  |
+| Maldives | 🟢 | 🟢 |
+| Mongolia | 🟢 | 🟢 |
+| Myanmar | 🟢 | 🟢 |
+| Nepal | 🟢 | 🟢 |
+| North Korea | 🟢 | 🟢 |
+| Pakistan | 🟢 | 🟢 |
+| Philippines | 🟢 | 🟢 |
 | Russia | 🟡 |  |
-| South Korea | 🟢 |  |
-| Sri Lanka | 🟢 |  |
-| Syria | 🟢 |  |
-| Taiwan | 🟢 |  |
-| Tajikistan | 🟢 |  |
-| Thailand | 🟢 |  |
-| Turkmenistan | 🟢 |  |
-| Uzbekistan | 🟢 |  |
-| Vietnam | 🟢 |  |
-| Yemen | 🟢 |  |
+| South Korea | 🟢 | 🟢 |
+| Sri Lanka | 🟢 | 🟢 |
+| Syria | 🟢 | 🟢 |
+| Taiwan | 🟢 | 🟢 |
+| Tajikistan | 🟢 | 🟢 |
+| Thailand | 🟢 | 🟢 |
+| Turkmenistan | 🟢 | 🟢 |
+| Uzbekistan | 🟢 | 🟢 |
+| Vietnam | 🟢 | 🟢 |
+| Yemen | 🟢 | 🟢 |
 
 ## Australia & Oceania
 
@@ -118,18 +118,18 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 | --- | :---: | :---: |
 | American Oceania |  |  |
 | Australia |  |  |
-| Cook Islands | 🟢 |  |
-| Fiji | 🟢 |  |
-| Kiribati | 🟢 |  |
-| Marshall Islands | 🟢 |  |
-| Micronesia | 🟢 |  |
-| Nauru | 🟢 |  |
-| New Caledonia | 🟢 |  |
+| Cook Islands | 🟢 | 🟢 |
+| Fiji | 🟢 | 🟢 |
+| Kiribati | 🟢 | 🟢 |
+| Marshall Islands | 🟢 | 🟢 |
+| Micronesia | 🟢 | 🟢 |
+| Nauru | 🟢 | 🟢 |
+| New Caledonia | 🟢 | 🟢 |
 | New Zealand |  |  |
-| Niue | 🟢 |  |
-| Palau | 🟢 |  |
-| Papua New Guinea | 🟢 |  |
-| Pitcairn Islands | 🟢 |  |
+| Niue | 🟢 | 🟢 |
+| Palau | 🟢 | 🟢 |
+| Papua New Guinea | 🟢 | 🟢 |
+| Pitcairn Islands | 🟢 | 🟢 |
 | Polynésie française | 🟡 |  |
 | Samoa |  |  |
 | Solomon Islands |  |  |
@@ -144,49 +144,49 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 
 | Country | Aryan | Siiri |
 | --- | :---: | :---: |
-| Albania |  |  |
-| Andorra |  |  |
-| Austria |  |  |
+| Albania |  | 🟢 |
+| Andorra |  | 🟢 |
+| Austria |  | 🟢 |
 | Belarus |  |  |
-| Belgium |  |  |
-| Bosnia and Herzegovina |  |  |
-| Bulgaria |  |  |
-| Croatia |  |  |
-| Cyprus |  |  |
-| Czechia |  |  |
-| Denmark |  |  |
-| Estonia |  |  |
-| Faroe Islands |  |  |
-| Finland |  |  |
+| Belgium |  | 🟡 |
+| Bosnia and Herzegovina |  | 🟢 |
+| Bulgaria |  | 🟢 |
+| Croatia |  | 🟢 |
+| Cyprus |  | 🟢 |
+| Czechia |  | 🟢 |
+| Denmark |  | 🟢 |
+| Estonia |  | 🟢 |
+| Faroe Islands |  | 🟢 |
+| Finland |  | 🟢 |
 | France |  |  |
 | Georgia |  |  |
 | Germany |  |  |
-| Greece |  |  |
-| Hungary |  |  |
-| Iceland |  |  |
-| Ireland |  |  |
+| Greece |  | 🟢 |
+| Hungary |  | 🟢 |
+| Iceland |  | 🟢 |
+| Ireland |  | 🟢 |
 | Italy |  |  |
-| Kosovo |  |  |
-| Latvia |  |  |
-| Liechtenstein |  |  |
-| Lithuania |  |  |
-| Luxembourg |  |  |
-| Malta |  |  |
-| Moldova |  |  |
-| Monaco |  |  |
-| Montenegro |  |  |
-| Netherlands |  |  |
-| North Macedonia |  |  |
-| Norway |  |  |
+| Kosovo |  | 🟢 |
+| Latvia |  | 🟢 |
+| Liechtenstein |  | 🟢 |
+| Lithuania |  | 🟢 |
+| Luxembourg |  | 🟢 |
+| Malta |  | 🟢 |
+| Moldova |  | 🟢 |
+| Monaco |  | 🟢 |
+| Montenegro |  | 🟢 |
+| Netherlands |  | 🟡 |
+| North Macedonia |  | 🟢 |
+| Norway |  | 🟢 |
 | Poland |  |  |
-| Portugal |  |  |
+| Portugal |  | 🟢 |
 | Romania |  |  |
-| Serbia |  |  |
-| Slovakia |  |  |
-| Slovenia |  |  |
-| Spain |  |  |
-| Sweden |  |  |
-| Switzerland |  |  |
+| Serbia |  | 🟢 |
+| Slovakia |  | 🟢 |
+| Slovenia |  | 🟢 |
+| Spain |  | 🟡 |
+| Sweden |  | 🟢 |
+| Switzerland |  | 🟢 |
 | Turkey |  |  |
 | Ukraine |  |  |
 | United Kingdom |  |  |
@@ -199,7 +199,7 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 | Greenland | 🟢 |  |
 | Mexico |  |  |
 | Puerto Rico | 🟢 |  |
-| United States |  |  |
+| United States |  | 🟡 |
 | US Virgin Islands | 🟢 |  |
 
 ## Central America
