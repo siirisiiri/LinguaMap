@@ -328,14 +328,19 @@ def search_nominatim(query: str) -> list[dict]:
         extras = item.get("extratags") or {}
         address = item.get("address") or {}
         kind = area_kind(extras.get("admin_level"))
-        parent_name = (
-            address.get("country")
-            or address.get("state")
+        country_name = address.get("country") or ""
+        region_name = (
+            address.get("state")
             or address.get("region")
+            or address.get("county")
             or ""
         )
         if kind == "country":
             parent_name = ""
+        elif kind == "subdivision_1":
+            parent_name = country_name
+        else:
+            parent_name = region_name or country_name
         hit = {
             "name": (item.get("display_name") or query).split(",")[0],
             "osm_id": osm_id,
@@ -345,6 +350,11 @@ def search_nominatim(query: str) -> list[dict]:
         }
         if parent_name:
             hit["parent_name"] = parent_name
+        if country_name and kind != "country":
+            hit["country_name"] = country_name
+        cc = (address.get("country_code") or "").upper()
+        if cc and kind != "country":
+            hit["country_iso"] = cc
         bbox = item.get("boundingbox")
         if bbox and len(bbox) == 4:
             try:
