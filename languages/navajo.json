@@ -89,7 +89,7 @@
   ],
   "exclusive_letters": {
     "script": "latin",
-    "letters": "ąęįǫł",
+    "letters": "ǫ",
     "min_hits": 3,
     "min_share": 0.003
   }
