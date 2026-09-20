@@ -117,19 +117,19 @@
       .panel-toggle {
         pointer-events: auto;
       }
-      #app::before {
-        content: "";
+      #hud-shade {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        height: 92px;
+        height: 88px;
         z-index: 1040;
         pointer-events: none;
         background: linear-gradient(
           180deg,
-          rgba(12, 11, 10, 0.32) 0%,
-          rgba(12, 11, 10, 0.12) 58%,
+          rgba(243, 238, 228, 0.16) 0%,
+          rgba(243, 238, 228, 0.07) 42%,
+          rgba(243, 238, 228, 0.02) 70%,
           transparent 100%
         );
       }
@@ -395,9 +395,25 @@
         background: rgba(243, 238, 228, 0.12);
         border-radius: 3px;
       }
+      #panel-chrome {
+        position: absolute;
+        top: 68px;
+        right: 0;
+        bottom: 0;
+        width: 298px;
+        z-index: 1095;
+        pointer-events: none;
+        background: var(--glass);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        clip-path: path(
+          "M 22 0 H 298 V 8000 H 22 V 36 H 8 A 8 8 0 0 1 0 28 V 8 A 8 8 0 0 1 8 0 H 22 Z"
+        );
+        transition: transform 280ms ease, opacity 220ms ease;
+      }
       #sidebar {
         position: absolute;
-        top: 0;
+        top: 68px;
         right: 0;
         bottom: 0;
         width: 276px;
@@ -405,24 +421,32 @@
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        padding: 72px 16px 16px 14px;
+        padding: 14px 16px 16px 14px;
         font-size: 13px;
-        background: var(--glass);
+        background: transparent;
         border: none;
-        border-left: 1px solid var(--line);
         border-radius: 0;
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
         transition: transform 280ms ease, opacity 220ms ease;
       }
-      #app.panel-collapsed #sidebar {
+      #sidebar::before {
+        content: "";
+        position: absolute;
+        top: 36px;
+        left: 0;
+        bottom: 0;
+        width: 1px;
+        background: var(--line);
+        pointer-events: none;
+      }
+      #app.panel-collapsed #sidebar,
+      #app.panel-collapsed #panel-chrome {
         transform: translateX(100%);
         opacity: 0;
         pointer-events: none;
       }
       .panel-toggle {
         position: absolute;
-        top: 78px;
+        top: 68px;
         right: 276px;
         z-index: 1110;
         width: 22px;
@@ -434,22 +458,23 @@
         border: 1px solid var(--line);
         border-right: none;
         border-radius: 8px 0 0 8px;
-        background: var(--glass);
+        background: transparent;
         color: var(--muted);
         font-size: 14px;
         line-height: 1;
         cursor: pointer;
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-        transition: right 280ms ease, background 160ms ease;
+        transition: right 280ms ease, background 160ms ease, color 160ms ease;
       }
       .panel-toggle:hover {
         color: var(--ink);
-        background: rgba(243, 238, 228, 0.08);
+        background: rgba(243, 238, 228, 0.06);
       }
       #app.panel-collapsed .panel-toggle {
         right: 0;
         color: var(--ink);
+        background: var(--glass);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
       }
       #app.panel-collapsed #timeline {
         right: 16px;
@@ -780,6 +805,12 @@
         .panel-toggle {
           right: 240px;
         }
+        #panel-chrome {
+          width: 262px;
+          clip-path: path(
+            "M 22 0 H 262 V 8000 H 22 V 36 H 8 A 8 8 0 0 1 0 28 V 8 A 8 8 0 0 1 8 0 H 22 Z"
+          );
+        }
       }
       @media (max-width: 560px) {
         .hud-top {
@@ -790,6 +821,9 @@
           max-width: none;
           flex-basis: 100%;
         }
+        #panel-chrome {
+          display: none;
+        }
         #sidebar {
           top: auto;
           left: 0;
@@ -798,18 +832,28 @@
           width: auto;
           max-height: 34%;
           padding: 14px 16px 16px;
+          background: var(--glass);
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
           border-left: none;
           border-top: 1px solid var(--line);
+          border-radius: 12px 12px 0 0;
+        }
+        #sidebar::before {
+          display: none;
         }
         .panel-toggle {
           top: auto;
-          bottom: calc(34% + 12px);
+          bottom: calc(34% - 1px);
           right: 16px;
           height: 28px;
           width: 36px;
           border-radius: 8px 8px 0 0;
           border-right: 1px solid var(--line);
           border-bottom: none;
+          background: var(--glass);
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
         }
         #app.panel-collapsed .panel-toggle {
           bottom: 12px;
@@ -828,6 +872,8 @@
   <body>
     <div id="app">
       <div id="map"></div>
+      <div id="hud-shade"></div>
+      <div id="panel-chrome" aria-hidden="true"></div>
       <div id="overlay">LinguaMap</div>
       <header class="hud-top">
         <h1>LinguaMap</h1>
@@ -1322,6 +1368,11 @@
       // Timeline. Months are ints (year * 12 + month - 1) so the slider and
       // interval lookups share one coordinate. Only Ukraine (primary name) and
       // Wales (Welsh on the name / name:cy) have OSM name history.
+      //
+      // The website crawl is the present-day ground truth. OSM names overstate
+      // Welsh / Ukrainian relative to homepages, so historical shares are
+      // ratio-scaled per area to land on today's website mix — the last tick
+      // is the live map, not a second data source.
       const TIMED_PLACES = {
         ukraine: { dataset: "ukraine", useAvailable: false },
         wales: { dataset: "wales", useAvailable: true },
@@ -1485,6 +1536,17 @@
         return st.primary ? [st.primary] : [];
       }
 
+      /** Map an OSM-name share onto today's website share for the same area.
+       *  `osmT / osmLast * web` keeps the shape of the name series but ends
+       *  exactly on the crawl. Tiny present-day OSM rates fall back to a
+       *  point shift so a near-zero denominator cannot explode the past.
+       */
+      function calibratedShare(osmT, osmLast, web) {
+        const clamp = (t) => Math.max(0, Math.min(1, t));
+        if (osmLast >= 0.008) return clamp(web * (osmT / osmLast));
+        return clamp(web + (osmT - osmLast));
+      }
+
       /**
        * Ukraine country (and its oblasts) or Wales (including UK › Wales).
        * United Kingdom as a whole, and every other country, stay untimed.
@@ -1632,9 +1694,9 @@
       }
 
       /**
-       * Share of each primary language per month, over the points currently in
-       * scope. Built by walking each site's intervals rather than probing every
-       * month, and cached until a filter changes.
+       * Share of each language per month, over the points currently in scope.
+       * OSM name counts are ratio-scaled so the last month equals the website
+       * crawl — the summary line does not jump at "today".
        */
       function timeSeries() {
         if (seriesCache) return seriesCache;
@@ -1642,10 +1704,11 @@
         const counts = Array.from({ length: span }, () => new Map());
         const totals = new Array(span).fill(0);
         const overall = new Map();
+        const stem = timedPlace && TIMED_PLACES[timedPlace] ? TIMED_PLACES[timedPlace].dataset : null;
 
         points.forEach((p) => {
           if (!p.hist || !datasetEnabled(p) || disabledCategories.has(p.category)) return;
-          if (timedPlace && datasetStem(p.dataset) !== TIMED_PLACES[timedPlace].dataset) return;
+          if (stem && datasetStem(p.dataset) !== stem) return;
           if (viewMode === "areas" && authorityFeatures.length && p.authorityId === null) return;
           for (let i = 0; i < p.hist.length; i++) {
             const langs = langsAtState(p.hist[i], timedPlace);
@@ -1660,6 +1723,35 @@
             }
           }
         });
+
+        const webCounts = new Map();
+        let webTotal = 0;
+        points.forEach((p) => {
+          if (!datasetEnabled(p) || disabledCategories.has(p.category)) return;
+          if (stem && datasetStem(p.dataset) !== stem) return;
+          if (viewMode === "areas" && authorityFeatures.length && p.authorityId === null) return;
+          if (!p.staticLangs.length) return;
+          webTotal += 1;
+          p.staticLangs.forEach((lang) => webCounts.set(lang, (webCounts.get(lang) || 0) + 1));
+        });
+
+        const last = span - 1;
+        if (last >= 0 && webTotal) {
+          const osmLastTotal = totals[last] || 0;
+          const langs = new Set([...overall.keys(), ...webCounts.keys()]);
+          langs.forEach((lang) => {
+            const osmLastShare = osmLastTotal ? (counts[last].get(lang) || 0) / osmLastTotal : 0;
+            const webShare = (webCounts.get(lang) || 0) / webTotal;
+            for (let m = 0; m < last; m++) {
+              if (!totals[m]) continue;
+              const osmShare = (counts[m].get(lang) || 0) / totals[m];
+              counts[m].set(lang, calibratedShare(osmShare, osmLastShare, webShare) * totals[m]);
+            }
+          });
+          counts[last] = webCounts;
+          totals[last] = webTotal;
+          webCounts.forEach((n, lang) => overall.set(lang, (overall.get(lang) || 0) + n));
+        }
 
         const order = [...overall.entries()]
           .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
@@ -1693,19 +1785,8 @@
             .map(([lang, c]) => `${titleCase(lang)} ${pct(c / total)}`)
             .join(" · ");
         };
-        if (viewingPresent()) {
-          const counts = new Map();
-          let total = 0;
-          points.forEach((p) => {
-            if (!inScope(p) || !p.langs.length) return;
-            total += 1;
-            p.langs.forEach((lang) => counts.set(lang, (counts.get(lang) || 0) + 1));
-          });
-          writeRows([...counts.keys()], (lang) => counts.get(lang) || 0, total);
-          return;
-        }
         const { counts, totals, order } = timeSeries();
-        const i = currentMonth - timeLo;
+        const i = Math.max(0, Math.min(totals.length - 1, currentMonth - timeLo));
         writeRows(order, (lang) => counts[i].get(lang) || 0, totals[i] || 0);
       }
 
@@ -1789,7 +1870,8 @@
           if (viewMode === "areas" && authorityFeatures.length && p.authorityId === null) return;
           catCounts.set(p.category, (catCounts.get(p.category) || 0) + 1);
           if (disabledCategories.has(p.category)) return;
-          p.langs.forEach((l) => langCounts.set(l, (langCounts.get(l) || 0) + 1));
+          const langs = timeEnabled ? p.staticLangs : p.langs;
+          langs.forEach((l) => langCounts.set(l, (langCounts.get(l) || 0) + 1));
         });
         const byCountThenName = (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]);
         languageTotals = langCounts;
@@ -1914,25 +1996,24 @@
       function timelineFillLanguage() {
         if (!activeLanguages.length) return null;
         if (timedPlace === "wales" && activeLanguageSet.has("welsh")) return "welsh";
-        if (timedPlace === "ukraine" && activeLanguageSet.has("ukrainian") && activeLanguages.length === 1) {
-          return "ukrainian";
-        }
+        if (timedPlace === "ukraine" && activeLanguageSet.has("ukrainian")) return "ukrainian";
         if (activeLanguages.length === 1) return activeLanguages[0];
         return null;
       }
 
       /** Per-area language counts at every slider stop.
        *
-       *  Raw share (welsh / all shops on the map) falls in places like Gwynedd
-       *  just because OSM added a wave of English shops later. The fill uses a
-       *  coverage-stable share instead: new Welsh shops still count, but new
-       *  English-only shops do not dilute the heartland.
+       *  OSM name history still supplies the *shape* of change (coverage-stable
+       *  so a later wave of English shops does not wash Gwynedd out). Those
+       *  shares are then ratio-scaled onto today's website mix, so the last
+       *  stop is the crawl and earlier stops ease into it.
        */
       function areaMonthStats() {
         if (areaMonthCache) return areaMonthCache;
         const stops = timeStops.length ? timeStops : [currentMonth];
         const members = [];
         const stem = timedPlace && TIMED_PLACES[timedPlace] ? TIMED_PLACES[timedPlace].dataset : null;
+        const webById = new Map();
         points.forEach((p) => {
           if (!p.hist || !p.authorityId) return;
           if (!datasetEnabled(p) || disabledCategories.has(p.category)) return;
@@ -1941,6 +2022,19 @@
           const first = langsByStop.findIndex((langs) => langs.length);
           if (first < 0) return;
           members.push({ auth: p.authorityId, first, langsByStop });
+        });
+        points.forEach((p) => {
+          if (!p.authorityId) return;
+          if (!datasetEnabled(p) || disabledCategories.has(p.category)) return;
+          if (stem && datasetStem(p.dataset) !== stem) return;
+          let web = webById.get(p.authorityId);
+          if (!web) {
+            web = { counts: new Map(), classified: 0 };
+            webById.set(p.authorityId, web);
+          }
+          if (!p.staticLangs.length) return;
+          web.classified += 1;
+          p.staticLangs.forEach((lang) => web.counts.set(lang, (web.counts.get(lang) || 0) + 1));
         });
         const byId = new Map();
         authorityFeatures.forEach((f) => {
@@ -1951,6 +2045,7 @@
             counts: new Map(),
             classified: 0,
             stable: new Map(),
+            calibrated: new Map(),
           }));
           mine.forEach((m) => {
             for (let i = 0; i < stops.length; i++) {
@@ -1976,6 +2071,24 @@
               if (den) slots[i].stable.set(lang, focus / den);
             }
           });
+          const web = webById.get(id);
+          if (web) web.counts.forEach((_, lang) => langsSeen.add(lang));
+          const lastIdx = slots.length - 1;
+          const osmShareAt = (slot, lang) => {
+            if (slot.stable.has(lang)) return slot.stable.get(lang);
+            return slot.classified ? (slot.counts.get(lang) || 0) / slot.classified : 0;
+          };
+          langsSeen.forEach((lang) => {
+            const osmLast = lastIdx >= 0 ? osmShareAt(slots[lastIdx], lang) : 0;
+            const webShare = web && web.classified ? (web.counts.get(lang) || 0) / web.classified : 0;
+            for (let i = 0; i < slots.length; i++) {
+              if (i === lastIdx) {
+                slots[i].calibrated.set(lang, webShare);
+                continue;
+              }
+              slots[i].calibrated.set(lang, calibratedShare(osmShareAt(slots[i], lang), osmLast, webShare));
+            }
+          });
           byId.set(id, { slots, areaFirst });
         });
         areaMonthCache = { byId, stops };
@@ -1993,8 +2106,10 @@
       }
 
       /**
-       * Min/max coverage-stable share of `lang` across every area × year, plus
-       * each area's own range so the heartland can still darken as it grows.
+       * Colour scale for a timed language. Intensity is share relative to the
+       * strongest area *today* (website crawl), so the present map matches the
+       * static view and the past is a gentler version of the same ramp — not
+       * each county stretched from its own min to max.
        */
       function temporalShareMeta(lang) {
         if (shareScaleCache && shareScaleCache.mode === "temporal" && shareScaleCache.lang === lang) {
@@ -2004,16 +2119,18 @@
         const byArea = new Map();
         let glo = Infinity;
         let ghi = -Infinity;
+        let presentMax = 0;
         byId.forEach((row, id) => {
           let lo = Infinity;
           let hi = -Infinity;
-          row.slots.forEach((s) => {
-            if (!s.stable.has(lang)) return;
-            const share = s.stable.get(lang);
+          row.slots.forEach((s, i) => {
+            if (!s.calibrated.has(lang)) return;
+            const share = s.calibrated.get(lang);
             if (share < lo) lo = share;
             if (share > hi) hi = share;
             if (share < glo) glo = share;
             if (share > ghi) ghi = share;
+            if (i === row.slots.length - 1) presentMax = Math.max(presentMax, share);
           });
           if (isFinite(lo)) byArea.set(id, { lo, hi });
         });
@@ -2021,7 +2138,14 @@
           glo = 0;
           ghi = 1;
         }
-        shareScaleCache = { mode: "temporal", lang, lo: glo, hi: Math.max(ghi, glo + 0.04), byArea };
+        shareScaleCache = {
+          mode: "temporal",
+          lang,
+          lo: glo,
+          hi: Math.max(ghi, glo + 0.04),
+          presentMax: presentMax || Math.max(ghi, 0.04),
+          byArea,
+        };
         return shareScaleCache;
       }
 
@@ -2035,9 +2159,10 @@
        * leading language, intensity is how far ahead it is in relative share
        * among the selected languages.
        *
-       * With the time slider up, the ramp is locked to the whole timeline and
-       * mixed with each area's own min–max so a heartland like Gwynedd darkens
-       * as Welsh grows there instead of washing out when the rest of Wales catches up.
+       * With the time slider up, keep painting the tracked language through to
+       * today. Intensity is that language's calibrated share versus the
+       * strongest area on the present-day website map, so Welsh darkens as it
+       * grows without a source-switch or a min–max stretch.
        */
       function areaFill(rec) {
         if (mapMetric === "multilingual") {
@@ -2052,33 +2177,31 @@
             lead: null,
           };
         }
-        if (!rec || !rec.classified || !activeLanguages.length) return null;
-        const timedLang = timeEnabled && !viewingPresent() ? timelineFillLanguage() : null;
+        if (!activeLanguages.length) return null;
+        const timedLang = timeEnabled ? timelineFillLanguage() : null;
         if (timedLang) {
           const slot = slotAtCurrentMonth(rec);
-          const raw = (rec.counts.get(timedLang) || 0) / rec.classified;
-          const share = slot && slot.stable.has(timedLang) ? slot.stable.get(timedLang) : raw;
+          const raw = rec && rec.classified ? (rec.counts.get(timedLang) || 0) / rec.classified : 0;
+          const share = slot && slot.calibrated && slot.calibrated.has(timedLang)
+            ? slot.calibrated.get(timedLang)
+            : rec && rec.classified ? raw : null;
+          if (share == null) return null;
           const meta = temporalShareMeta(timedLang);
-          const spatial = meta.hi > meta.lo ? (share - meta.lo) / (meta.hi - meta.lo) : 0.5;
-          const local = rec.feature ? meta.byArea.get(featureId(rec.feature)) : null;
-          let localT = 0.5;
-          if (local && local.hi - local.lo >= 0.012) {
-            localT = (share - local.lo) / (local.hi - local.lo);
-          }
-          let t = 0.62 * clamp01(spatial) + 0.38 * clamp01(localT);
-          if (share > 0) t = 0.16 + 0.84 * t;
+          const local = rec && rec.feature ? meta.byArea.get(featureId(rec.feature)) : null;
+          const max = meta.presentMax || meta.hi || 1;
           return {
             lang: timedLang,
             color: colorForLanguage(timedLang),
-            intensity: clamp01(t),
+            intensity: max > 0 ? clamp01(share / max) : 0,
             share,
             rawShare: raw,
             lead: null,
-            scale: meta.hi,
+            scale: max,
             localLo: local ? local.lo : null,
             localHi: local ? local.hi : null,
           };
         }
+        if (!rec || !rec.classified) return null;
         if (activeLanguages.length === 1) {
           const lang = activeLanguages[0];
           const share = (rec.counts.get(lang) || 0) / rec.classified;
@@ -2158,28 +2281,34 @@
             hoverBars(pairs)
           );
         }
-        if (!rec || !rec.classified) {
+        const slot = timeEnabled ? slotAtCurrentMonth(rec) : null;
+        if (!rec || (!rec.classified && !(slot && slot.calibrated.size))) {
           return `<div class="hover-name">${name}</div><div class="hover-count">${count}</div>`;
         }
+        const shareOf = (lang) => {
+          if (slot && slot.calibrated.has(lang)) return slot.calibrated.get(lang);
+          return rec.classified ? (rec.counts.get(lang) || 0) / rec.classified : 0;
+        };
         const rows = activeLanguages
-          .map((l) => [l, rec.counts.get(l) || 0])
+          .map((l) => [l, shareOf(l)])
           .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
           .slice(0, 5)
-          .filter(([, c]) => c)
-          .map(([l, c]) => ({
+          .filter(([, share]) => share)
+          .map(([l, share]) => ({
             label: titleCase(l),
-            share: c / rec.classified,
+            share,
             color: colorForLanguage(l),
           }));
         const changeLine =
-          timeEnabled && !viewingPresent()
+          timeEnabled
             ? (() => {
                 const fill = areaFill(rec);
                 if (!fill || fill.localLo == null || fill.share == null || !fill.lang) return "";
                 const delta = fill.share - fill.localLo;
+                if (Math.abs(delta) < 0.005) return "";
                 return `<div class="hover-count" style="margin:8px 0 0">${escapeHtml(titleCase(fill.lang))} ${
                   delta >= 0 ? "+" : ""
-                }${ptsLabel(delta)} vs this area's low</div>`;
+                }${ptsLabel(delta)} vs this area's earliest</div>`;
               })()
             : "";
         return (
@@ -2433,6 +2562,7 @@
       function invalidateTimeSeries() {
         seriesCache = null;
         areaMonthCache = null;
+        shareScaleCache = null;
       }
 
       function setOverlay(html) {
