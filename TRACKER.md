@@ -14,7 +14,7 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 
 ## Aryan current run
 
-Last update: 2026-09-20 10:48 ET
+Last update: 2026-09-20 10:53 ET
 
 | Country | Status |
 | --- | --- |
@@ -25,13 +25,13 @@ Last update: 2026-09-20 10:48 ET
 | Mexico | 🟢 done |
 | Brazil | 🟢 done |
 | Russia | abandoned |
-| Canada | 🟡 crawling Toronto sample (2,500 sites) |
-| United Kingdom | 🟡 city sample then crawl |
-| Australia | 🟡 city sample then crawl |
-| New Zealand | 🟡 city sample then crawl |
-| Nigeria | 🟡 city sample then crawl |
+| Canada | 🟢 Toronto sample crawled (2,500 sites, 1,843 labeled) |
+| United Kingdom | 🟢 London sample crawled (2,500 sites) |
+| Australia | 🟡 crawling Sydney CBD sample (1,200 sites) |
+| New Zealand | 🟡 crawling Auckland CBD sample (1,200 sites) |
+| Nigeria | 🟡 crawling Lagos sample (80 sites) |
 
-Resumed after pull. Region JSON still lives in `data/`; outlines moved to `tools/` + `data/admin1`.
+Canada and UK samples are on disk and classified. AU/NZ/NG downtown samples written; crawls running.
 
 ## Africa
 
@@ -212,13 +212,13 @@ Resumed after pull. Region JSON still lives in `data/`; outlines moved to `tools
 | Switzerland |  | 🟢 | 🟢 |
 | Turkey |  |  |  |
 | Ukraine |  |  |  |
-| United Kingdom | 🟡 |  | 🟡 |
+| United Kingdom | 🟢 |  | 🟢 |
 
 ## North America
 
 | Country | Aryan | Siiri | Combined |
 | --- | :---: | :---: | :---: |
-| Canada | 🟡 |  | 🟡 |
+| Canada | 🟢 |  | 🟢 |
 | Greenland | 🟢 |  | 🟢 |
 | Mexico | 🟢 |  | 🟢 |
 | Puerto Rico | 🟢 |  | 🟢 |
