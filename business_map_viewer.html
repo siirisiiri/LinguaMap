@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Business & Language Map</title>
+    <title>LinguaMap</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
@@ -14,6 +14,7 @@
         --ink: #1c1f26;
         --paper: #f7f5f0;
         --line: #d8d3c7;
+        --muted: #6b6558;
         --accent: #2c6e49;
       }
       * {
@@ -35,11 +36,11 @@
         height: 100%;
       }
       header {
-        padding: 14px 20px;
+        padding: 12px 20px;
         border-bottom: 1px solid var(--line);
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: 14px;
         flex-wrap: wrap;
         background: var(--paper);
         z-index: 10;
@@ -50,37 +51,18 @@
         font-weight: 600;
         white-space: nowrap;
       }
-      #dropzone {
-        flex: 1;
-        min-width: 220px;
-        border: 1.5px dashed var(--line);
-        border-radius: 6px;
-        padding: 8px 14px;
-        font-size: 13px;
-        color: #6b6558;
-        cursor: pointer;
-        transition:
-          border-color 0.15s,
-          color 0.15s;
-      }
-      #dropzone.drag {
-        border-color: var(--accent);
-        color: var(--accent);
-      }
       #stats {
         font-size: 13px;
-        color: #6b6558;
-        white-space: nowrap;
+        color: var(--muted);
+        margin-left: auto;
+        text-align: right;
       }
       .mode-toggle {
-        display: none;
+        display: flex;
         border: 1px solid var(--line);
         border-radius: 6px;
         overflow: hidden;
         flex-shrink: 0;
-      }
-      .mode-toggle.visible {
-        display: flex;
       }
       .mode-toggle button {
         border: none;
@@ -94,73 +76,35 @@
         background: var(--accent);
         color: #fff;
       }
-      .legend-note {
-        font-size: 12px;
-        color: #6b6558;
-        line-height: 1.4;
-        margin: 0 0 12px;
-      }
-      .choropleth-lang {
-        display: none;
+      .area-jump {
+        display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         font-size: 13px;
-        color: #6b6558;
+        color: var(--muted);
         flex-shrink: 0;
       }
-      .choropleth-lang.visible {
-        display: flex;
-      }
-      .choropleth-lang select,
-      .parent-area input {
+      .area-jump input,
+      .area-jump button {
         font: inherit;
         color: var(--ink);
         background: #fff;
         border: 1px solid var(--line);
         border-radius: 6px;
-        padding: 5px 8px;
+        padding: 5px 9px;
       }
-      .parent-area {
-        display: none;
-        align-items: center;
-        gap: 8px;
-        font-size: 13px;
-        color: #6b6558;
-        flex-shrink: 0;
+      .area-jump input {
+        width: 130px;
       }
-      .parent-area.visible {
-        display: flex;
-      }
-      .parent-area input {
-        width: 140px;
-      }
-      .parent-area button {
-        font: inherit;
-        border: 1px solid var(--line);
-        background: #fff;
-        color: var(--ink);
-        border-radius: 6px;
-        padding: 5px 10px;
+      .area-jump button {
         cursor: pointer;
-      }
-      .share-scale {
-        height: 10px;
-        border-radius: 999px;
-        margin: 8px 0 4px;
-        border: 1px solid var(--line);
-      }
-      .share-scale-labels {
-        display: flex;
-        justify-content: space-between;
-        font-size: 11px;
-        color: #8a8375;
       }
       #breadcrumb {
         display: none;
         width: 100%;
-        font-size: 13px;
-        color: #6b6558;
         flex-basis: 100%;
+        font-size: 13px;
+        color: var(--muted);
         gap: 6px;
         flex-wrap: wrap;
         align-items: center;
@@ -182,7 +126,7 @@
         font-weight: 600;
       }
       #breadcrumb .sep {
-        color: #c4beB0;
+        color: #c4beb0;
       }
       #mapMessage {
         display: none;
@@ -198,14 +142,6 @@
       #mapMessage.visible {
         display: block;
       }
-      .missing-swatch {
-        width: 11px;
-        height: 11px;
-        border-radius: 2px;
-        background: #c8c2b6;
-        border: 1px dashed #8a8375;
-        flex-shrink: 0;
-      }
       #main {
         flex: 1;
         display: flex;
@@ -216,28 +152,60 @@
         inset: 0;
       }
       #sidebar {
-        width: 260px;
+        width: 268px;
         border-left: 1px solid var(--line);
         overflow-y: auto;
         padding: 14px;
         font-size: 13px;
-        display: none;
         flex-shrink: 0;
-      }
-      #sidebar.visible {
-        display: block;
       }
       #sidebar h2 {
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        color: #6b6558;
-        margin: 0 0 10px;
+        color: var(--muted);
+        margin: 0 0 8px;
       }
       .legend-section + .legend-section {
         margin-top: 16px;
         padding-top: 14px;
         border-top: 1px solid var(--line);
+      }
+      .legend-note {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.45;
+        margin: 0 0 10px;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 0;
+        cursor: pointer;
+        user-select: none;
+      }
+      .legend-item.off {
+        opacity: 0.4;
+      }
+      .legend-item.static {
+        cursor: default;
+      }
+      .swatch {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .swatch.ramp {
+        width: 26px;
+        border-radius: 3px;
+        border: 1px solid var(--line);
+      }
+      .swatch.missing {
+        border-radius: 3px;
+        background: #c8c2b6;
+        border: 1px dashed #8a8375;
       }
       .legend-check {
         width: 12px;
@@ -251,27 +219,28 @@
         background: var(--accent);
         border-color: var(--accent);
       }
-      .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 5px 0;
-        cursor: pointer;
-        user-select: none;
-      }
-      .legend-item.off {
-        opacity: 0.35;
-      }
-      .swatch {
-        width: 11px;
-        height: 11px;
-        border-radius: 50%;
-        flex-shrink: 0;
+      .legend-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       .legend-count {
         margin-left: auto;
         color: #8a8375;
         font-variant-numeric: tabular-nums;
+        padding-left: 6px;
+      }
+      .scale-bar {
+        height: 10px;
+        border-radius: 999px;
+        margin: 10px 0 4px;
+        border: 1px solid var(--line);
+      }
+      .scale-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #8a8375;
       }
       .leaflet-popup-content b {
         display: block;
@@ -284,17 +253,33 @@
       .leaflet-interactive {
         cursor: pointer;
       }
-      #empty {
+      .area-tip b {
+        display: block;
+        margin-bottom: 3px;
+      }
+      .area-tip .row {
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        font-variant-numeric: tabular-nums;
+      }
+      .area-tip .meta {
+        color: #6b6558;
+        margin-top: 3px;
+      }
+      #overlay {
         position: absolute;
         inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #8a8375;
+        color: var(--muted);
         font-size: 14px;
+        text-align: center;
+        padding: 20px;
         pointer-events: none;
       }
-      input[type="file"] {
+      #overlay.hidden {
         display: none;
       }
       @media (max-width: 720px) {
@@ -305,7 +290,7 @@
           width: 100%;
           border-left: none;
           border-top: 1px solid var(--line);
-          max-height: 42%;
+          max-height: 45%;
         }
       }
     </style>
@@ -313,25 +298,16 @@
   <body>
     <div id="app">
       <header>
-        <h1>Business &amp; Language Map</h1>
-        <label id="dropzone" for="fileInput"
-          >Drop your <code>businesses.json</code> or
-          <code>languages.json</code> here, or click to choose a file</label
-        >
-        <input type="file" id="fileInput" accept="application/json" />
-        <div class="mode-toggle" id="modeToggle" role="group" aria-label="Map view">
-          <button type="button" id="modePoints" class="active">Points</button>
-          <button type="button" id="modeAuthorities">Municipalities</button>
+        <h1>LinguaMap</h1>
+        <div class="mode-toggle" role="group" aria-label="Map view">
+          <button type="button" id="modeAreas" class="active">Areas</button>
+          <button type="button" id="modePoints">Points</button>
         </div>
-        <form class="parent-area" id="parentAreaWrap">
-          <label for="parentArea">In area</label>
-          <input id="parentArea" type="text" placeholder="e.g. Wales" autocomplete="off" />
-          <button type="submit">Apply</button>
+        <form class="area-jump" id="areaJump">
+          <label for="areaName">Jump to</label>
+          <input id="areaName" type="text" placeholder="e.g. Wales" autocomplete="off" />
+          <button type="submit">Go</button>
         </form>
-        <label class="choropleth-lang" id="choroplethLangWrap" for="choroplethLang">
-          Language
-          <select id="choroplethLang"></select>
-        </label>
         <div id="stats"></div>
         <nav id="breadcrumb" aria-label="Area hierarchy"></nav>
         <div id="mapMessage" role="status"></div>
@@ -339,107 +315,95 @@
       <div id="main">
         <div style="position: relative; flex: 1">
           <div id="map"></div>
-          <div id="empty">No data loaded yet</div>
+          <div id="overlay">Loading datasets…</div>
         </div>
         <div id="sidebar"></div>
       </div>
     </div>
 
     <script>
-      const CATEGORY_COLORS = {
-        shop: "#c9622a",
-        amenity: "#2c6e49",
-        office: "#3a5ba0",
-        craft: "#9c5fb5",
-        tourism: "#c94277",
-        leisure: "#2ba7a0",
-        healthcare: "#b0392b",
-        other: "#6b6558",
-      };
+      // ---------------------------------------------------------------- config
 
       const LANGUAGE_COLORS = {
-        english: "#3a5ba0",
-        welsh: "#c94277",
-        "english+welsh": "#9c5fb5",
-        too_little_text: "#8a8375",
-        fetch_failed: "#b0aaa0",
-        unknown: "#999999",
-        "not crawled": "#999999",
-        "no language detected": "#999999",
+        english: "#2c6ea8",
+        french: "#d1495b",
+        welsh: "#2c8a4b",
+        spanish: "#e0a01e",
+        german: "#6a4c93",
+        inuktitut: "#2ba7a0",
+        cree: "#b5456e",
+        ojibwe: "#7a8a3a",
+        mikmaq: "#a05a2c",
+        mohawk: "#4d7c8a",
+        innu: "#9c5fb5",
+        dene: "#5c4d99",
+        blackfoot: "#3a8a5c",
       };
       const LANGUAGE_PALETTE = [
         "#c9622a",
         "#2c6e49",
-        "#2ba7a0",
+        "#3a5ba0",
+        "#c94277",
         "#d4a72c",
         "#4d7c8a",
         "#7a8a3a",
-        "#a05a2c",
         "#5c4d99",
-        "#3a8a5c",
-        "#b5456e",
-        "#2c7ab0",
       ];
-      const LANGUAGE_LABELS = {
-        english: "English",
-        welsh: "Welsh",
-        "english+welsh": "English + Welsh",
-        too_little_text: "Too little text",
-        fetch_failed: "Fetch failed",
-        unknown: "Unknown",
-        "not crawled": "Not crawled",
-        "no language detected": "No language detected",
-      };
-      const NON_LANGUAGE_KEYS = new Set([
-        "fetch_failed",
-        "too_little_text",
-        "unknown",
-        "not crawled",
-        "no language detected",
-      ]);
-      const OVERPASS_URLS = [
-        "https://lz4.overpass-api.de/api/interpreter",
-        "https://overpass.kumi.systems/api/interpreter",
-        "https://overpass-api.de/api/interpreter",
-      ];
-      const languageColorMap = new Map();
+      const MISSING_FILL = "#c8c2b6";
+      const UNCLASSIFIED_COLOR = "#9a948a";
+      // Floor on fill intensity so the leading language's hue stays legible even
+      // where the race is close; above it, intensity is the real lead margin.
+      const LEAD_FLOOR = 0.18;
+      const MAX_MARKERS = 12000;
 
-      function colorForLanguage(key) {
-        if (LANGUAGE_COLORS[key]) return LANGUAGE_COLORS[key];
-        if (!languageColorMap.has(key)) {
-          languageColorMap.set(
-            key,
-            LANGUAGE_PALETTE[languageColorMap.size % LANGUAGE_PALETTE.length],
+      const paletteAssignments = new Map();
+
+      function colorForLanguage(lang) {
+        if (LANGUAGE_COLORS[lang]) return LANGUAGE_COLORS[lang];
+        if (!paletteAssignments.has(lang)) {
+          paletteAssignments.set(
+            lang,
+            LANGUAGE_PALETTE[paletteAssignments.size % LANGUAGE_PALETTE.length],
           );
         }
-        return languageColorMap.get(key);
+        return paletteAssignments.get(lang);
       }
 
-      function languageLabel(key) {
-        return LANGUAGE_LABELS[key] || key;
+      function titleCase(s) {
+        return s.charAt(0).toUpperCase() + s.slice(1);
       }
 
-      function languageKey(b) {
-        if (b.language) return b.language;
-        if (b.cc_status === "found" && b.detected_language)
-          return b.detected_language;
-        if (b.cc_status === "not_found") return "not crawled";
-        if ("cc_status" in b) return "no language detected";
-        return "unknown";
+      function pct(fraction) {
+        return (fraction * 100).toFixed(1) + "%";
       }
 
-      function topLevelCategory(catString) {
-        const key = (catString || "").split("=")[0];
-        return CATEGORY_COLORS[key] ? key : "other";
+      function ptsLabel(fraction) {
+        return (fraction * 100).toFixed(1) + " pts";
       }
 
-      function languageParts(lang) {
-        if (!lang || NON_LANGUAGE_KEYS.has(lang)) return [];
-        return lang
-          .split(/\s*(?:\+|\/|&|,| and )\s*/i)
-          .map((part) => part.trim().toLowerCase())
-          .filter((part) => part && !NON_LANGUAGE_KEYS.has(part));
+      function num(n) {
+        return n.toLocaleString();
       }
+
+      function escapeHtml(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c],
+        );
+      }
+
+      function mixToWhite(hex, t) {
+        const raw = hex.replace("#", "");
+        const r = parseInt(raw.slice(0, 2), 16);
+        const g = parseInt(raw.slice(2, 4), 16);
+        const b = parseInt(raw.slice(4, 6), 16);
+        const clamped = Math.max(0, Math.min(1, t));
+        const mix = (c) => Math.round(255 + (c - 255) * clamped);
+        return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
+      }
+
+      // ------------------------------------------------------- geometry helpers
 
       function coordsEqual(a, b) {
         return Math.abs(a[0] - b[0]) < 1e-9 && Math.abs(a[1] - b[1]) < 1e-9;
@@ -526,25 +490,6 @@
         return [minX, minY, maxX, maxY];
       }
 
-      function geomBBoxArea(geom) {
-        let minX = 180,
-          minY = 90,
-          maxX = -180,
-          maxY = -90;
-        const walk = (c) => {
-          if (typeof c[0] === "number") {
-            minX = Math.min(minX, c[0]);
-            maxX = Math.max(maxX, c[0]);
-            minY = Math.min(minY, c[1]);
-            maxY = Math.max(maxY, c[1]);
-          } else {
-            c.forEach(walk);
-          }
-        };
-        walk(geom.coordinates);
-        return Math.max(0, maxX - minX) * Math.max(0, maxY - minY);
-      }
-
       function relationToGeometry(el) {
         const outers = [];
         const inners = [];
@@ -577,9 +522,8 @@
           features.push({
             type: "Feature",
             properties: {
-              name: tags.name || tags["name:en"] || `relation/${el.id}`,
+              name: tags["name:en"] || tags.name || `relation/${el.id}`,
               admin_level: tags.admin_level,
-              designation: tags.designation,
               osm_type: el.type,
               osm_id: el.id,
             },
@@ -589,216 +533,169 @@
         return { type: "FeatureCollection", features };
       }
 
-      let map = L.map("map", { zoomControl: true }).setView([20, 0], 2);
-      window.addEventListener("resize", () => map.invalidateSize());
+      function featureId(feature) {
+        return `${feature.properties.osm_type}/${feature.properties.osm_id}`;
+      }
+
+      // ------------------------------------------------------------------ state
+
+      const map = L.map("map", { zoomControl: true, preferCanvas: true }).setView([20, 0], 2);
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
+      const markerLayer = L.layerGroup().addTo(map);
 
       let points = [];
-      let markerLayer = L.layerGroup().addTo(map);
-      let enabledLanguages = new Set();
-      let enabledCategories = new Set();
-      let viewMode = "points";
+      let datasets = [];
+      let viewMode = "areas";
+
+      // User's explicit "off" switches. Everything relevant is on by default, so
+      // a language appearing after a drill-down starts visible.
+      const disabledLanguages = new Set();
+      const disabledCategories = new Set();
+      const disabledDatasets = new Set();
+      let showUnclassified = false;
+
+      // Recomputed by refreshScope() on every filter/drill change.
+      let scopedLanguages = [];
+      let activeLanguages = [];
+      let activeLanguageSet = new Set();
+      let scopedCategories = [];
+
       let authorityFeatures = [];
       let choroplethLayer = null;
-      let selectedChoroplethLang = null;
-      let parentAreaName = "";
-      let parentAreaInfo = null;
-      const authorityCache = new Map();
       let hierarchy = [];
-      const MISSING_FILL = "#c8c2b6";
+      let currentParent = null;
+      const authorityCache = new Map();
+      let drillBusy = false;
 
-      function classifiedLanguages() {
-        const counts = new Map();
-        points.forEach((p) => {
-          languageParts(p.lang).forEach((part) => {
-            counts.set(part, (counts.get(part) || 0) + 1);
-          });
-        });
-        return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+      // ------------------------------------------------------------ data loading
+
+      function normalizeLanguages(value) {
+        if (!Array.isArray(value)) return typeof value === "string" && value ? [value] : [];
+        return [...new Set(value.filter((v) => typeof v === "string" && v).map((v) => v.toLowerCase()))];
       }
 
-      function isMunicipalityPoint(p) {
-        return (
-          enabledCategories.has(p.category) &&
-          languageParts(p.lang).length > 0
-        );
+      function topLevelCategory(catString) {
+        return (catString || "").split("=")[0] || "unclassified";
       }
 
-      function mixTowardPaper(hex, t) {
-        const raw = (hex || "#6b6558").replace("#", "");
-        const r = parseInt(raw.slice(0, 2), 16);
-        const g = parseInt(raw.slice(2, 4), 16);
-        const b = parseInt(raw.slice(4, 6), 16);
-        const mix = (c) => Math.round(247 + (c - 247) * t);
-        return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
-      }
-
-      function populateChoroplethLangSelect() {
-        const select = document.getElementById("choroplethLang");
-        const langs = classifiedLanguages();
-        if (!langs.length) {
-          selectedChoroplethLang = null;
-          select.innerHTML = "";
+      async function loadDatasets() {
+        let manifest;
+        try {
+          const resp = await fetch("api/datasets");
+          if (!resp.ok) throw new Error(String(resp.status));
+          manifest = await resp.json();
+        } catch (err) {
+          setOverlay(
+            "Could not reach the dataset index.<br>Start the viewer with <code>python3 serve.py</code>.",
+          );
           return;
         }
-        if (!selectedChoroplethLang || !langs.some(([lang]) => lang === selectedChoroplethLang)) {
-          selectedChoroplethLang = langs[0][0];
+        if (!manifest.length) {
+          setOverlay("No datasets found in <code>data/</code>.");
+          return;
         }
-        select.innerHTML = langs
-          .map(
-            ([lang]) =>
-              `<option value="${lang}"${lang === selectedChoroplethLang ? " selected" : ""}>${languageLabel(lang)}</option>`,
-          )
-          .join("");
-      }
 
-      function clearChoropleth() {
-        if (choroplethLayer) {
-          map.removeLayer(choroplethLayer);
-          choroplethLayer = null;
-        }
-      }
+        const loaded = await Promise.all(
+          manifest.map(async (entry) => {
+            const resp = await fetch(entry.url);
+            if (!resp.ok) return { ...entry, rows: [] };
+            return { ...entry, rows: await resp.json() };
+          }),
+        );
 
-      function clearMap() {
-        markerLayer.clearLayers();
-        clearChoropleth();
         points = [];
-        enabledLanguages = new Set();
-        enabledCategories = new Set();
-        languageColorMap.clear();
-        authorityFeatures = [];
-        hierarchy = [];
-        parentAreaName = "";
-        parentAreaInfo = null;
-        showMapMessage("");
+        datasets = [];
+        loaded.forEach((set) => {
+          let kept = 0;
+          (set.rows || []).forEach((b) => {
+            if (typeof b.lat !== "number" || typeof b.lon !== "number") return;
+            points.push({
+              lat: b.lat,
+              lon: b.lon,
+              name: b.name || "(unnamed)",
+              website: b.website || "",
+              category: topLevelCategory(b.category),
+              rawCategory: b.category || "",
+              langs: normalizeLanguages(b.language),
+              dataset: set.name,
+              authorityId: null,
+              primaryLang: null,
+              marker: null,
+            });
+            kept += 1;
+          });
+          datasets.push({ name: set.name, count: kept });
+        });
+        datasets.sort((a, b) => b.count - a.count);
+        assignPrimaryLanguages();
       }
 
-      function renderData(businesses) {
-        clearMap();
-        document.getElementById("empty").style.display = businesses.length
-          ? "none"
-          : "flex";
-
-        const bounds = [];
-        businesses.forEach((b) => {
-          if (typeof b.lat !== "number" || typeof b.lon !== "number") return;
-          const lang = languageKey(b);
-          const category = topLevelCategory(b.category);
-          const color = colorForLanguage(lang);
-
-          const marker = L.circleMarker([b.lat, b.lon], {
-            radius: 6,
-            color: color,
-            weight: 1.5,
-            fillColor: color,
-            fillOpacity: 0.75,
-          });
-
-          const name = b.name ? b.name.replace(/</g, "&lt;") : "(unnamed)";
-          const website = b.website || "";
-          const safeWebsite = website.replace(/"/g, "&quot;");
-          let popupHtml = `<b>${name}</b>`;
-          popupHtml += `Language: ${languageLabel(lang)}<br>`;
-          if (typeof b.language_confidence === "number") {
-            popupHtml += `Confidence: ${Math.round(b.language_confidence * 100)}%<br>`;
-          }
-          if (b.category) popupHtml += `${b.category}<br>`;
-          popupHtml += website
-            ? `<a href="${safeWebsite}" target="_blank" rel="noopener">${website}</a>`
-            : "no website";
-          marker.bindPopup(popupHtml);
-
-          points.push({ marker, lang, category, lat: b.lat, lon: b.lon });
-          enabledLanguages.add(lang);
-          enabledCategories.add(category);
-          bounds.push([b.lat, b.lon]);
+      /**
+       * A bilingual site is plotted in its rarest language, so minority-language
+       * presence is visible instead of being buried under the majority colour.
+       */
+      function assignPrimaryLanguages() {
+        const totals = new Map();
+        points.forEach((p) => p.langs.forEach((l) => totals.set(l, (totals.get(l) || 0) + 1)));
+        points.forEach((p) => {
+          p.primaryLang = p.langs.reduce(
+            (rarest, l) => (rarest === null || totals.get(l) < totals.get(rarest) ? l : rarest),
+            null,
+          );
         });
+      }
 
-        document.getElementById("modeToggle").classList.add("visible");
-        populateChoroplethLangSelect();
-        if (bounds.length)
-          map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15 });
+      // ------------------------------------------------------- filtering & scope
 
-        if (viewMode === "authorities") {
-          setViewMode("authorities");
-        } else {
-          applyFilters();
-          renderSidebar();
-          updateStats();
-        }
+      function datasetEnabled(p) {
+        return !disabledDatasets.has(p.dataset);
+      }
+
+      /** Points that count toward the current view's language statistics. */
+      function inScope(p) {
+        if (!datasetEnabled(p)) return false;
+        if (disabledCategories.has(p.category)) return false;
+        if (viewMode === "areas" && authorityFeatures.length) return p.authorityId !== null;
+        return true;
       }
 
       function isPointVisible(p) {
-        return enabledLanguages.has(p.lang) && enabledCategories.has(p.category);
+        if (!datasetEnabled(p) || disabledCategories.has(p.category)) return false;
+        if (!p.langs.length) return showUnclassified;
+        return p.langs.some((l) => activeLanguageSet.has(l));
       }
 
-      function applyFilters() {
-        if (viewMode === "authorities") {
-          markerLayer.clearLayers();
-          updateChoropleth();
-        } else {
-          clearChoropleth();
-          markerLayer.clearLayers();
-          points.forEach((p) => {
-            if (isPointVisible(p)) markerLayer.addLayer(p.marker);
-          });
-        }
-        updateStats();
-        refreshSidebarCounts();
-      }
-
-      function updateStats() {
-        if (!points.length) {
-          document.getElementById("stats").textContent = "";
-          return;
-        }
-        const visible = points.filter(isPointVisible).length;
-        if (viewMode === "authorities") {
-          const used = points.filter((p) => isMunicipalityPoint(p) && p.authorityId);
-          const label = selectedChoroplethLang
-            ? languageLabel(selectedChoroplethLang)
-            : "language";
-          const withData = [...authorityStats().values()].filter((r) => r.classified).length;
-          const level = hierarchy[hierarchy.length - 1];
-          if (!level || level.key === "world") {
-            document.getElementById("stats").textContent =
-              `${authorityFeatures.length} countries · ${withData} with data · showing ${label} share`;
-            return;
-          }
-          document.getElementById("stats").textContent =
-            `${authorityFeatures.length} areas in ${level.name} · ${used.length} classified sites · showing ${label} share`;
-          return;
-        }
-        document.getElementById("stats").textContent =
-          `${visible} of ${points.length} businesses visible`;
-      }
-
-      function uniqueSorted(getter) {
-        const counts = new Map();
+      /**
+       * Rebuild the language and category lists from whatever is currently in
+       * view, so the sidebar only offers choices that mean something here.
+       */
+      function refreshScope() {
+        const langCounts = new Map();
+        const catCounts = new Map();
         points.forEach((p) => {
-          const key = getter(p);
-          counts.set(key, (counts.get(key) || 0) + 1);
+          if (!datasetEnabled(p)) return;
+          if (viewMode === "areas" && authorityFeatures.length && p.authorityId === null) return;
+          catCounts.set(p.category, (catCounts.get(p.category) || 0) + 1);
+          if (disabledCategories.has(p.category)) return;
+          p.langs.forEach((l) => langCounts.set(l, (langCounts.get(l) || 0) + 1));
         });
-        return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+        const byCountThenName = (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]);
+        scopedLanguages = [...langCounts.entries()].sort(byCountThenName);
+        scopedCategories = [...catCounts.entries()].sort(byCountThenName);
+        activeLanguages = scopedLanguages
+          .map(([l]) => l)
+          .filter((l) => !disabledLanguages.has(l));
+        activeLanguageSet = new Set(activeLanguages);
       }
 
-      function countForLanguage(lang) {
-        return points.filter(
-          (p) => p.lang === lang && enabledCategories.has(p.category),
-        ).length;
-      }
-
-      function countForCategory(category) {
-        return points.filter(
-          (p) => p.category === category && enabledLanguages.has(p.lang),
-        ).length;
-      }
+      // -------------------------------------------------------- area statistics
 
       function assignAuthorities() {
+        // Smallest-first so a point inside nested boundaries lands on the tightest.
         const ranked = authorityFeatures
           .map((f) => {
             const bbox = geomBBox(f.geometry);
@@ -811,32 +708,30 @@
           .sort((a, b) => a.area - b.area);
         points.forEach((p) => {
           p.authorityId = null;
-          p.authorityName = null;
-          let fallback = null;
           for (const { f, bbox } of ranked) {
             if (p.lon < bbox[0] || p.lon > bbox[2] || p.lat < bbox[1] || p.lat > bbox[3]) {
               continue;
             }
-            if (!fallback) fallback = f;
             if (pointInGeometry(p.lon, p.lat, f.geometry)) {
-              p.authorityId = `${f.properties.osm_type}/${f.properties.osm_id}`;
-              p.authorityName = f.properties.name;
-              fallback = null;
+              p.authorityId = featureId(f);
               break;
             }
-          }
-          if (fallback) {
-            p.authorityId = `${fallback.properties.osm_type}/${fallback.properties.osm_id}`;
-            p.authorityName = fallback.properties.name;
           }
         });
       }
 
+      /**
+       * Per-area language tallies. `classified` counts sites with any detected
+       * language, so a single-language share reads as "x% of classified sites".
+       */
+      let areaStatsCache = null;
+      let shareScaleCache = null;
+
       function authorityStats() {
+        if (areaStatsCache) return areaStatsCache;
         const byId = new Map();
         authorityFeatures.forEach((f) => {
-          const id = `${f.properties.osm_type}/${f.properties.osm_id}`;
-          byId.set(id, {
+          byId.set(featureId(f), {
             feature: f,
             counts: new Map(),
             classified: 0,
@@ -844,24 +739,146 @@
           });
         });
         points.forEach((p) => {
-          if (!isMunicipalityPoint(p) || !p.authorityId) return;
+          if (!inScope(p) || !p.authorityId) return;
           const rec = byId.get(p.authorityId);
           if (!rec) return;
-          const parts = languageParts(p.lang);
-          rec.classified += 1;
           rec.total += 1;
-          parts.forEach((part) => rec.counts.set(part, (rec.counts.get(part) || 0) + 1));
+          if (!p.langs.length) return;
+          rec.classified += 1;
+          p.langs.forEach((l) => rec.counts.set(l, (rec.counts.get(l) || 0) + 1));
         });
-        byId.forEach((rec) => {
-          rec.selectedCount = selectedChoroplethLang
-            ? rec.counts.get(selectedChoroplethLang) || 0
-            : 0;
-          rec.share = rec.classified ? rec.selectedCount / rec.classified : 0;
-        });
+        areaStatsCache = byId;
         return byId;
       }
 
-      function updateChoropleth() {
+      /**
+       * Minority-language shares rarely pass a third of a region, so ramping
+       * from 0% to 100% would leave every area near-white. The ramp tops out at
+       * the strongest area in view instead, which is what makes the relative
+       * pattern readable.
+       */
+      function singleLanguageScale(lang) {
+        if (shareScaleCache !== null) return shareScaleCache;
+        let max = 0;
+        authorityStats().forEach((rec) => {
+          if (!rec.classified) return;
+          max = Math.max(max, (rec.counts.get(lang) || 0) / rec.classified);
+        });
+        shareScaleCache = max || 1;
+        return shareScaleCache;
+      }
+
+      /**
+       * One language selected: intensity is that language's share of classified
+       * sites, relative to the strongest area on screen. Two or more: hue is the
+       * leading language, intensity is how far ahead it is in relative share
+       * among the selected languages.
+       */
+      function areaFill(rec) {
+        if (!rec || !rec.classified || !activeLanguages.length) return null;
+        if (activeLanguages.length === 1) {
+          const lang = activeLanguages[0];
+          const share = (rec.counts.get(lang) || 0) / rec.classified;
+          const scale = singleLanguageScale(lang);
+          return {
+            lang,
+            color: colorForLanguage(lang),
+            intensity: share / scale,
+            share,
+            lead: null,
+            scale,
+          };
+        }
+        const ranked = activeLanguages
+          .map((l) => [l, rec.counts.get(l) || 0])
+          .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+        const total = ranked.reduce((sum, [, c]) => sum + c, 0);
+        // Classified, but none of the selected languages: white rather than the
+        // hatched "no data" fill, since 0% is a real answer.
+        if (!total) return { lang: null, color: "#ffffff", intensity: 0, share: 0, lead: 0 };
+        const lead = (ranked[0][1] - ranked[1][1]) / total;
+        return {
+          lang: ranked[0][0],
+          color: colorForLanguage(ranked[0][0]),
+          intensity: LEAD_FLOOR + (1 - LEAD_FLOOR) * lead,
+          share: ranked[0][1] / rec.classified,
+          lead,
+        };
+      }
+
+      function areaTooltip(feature, rec) {
+        const name = escapeHtml(feature.properties.name);
+        if (!rec || !rec.classified) {
+          return `<div class="area-tip"><b>${name}</b><div class="meta">No classified sites here</div></div>`;
+        }
+        const fill = areaFill(rec);
+        const rows = activeLanguages
+          .map((l) => [l, rec.counts.get(l) || 0])
+          .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+          .slice(0, 6)
+          .map(
+            ([l, c]) =>
+              `<div class="row"><span>${escapeHtml(titleCase(l))}</span><span>${pct(c / rec.classified)}</span></div>`,
+          )
+          .join("");
+        const leadLine =
+          fill && fill.lang && fill.lead !== null
+            ? `<div class="meta">${escapeHtml(titleCase(fill.lang))} leads by ${ptsLabel(fill.lead)}</div>`
+            : "";
+        return (
+          `<div class="area-tip"><b>${name}</b>${rows}${leadLine}` +
+          `<div class="meta">${num(rec.classified)} classified of ${num(rec.total)} sites</div></div>`
+        );
+      }
+
+      // ------------------------------------------------------------- map drawing
+
+      function clearChoropleth() {
+        if (choroplethLayer) {
+          map.removeLayer(choroplethLayer);
+          choroplethLayer = null;
+        }
+      }
+
+      function markerFor(p) {
+        if (p.marker) return p.marker;
+        const color = p.primaryLang ? colorForLanguage(p.primaryLang) : UNCLASSIFIED_COLOR;
+        const marker = L.circleMarker([p.lat, p.lon], {
+          radius: 5,
+          color,
+          weight: 1.2,
+          fillColor: color,
+          fillOpacity: 0.75,
+        });
+        const langLine = p.langs.length
+          ? p.langs.map((l) => escapeHtml(titleCase(l))).join(" + ")
+          : "No language detected";
+        const href = /^https?:\/\//i.test(p.website) ? p.website : "";
+        marker.bindPopup(
+          `<b>${escapeHtml(p.name)}</b>${langLine}<br>${escapeHtml(p.rawCategory)}<br>` +
+            (href
+              ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(href)}</a>`
+              : escapeHtml(p.website) || "no website"),
+        );
+        p.marker = marker;
+        return marker;
+      }
+
+      function renderPoints() {
+        markerLayer.clearLayers();
+        const bounds = map.getBounds();
+        let shown = 0;
+        for (const p of points) {
+          if (shown >= MAX_MARKERS) break;
+          if (!isPointVisible(p)) continue;
+          if (!bounds.contains([p.lat, p.lon])) continue;
+          markerLayer.addLayer(markerFor(p));
+          shown += 1;
+        }
+        return shown;
+      }
+
+      function renderChoropleth() {
         clearChoropleth();
         if (!authorityFeatures.length) return;
         const stats = authorityStats();
@@ -869,62 +886,270 @@
           { type: "FeatureCollection", features: authorityFeatures },
           {
             style(feature) {
-              const rec = stats.get(
-                `${feature.properties.osm_type}/${feature.properties.osm_id}`,
-              );
-              if (!rec || !rec.classified || !selectedChoroplethLang) {
+              const fill = areaFill(stats.get(featureId(feature)));
+              if (!fill) {
                 return {
                   color: "#8a8375",
                   weight: 1,
                   dashArray: "4 3",
                   fillColor: MISSING_FILL,
-                  fillOpacity: 0.62,
+                  fillOpacity: 0.55,
                 };
               }
               return {
                 color: "#ffffff",
                 weight: 1.2,
-                fillColor: mixTowardPaper(
-                  colorForLanguage(selectedChoroplethLang),
-                  rec.share,
-                ),
-                fillOpacity: 0.88,
+                fillColor: mixToWhite(fill.color, fill.intensity),
+                fillOpacity: 0.9,
               };
             },
             onEachFeature(feature, layer) {
-              const rec = stats.get(
-                `${feature.properties.osm_type}/${feature.properties.osm_id}`,
-              );
-              const name = feature.properties.name;
-              const tip = rec && rec.classified
-                ? `${name}: ${Math.round(rec.share * 100)}% ${languageLabel(selectedChoroplethLang)} (${rec.classified} sites)`
-                : `${name}: no classified language data`;
-              layer.bindTooltip(tip);
+              layer.bindTooltip(areaTooltip(feature, stats.get(featureId(feature))), {
+                sticky: true,
+              });
               layer.on("click", () => {
-                drillIntoFeature(feature).catch((err) => {
-                  showMapMessage(err.message || `Could not open ${name}.`);
-                });
+                drillInto(feature).catch((err) =>
+                  showMapMessage(err.message || `Could not open ${feature.properties.name}.`),
+                );
               });
             },
           },
         ).addTo(map);
       }
 
-      function showMapMessage(text) {
-        const el = document.getElementById("mapMessage");
-        if (!text) {
-          el.classList.remove("visible");
+      function render() {
+        areaStatsCache = null;
+        shareScaleCache = null;
+        refreshScope();
+        if (viewMode === "areas") {
+          markerLayer.clearLayers();
+          renderChoropleth();
+        } else {
+          clearChoropleth();
+          renderPoints();
+        }
+        renderSidebar();
+        renderBreadcrumb();
+        updateStats();
+      }
+
+      function updateStats() {
+        const el = document.getElementById("stats");
+        if (!points.length) {
           el.textContent = "";
           return;
         }
-        el.textContent = text;
-        el.classList.add("visible");
+        if (viewMode === "areas") {
+          const withData = [...authorityStats().values()].filter((r) => r.classified).length;
+          const level = hierarchy[hierarchy.length - 1];
+          const where = level ? level.name : "world";
+          el.textContent = `${num(authorityFeatures.length)} areas in ${where} · ${num(withData)} with language data`;
+          return;
+        }
+        const visible = points.filter(isPointVisible).length;
+        const drawn = markerLayer.getLayers().length;
+        el.textContent =
+          drawn < visible
+            ? `${num(drawn)} drawn · ${num(visible)} of ${num(points.length)} sites match — zoom in for the rest`
+            : `${num(visible)} of ${num(points.length)} sites match`;
       }
+
+      function setOverlay(html) {
+        const el = document.getElementById("overlay");
+        if (!html) {
+          el.classList.add("hidden");
+          return;
+        }
+        el.innerHTML = html;
+        el.classList.remove("hidden");
+      }
+
+      function showMapMessage(text) {
+        const el = document.getElementById("mapMessage");
+        el.textContent = text || "";
+        el.classList.toggle("visible", Boolean(text));
+      }
+
+      function setProgress(text) {
+        document.getElementById("stats").textContent = text;
+      }
+
+      // ----------------------------------------------------------------- sidebar
+
+      function legendRow({ swatch, label, count, off, onClick }) {
+        const item = document.createElement("div");
+        item.className = "legend-item" + (off ? " off" : "") + (onClick ? "" : " static");
+        item.innerHTML =
+          swatch +
+          `<span class="legend-label">${escapeHtml(label)}</span>` +
+          (count === undefined ? "" : `<span class="legend-count">${num(count)}</span>`);
+        if (onClick) {
+          item.setAttribute("role", "button");
+          item.addEventListener("click", onClick);
+        }
+        return item;
+      }
+
+      function section(title) {
+        const el = document.createElement("div");
+        el.className = "legend-section";
+        el.innerHTML = `<h2>${title}</h2>`;
+        return el;
+      }
+
+      function renderLanguageSection() {
+        const el = section("Languages");
+        if (!scopedLanguages.length) {
+          const note = document.createElement("p");
+          note.className = "legend-note";
+          note.textContent = "No detected languages in this view.";
+          el.appendChild(note);
+          return el;
+        }
+
+        scopedLanguages.forEach(([lang, count]) => {
+          const color = colorForLanguage(lang);
+          const on = !disabledLanguages.has(lang);
+          const swatch =
+            viewMode === "areas"
+              ? `<span class="swatch ramp" style="background:linear-gradient(to right, ${mixToWhite(color, 0)}, ${color})"></span>`
+              : `<span class="swatch" style="background:${color}"></span>`;
+          el.appendChild(
+            legendRow({
+              swatch,
+              label: titleCase(lang),
+              count,
+              off: !on,
+              onClick: () => {
+                if (on) disabledLanguages.add(lang);
+                else disabledLanguages.delete(lang);
+                render();
+              },
+            }),
+          );
+        });
+
+        if (viewMode === "areas") {
+          const note = document.createElement("p");
+          note.className = "legend-note";
+          note.style.margin = "10px 0 0";
+          if (activeLanguages.length === 0) {
+            note.textContent = "Select at least one language to colour the map.";
+          } else if (activeLanguages.length === 1) {
+            note.textContent =
+              `Shade is the share of classified sites in ${titleCase(activeLanguages[0])}, ` +
+              "scaled to the strongest area in view.";
+          } else {
+            note.textContent =
+              "Hue is the leading language; shade is how far ahead it is. Pale areas are closely contested.";
+          }
+          el.appendChild(note);
+
+          if (activeLanguages.length === 1) {
+            const color = colorForLanguage(activeLanguages[0]);
+            const bar = document.createElement("div");
+            bar.className = "scale-bar";
+            bar.style.background = `linear-gradient(to right, ${mixToWhite(color, 0)}, ${color})`;
+            const labels = document.createElement("div");
+            labels.className = "scale-labels";
+            labels.innerHTML = `<span>0.0%</span><span>${pct(singleLanguageScale(activeLanguages[0]))}</span>`;
+            el.appendChild(bar);
+            el.appendChild(labels);
+          } else if (activeLanguages.length > 1) {
+            const bar = document.createElement("div");
+            bar.className = "scale-bar";
+            bar.style.background = `linear-gradient(to right, ${mixToWhite("#555555", LEAD_FLOOR)}, #555555)`;
+            const labels = document.createElement("div");
+            labels.className = "scale-labels";
+            labels.innerHTML = `<span>tied</span><span>uncontested</span>`;
+            el.appendChild(bar);
+            el.appendChild(labels);
+          }
+
+          el.appendChild(
+            legendRow({
+              swatch: `<span class="swatch missing"></span>`,
+              label: "No classified sites",
+            }),
+          );
+        } else {
+          el.appendChild(
+            legendRow({
+              swatch: `<span class="swatch" style="background:${UNCLASSIFIED_COLOR}"></span>`,
+              label: "No language detected",
+              off: !showUnclassified,
+              onClick: () => {
+                showUnclassified = !showUnclassified;
+                render();
+              },
+            }),
+          );
+        }
+        return el;
+      }
+
+      function renderSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.innerHTML = "";
+
+        if (viewMode === "areas") {
+          const intro = document.createElement("p");
+          intro.className = "legend-note";
+          intro.textContent = currentParent
+            ? `Showing OSM subdivisions of ${currentParent.name}. Click one to drill in.`
+            : "Showing every OSM country. Click one with data to drill in.";
+          sidebar.appendChild(intro);
+        }
+
+        sidebar.appendChild(renderLanguageSection());
+
+        const cats = section("Categories");
+        scopedCategories.forEach(([category, count]) => {
+          const on = !disabledCategories.has(category);
+          cats.appendChild(
+            legendRow({
+              swatch: `<span class="legend-check"></span>`,
+              label: category,
+              count,
+              off: !on,
+              onClick: () => {
+                if (on) disabledCategories.add(category);
+                else disabledCategories.delete(category);
+                render();
+              },
+            }),
+          );
+        });
+        sidebar.appendChild(cats);
+
+        if (datasets.length > 1) {
+          const sets = section("Datasets");
+          datasets.forEach(({ name, count }) => {
+            const on = !disabledDatasets.has(name);
+            sets.appendChild(
+              legendRow({
+                swatch: `<span class="legend-check"></span>`,
+                label: name,
+                count,
+                off: !on,
+                onClick: () => {
+                  if (on) disabledDatasets.add(name);
+                  else disabledDatasets.delete(name);
+                  render();
+                },
+              }),
+            );
+          });
+          sidebar.appendChild(sets);
+        }
+      }
+
+      // -------------------------------------------------------- area hierarchy
 
       function renderBreadcrumb() {
         const nav = document.getElementById("breadcrumb");
         nav.innerHTML = "";
-        if (viewMode !== "authorities" || !hierarchy.length) {
+        if (viewMode !== "areas" || !hierarchy.length) {
           nav.classList.remove("visible");
           return;
         }
@@ -940,29 +1165,27 @@
           btn.type = "button";
           btn.textContent = level.name;
           btn.disabled = i === hierarchy.length - 1;
-          btn.addEventListener("click", () => goToHierarchyIndex(i));
+          btn.addEventListener("click", () => goToLevel(i));
           nav.appendChild(btn);
         });
       }
 
-      function goToHierarchyIndex(index) {
+      function fitToAreas() {
+        if (choroplethLayer && choroplethLayer.getBounds().isValid()) {
+          map.fitBounds(choroplethLayer.getBounds(), { padding: [20, 20] });
+        }
+      }
+
+      function goToLevel(index) {
         showMapMessage("");
         hierarchy = hierarchy.slice(0, index + 1);
         const level = hierarchy[index];
         authorityFeatures = level.features;
-        parentAreaInfo = level.osm_id
-          ? { name: level.name, osm_id: level.osm_id }
-          : null;
-        parentAreaName = "";
-        document.getElementById("parentArea").value = "";
+        currentParent = level.osm_id ? { name: level.name, osm_id: level.osm_id } : null;
         assignAuthorities();
-        applyFilters();
-        renderBreadcrumb();
-        renderSidebar();
+        render();
         if (index === 0) map.setView([20, 0], 2);
-        else if (choroplethLayer && choroplethLayer.getBounds().isValid()) {
-          map.fitBounds(choroplethLayer.getBounds(), { padding: [20, 20] });
-        }
+        else fitToAreas();
       }
 
       function escapeOverpass(value) {
@@ -971,24 +1194,24 @@
           .replace(/"/g, '\\"');
       }
 
+      /**
+       * Boundary queries go through serve.py, which caches every response on
+       * disk. A cold geometry query can take a couple of minutes; a cached one
+       * is instant, so drilling the same area twice costs nothing.
+       */
       async function postOverpass(query) {
-        for (const url of OVERPASS_URLS) {
-          try {
-            const resp = await fetch(url, {
-              method: "POST",
-              headers: { "Content-Type": "application/x-www-form-urlencoded" },
-              body: "data=" + encodeURIComponent(query),
-            });
-            if (!resp.ok) continue;
-            const data = await resp.json();
-            const remark = data.remark || "";
-            if (remark && /error/i.test(remark)) continue;
-            return data;
-          } catch (err) {
-            console.warn("Overpass failed", url, err);
+        try {
+          const resp = await fetch("api/overpass", { method: "POST", body: query });
+          const data = await resp.json();
+          if (!resp.ok) {
+            console.warn("Overpass proxy error", data.error);
+            return null;
           }
+          return data;
+        } catch (err) {
+          console.warn("Overpass proxy unreachable", err);
+          return null;
         }
-        return null;
       }
 
       function scoreParentRelation(el, query) {
@@ -1027,7 +1250,7 @@
         const best = rels[0];
         return {
           osm_id: best.id,
-          name: best.tags.name || best.tags["name:en"] || name,
+          name: best.tags["name:en"] || best.tags.name || name,
           admin_level: best.tags.admin_level,
         };
       }
@@ -1044,14 +1267,16 @@
           .map((el) => el.id);
       }
 
-      async function fetchRelationsGeom(ids) {
-        if (!ids.length) return [];
+      async function fetchRelationsGeom(ids, label) {
         const features = [];
+        const chunks = Math.ceil(ids.length / 25);
         for (let i = 0; i < ids.length; i += 25) {
-          const chunk = ids.slice(i, i + 25);
+          setProgress(
+            `Downloading boundaries for ${label} (part ${i / 25 + 1} of ${chunks})…`,
+          );
           const data = await postOverpass(`
-            [out:json][timeout:90];
-            rel(id:${chunk.join(",")});
+            [out:json][timeout:180];
+            rel(id:${ids.slice(i, i + 25).join(",")});
             out geom;
           `);
           if (data) features.push(...osmToGeoJSON(data).features);
@@ -1059,9 +1284,10 @@
         return features;
       }
 
-      async function fetchChildrenByArea(parentId, adminLevel) {
+      async function fetchChildrenByArea(parentId, adminLevel, label) {
+        setProgress(`Looking for level-${adminLevel} areas inside ${label}…`);
         const data = await postOverpass(`
-          [out:json][timeout:90];
+          [out:json][timeout:180];
           rel(${parentId});
           map_to_area -> .parent;
           rel(area.parent)["type"="boundary"]["boundary"="administrative"]["admin_level"="${adminLevel}"]["name"];
@@ -1070,75 +1296,53 @@
         return data ? osmToGeoJSON(data).features : [];
       }
 
-      async function localAuthorityFeatures() {
-        try {
-          const resp = await fetch("data/authorities.geojson");
-          if (!resp.ok) return [];
-          const gj = await resp.json();
-          return gj.features || [];
-        } catch (err) {
-          return [];
-        }
-      }
-
-      function featuresForIds(features, ids) {
-        const want = new Set(ids);
-        return features.filter((f) => want.has(f.properties.osm_id));
-      }
-
       async function fetchChildrenOfRelation(parent) {
         const cacheKey = "children:" + parent.osm_id;
-        if (authorityCache.has(cacheKey)) return authorityCache.get(cacheKey).features;
+        if (authorityCache.has(cacheKey)) return authorityCache.get(cacheKey);
+        setProgress(`Listing subdivisions of ${parent.name}…`);
         const childIds = await fetchChildRelationIds(parent.osm_id);
-        const local = await localAuthorityFeatures();
-        let features = childIds.length ? featuresForIds(local, childIds) : [];
-        if (childIds.length && features.length < childIds.length) {
-          const have = new Set(features.map((f) => f.properties.osm_id));
-          const missing = childIds.filter((id) => !have.has(id));
-          const downloaded = await fetchRelationsGeom(missing);
-          if (downloaded.length) features = features.concat(downloaded);
-        }
-        if (!features.length) {
+        let features = childIds.length ? await fetchRelationsGeom(childIds, parent.name) : [];
+        if (features.length < 2) {
           const parentLevel = parseInt(parent.admin_level || "4", 10);
           const guess = parentLevel <= 2 ? "4" : parentLevel <= 4 ? "6" : "8";
-          features = await fetchChildrenByArea(parent.osm_id, guess);
-          if (features.length < 3) {
-            const nextLevel = String(Math.min(10, parseInt(guess, 10) + 2));
-            const next = await fetchChildrenByArea(parent.osm_id, nextLevel);
-            if (next.length) features = next;
+          const byArea = await fetchChildrenByArea(parent.osm_id, guess, parent.name);
+          if (byArea.length >= 2) features = byArea;
+          else {
+            const deeper = await fetchChildrenByArea(
+              parent.osm_id,
+              String(Math.min(10, parseInt(guess, 10) + 2)),
+              parent.name,
+            );
+            if (deeper.length) features = deeper;
           }
         }
-        if (features.length) authorityCache.set(cacheKey, { info: parent, features });
+        if (features.length) authorityCache.set(cacheKey, features);
         return features;
       }
 
       async function loadWorldCountries() {
-        if (authorityCache.has("world")) return authorityCache.get("world").features;
+        if (authorityCache.has("world")) return authorityCache.get("world");
         const resp = await fetch("data/countries.geojson");
-        if (!resp.ok) throw new Error("Could not load OSM country outlines.");
-        const gj = await resp.json();
-        const features = gj.features || [];
+        if (!resp.ok) throw new Error("Could not load country outlines.");
+        const features = (await resp.json()).features || [];
         if (!features.length) throw new Error("Country outline file is empty.");
-        authorityCache.set("world", { info: { name: "World" }, features });
+        authorityCache.set("world", features);
         return features;
       }
 
-      let drillBusy = false;
-
-      async function drillIntoFeature(feature) {
+      async function drillInto(feature) {
         if (drillBusy) return;
         showMapMessage("");
         const name = feature.properties.name;
-        const rec = authorityStats().get(
-          `${feature.properties.osm_type}/${feature.properties.osm_id}`,
-        );
+        const rec = authorityStats().get(featureId(feature));
         if (!rec || !rec.classified) {
-          showMapMessage(`${name} has no classified language data in the loaded file.`);
+          showMapMessage(`${name} has no classified language data in the loaded datasets.`);
           return;
         }
         drillBusy = true;
-        document.getElementById("stats").textContent =
-          `Loading subdivisions of ${name}...`;
+        showMapMessage(
+          `Fetching ${name}'s boundaries from OpenStreetMap. This takes a minute or two the first time, then it is cached.`,
+        );
         try {
           const children = await fetchChildrenOfRelation({
             osm_id: feature.properties.osm_id,
@@ -1150,312 +1354,100 @@
             updateStats();
             return;
           }
-          hierarchy.push({
-            key: String(feature.properties.osm_id),
-            name,
-            osm_id: feature.properties.osm_id,
-            features: children,
-          });
-          parentAreaInfo = { name, osm_id: feature.properties.osm_id };
+          hierarchy.push({ name, osm_id: feature.properties.osm_id, features: children });
+          currentParent = { name, osm_id: feature.properties.osm_id };
           authorityFeatures = children;
           assignAuthorities();
-          applyFilters();
-          renderBreadcrumb();
-          renderSidebar();
-          if (choroplethLayer && choroplethLayer.getBounds().isValid()) {
-            map.fitBounds(choroplethLayer.getBounds(), { padding: [20, 20] });
-          }
+          showMapMessage("");
+          render();
+          fitToAreas();
         } finally {
           drillBusy = false;
         }
       }
 
-      async function loadAuthoritiesForParent(name) {
-        document.getElementById("stats").textContent =
-          `Finding OSM area “${name}”...`;
-        const parent = await findParentRelation(name);
-        if (!parent) {
-          throw new Error(`Could not find an OSM administrative area named “${name}”.`);
-        }
-        parentAreaInfo = parent;
-        document.getElementById("stats").textContent =
-          `Loading subdivisions of ${parent.name}...`;
-        const features = await fetchChildrenOfRelation(parent);
-        if (!features.length) {
-          throw new Error(`OSM has no administrative subdivisions for ${parent.name}.`);
-        }
-        const world = await loadWorldCountries();
-        hierarchy = [
-          { key: "world", name: "World", osm_id: null, features: world },
-          {
-            key: String(parent.osm_id),
-            name: parent.name,
-            osm_id: parent.osm_id,
-            features,
-          },
-        ];
-        authorityFeatures = features;
-        assignAuthorities();
-      }
-
-      async function fetchAuthoritiesFromOverpass(adminLevel) {
-        const lats = points.map((p) => p.lat);
-        const lons = points.map((p) => p.lon);
-        const south = Math.min(...lats) - 0.02;
-        const north = Math.max(...lats) + 0.02;
-        const west = Math.min(...lons) - 0.02;
-        const east = Math.max(...lons) + 0.02;
-        const data = await postOverpass(
-          `[out:json][timeout:120];relation["type"="boundary"]["boundary"="administrative"]["admin_level"="${adminLevel}"]["name"](${south},${west},${north},${east});out geom;`,
-        );
-        return data ? osmToGeoJSON(data).features : [];
-      }
-
-      async function ensureAuthorities() {
-        if (parentAreaName) {
-          await loadAuthoritiesForParent(parentAreaName);
-          return;
-        }
-        if (hierarchy.length && authorityFeatures.length) {
-          if (!points.some((p) => p.authorityId)) assignAuthorities();
-          return;
-        }
-        document.getElementById("stats").textContent = "Loading OSM countries...";
-        const features = await loadWorldCountries();
-        hierarchy = [{ key: "world", name: "World", osm_id: null, features }];
-        parentAreaInfo = null;
-        authorityFeatures = features;
-        assignAuthorities();
-      }
-
-      function fitCurrentView() {
-        const level = hierarchy[hierarchy.length - 1];
-        if (!level || level.key === "world") {
-          map.setView([20, 0], 2);
-          return;
-        }
-        if (choroplethLayer && choroplethLayer.getBounds().isValid()) {
-          map.fitBounds(choroplethLayer.getBounds(), { padding: [20, 20] });
+      async function enterAreaMode() {
+        if (!hierarchy.length) {
+          setProgress("Loading country outlines…");
+          const world = await loadWorldCountries();
+          hierarchy = [{ name: "World", osm_id: null, features: world }];
+          currentParent = null;
+          authorityFeatures = world;
+          assignAuthorities();
         }
       }
 
       async function setViewMode(mode) {
         viewMode = mode;
+        document.getElementById("modeAreas").classList.toggle("active", mode === "areas");
         document.getElementById("modePoints").classList.toggle("active", mode === "points");
-        document
-          .getElementById("modeAuthorities")
-          .classList.toggle("active", mode === "authorities");
-        document
-          .getElementById("choroplethLangWrap")
-          .classList.toggle("visible", mode === "authorities");
-        document
-          .getElementById("parentAreaWrap")
-          .classList.toggle("visible", mode === "authorities");
-        if (mode === "authorities") {
-          populateChoroplethLangSelect();
+        showMapMessage("");
+        if (mode === "areas") {
           try {
-            await ensureAuthorities();
+            await enterAreaMode();
           } catch (err) {
             showMapMessage(err.message || "Could not load area outlines.");
           }
-        } else {
-          showMapMessage("");
         }
-        applyFilters();
-        renderSidebar();
-        renderBreadcrumb();
-        if (mode === "authorities") fitCurrentView();
-        else if (points.length) {
-          map.fitBounds(
-            points.map((p) => [p.lat, p.lon]),
-            { padding: [30, 30], maxZoom: 15 },
-          );
-        }
+        render();
       }
 
-      function renderSidebar() {
-        const sidebar = document.getElementById("sidebar");
-        sidebar.innerHTML = "";
-        sidebar.classList.add("visible");
-        if (viewMode === "authorities") {
-          const note = document.createElement("p");
-          note.className = "legend-note";
-          const focus = selectedChoroplethLang
-            ? languageLabel(selectedChoroplethLang)
-            : "the selected language";
-          note.textContent = parentAreaInfo
-            ? `OSM members of ${parentAreaInfo.name}. Click an area to open its children. Fetch failed and too-little-text sites are ignored. Color is the share of classified sites that include ${focus}.`
-            : `Every OSM country is shown. Click a country with data to open its OSM members. Fetch failed and too-little-text sites are ignored. Color is the share of classified sites that include ${focus}.`;
-          sidebar.appendChild(note);
-          const missing = document.createElement("div");
-          missing.className = "legend-item";
-          missing.style.cursor = "default";
-          missing.innerHTML =
-            `<span class="missing-swatch"></span><span>No classified language data</span>`;
-          sidebar.appendChild(missing);
-          if (selectedChoroplethLang) {
-            const scale = document.createElement("div");
-            scale.className = "share-scale";
-            scale.style.background = `linear-gradient(to right, ${mixTowardPaper(colorForLanguage(selectedChoroplethLang), 0)}, ${colorForLanguage(selectedChoroplethLang)})`;
-            const labels = document.createElement("div");
-            labels.className = "share-scale-labels";
-            labels.innerHTML = `<span>0% ${languageLabel(selectedChoroplethLang)}</span><span>100%</span>`;
-            sidebar.appendChild(scale);
-            sidebar.appendChild(labels);
-          }
-        }
+      // ------------------------------------------------------------------ events
 
-        if (viewMode !== "authorities") {
-          const langSection = document.createElement("div");
-          langSection.className = "legend-section";
-          langSection.innerHTML = "<h2>Languages</h2>";
-          uniqueSorted((p) => p.lang).forEach(([lang]) => {
-            const item = document.createElement("div");
-            item.className = "legend-item";
-            item.setAttribute("role", "button");
-            item.dataset.kind = "language";
-            item.dataset.key = lang;
-            if (!enabledLanguages.has(lang)) item.classList.add("off");
-            item.innerHTML =
-              `<span class="swatch" style="background:${colorForLanguage(lang)}"></span>` +
-              `<span>${languageLabel(lang)}</span>` +
-              `<span class="legend-count">${countForLanguage(lang)}</span>`;
-            item.addEventListener("click", () => {
-              if (enabledLanguages.has(lang)) enabledLanguages.delete(lang);
-              else enabledLanguages.add(lang);
-              item.classList.toggle("off", !enabledLanguages.has(lang));
-              applyFilters();
-            });
-            langSection.appendChild(item);
-          });
-          sidebar.appendChild(langSection);
-        }
+      document.getElementById("modeAreas").addEventListener("click", () => setViewMode("areas"));
+      document.getElementById("modePoints").addEventListener("click", () => setViewMode("points"));
 
-        const catSection = document.createElement("div");
-        catSection.className = "legend-section";
-        catSection.innerHTML = "<h2>Categories</h2>";
-        uniqueSorted((p) => p.category).forEach(([category]) => {
-          const item = document.createElement("div");
-          item.className = "legend-item";
-          item.setAttribute("role", "button");
-          item.dataset.kind = "category";
-          item.dataset.key = category;
-          if (!enabledCategories.has(category)) item.classList.add("off");
-          item.innerHTML =
-            `<span class="legend-check"></span>` +
-            `<span>${category}</span>` +
-            `<span class="legend-count">${countForCategory(category)}</span>`;
-          item.addEventListener("click", () => {
-            if (enabledCategories.has(category)) enabledCategories.delete(category);
-            else enabledCategories.add(category);
-            item.classList.toggle("off", !enabledCategories.has(category));
-            applyFilters();
-          });
-          catSection.appendChild(item);
-        });
-        sidebar.appendChild(catSection);
-      }
-
-      function refreshSidebarCounts() {
-        document.querySelectorAll(".legend-item").forEach((item) => {
-          const key = item.dataset.key;
-          const count =
-            item.dataset.kind === "language"
-              ? countForLanguage(key)
-              : countForCategory(key);
-          const el = item.querySelector(".legend-count");
-          if (el) el.textContent = count;
-        });
-      }
-
-      function handleFile(file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          try {
-            const data = JSON.parse(e.target.result);
-            if (!Array.isArray(data)) throw new Error("Expected a JSON array");
-            renderData(data);
-          } catch (err) {
-            alert(
-              "Couldn't read that file as a businesses.json export: " +
-                err.message,
-            );
-          }
-        };
-        reader.readAsText(file);
-      }
-
-      const fileInput = document.getElementById("fileInput");
-      const dropzone = document.getElementById("dropzone");
-
-      fileInput.addEventListener("change", (e) => {
-        if (e.target.files[0]) handleFile(e.target.files[0]);
-      });
-
-      ["dragenter", "dragover"].forEach((evt) =>
-        dropzone.addEventListener(evt, (e) => {
-          e.preventDefault();
-          dropzone.classList.add("drag");
-        }),
-      );
-      ["dragleave", "drop"].forEach((evt) =>
-        dropzone.addEventListener(evt, (e) => {
-          e.preventDefault();
-          dropzone.classList.remove("drag");
-        }),
-      );
-      dropzone.addEventListener("drop", (e) => {
-        const file = e.dataTransfer.files[0];
-        if (file) handleFile(file);
-      });
-
-      document.getElementById("modePoints").addEventListener("click", () => {
-        setViewMode("points");
-      });
-      document.getElementById("modeAuthorities").addEventListener("click", () => {
-        setViewMode("authorities");
-      });
-      document.getElementById("parentAreaWrap").addEventListener("submit", async (e) => {
+      document.getElementById("areaJump").addEventListener("submit", async (e) => {
         e.preventDefault();
-        const name = document.getElementById("parentArea").value.trim();
-        showMapMessage("");
-        parentAreaName = name;
-        parentAreaInfo = null;
-        if (!name) {
-          hierarchy = [];
-          authorityFeatures = [];
-        }
-        points.forEach((p) => {
-          p.authorityId = null;
-          p.authorityName = null;
-        });
-        if (viewMode !== "authorities") return;
+        const name = document.getElementById("areaName").value.trim();
+        if (!name) return;
+        showMapMessage(
+          `Fetching boundaries for “${name}” from OpenStreetMap. This takes a minute or two the first time, then it is cached.`,
+        );
+        setProgress(`Finding “${name}”…`);
         try {
-          await ensureAuthorities();
-          applyFilters();
-          renderSidebar();
-          renderBreadcrumb();
-          fitCurrentView();
+          const parent = await findParentRelation(name);
+          if (!parent) throw new Error(`No OSM administrative area named “${name}”.`);
+          const children = await fetchChildrenOfRelation(parent);
+          if (!children.length) {
+            throw new Error(`OSM has no administrative subdivisions for ${parent.name}.`);
+          }
+          const world = await loadWorldCountries();
+          hierarchy = [
+            { name: "World", osm_id: null, features: world },
+            { name: parent.name, osm_id: parent.osm_id, features: children },
+          ];
+          currentParent = parent;
+          authorityFeatures = children;
+          assignAuthorities();
+          viewMode = "areas";
+          document.getElementById("modeAreas").classList.add("active");
+          document.getElementById("modePoints").classList.remove("active");
+          showMapMessage("");
+          render();
+          fitToAreas();
         } catch (err) {
           showMapMessage(err.message || String(err));
           updateStats();
         }
       });
-      document.getElementById("choroplethLang").addEventListener("change", (e) => {
-        selectedChoroplethLang = e.target.value || null;
-        if (viewMode === "authorities") {
-          updateChoropleth();
+
+      map.on("moveend", () => {
+        if (viewMode === "points") {
+          renderPoints();
           updateStats();
-          renderSidebar();
         }
       });
+      window.addEventListener("resize", () => map.invalidateSize());
 
-      fetch("data/businesses.json")
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data) => {
-          if (Array.isArray(data)) renderData(data);
-        })
-        .catch(() => {});
+      // -------------------------------------------------------------------- boot
+
+      (async () => {
+        await loadDatasets();
+        if (!points.length) return;
+        setOverlay("");
+        await setViewMode("areas");
+      })();
     </script>
   </body>
 </html>

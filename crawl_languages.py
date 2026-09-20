@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import re
 import sys
 import time
@@ -34,6 +35,9 @@ from urllib.parse import urlparse
 import aiohttp
 
 try:
+    # uvloop resolves DNS on the libuv thread pool, which defaults to 4 threads.
+    # Must be set before uvloop initializes the pool.
+    os.environ.setdefault("UV_THREADPOOL_SIZE", "128")
     import uvloop
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 except ImportError:
@@ -697,7 +701,7 @@ def summarize_language_lists(records: Iterable[dict]) -> tuple[Counter, Counter]
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Classify homepage languages from OSM website list.")
-    parser.add_argument("--data", default="data/businesses.json")
+    parser.add_argument("--data", default="data/Wales.json")
     parser.add_argument("--output", default=None, help="Write annotated JSON here (default: overwrite --data)")
     parser.add_argument("--limit", type=int, default=None, help="Max unique URLs (default: all)")
     parser.add_argument("--workers", type=int, default=DEFAULT_WORKERS)
