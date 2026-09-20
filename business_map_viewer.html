@@ -96,6 +96,7 @@
       }
       .leaflet-bar a:last-child {
         border-radius: 0 0 8px 8px;
+        padding-bottom: 3px !important;
       }
       .leaflet-control-attribution {
         background: transparent !important;
@@ -116,12 +117,28 @@
       .panel-toggle {
         pointer-events: auto;
       }
+      #app::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 92px;
+        z-index: 1040;
+        pointer-events: none;
+        background: linear-gradient(
+          180deg,
+          rgba(12, 11, 10, 0.32) 0%,
+          rgba(12, 11, 10, 0.12) 58%,
+          transparent 100%
+        );
+      }
       .hud-top {
         position: absolute;
         top: 18px;
         left: 20px;
         right: 20px;
-        z-index: 1100;
+        z-index: 1120;
         display: flex;
         align-items: center;
         gap: 16px;
@@ -282,7 +299,7 @@
       #breadcrumb {
         display: none;
         position: absolute;
-        top: 104px;
+        top: 64px;
         left: 20px;
         z-index: 1100;
         font-size: 12px;
@@ -315,7 +332,7 @@
       #mapMessage {
         display: none;
         position: absolute;
-        top: 92px;
+        top: 64px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 1100;
@@ -380,32 +397,33 @@
       }
       #sidebar {
         position: absolute;
-        top: 86px;
-        right: 16px;
-        bottom: 20px;
+        top: 0;
+        right: 0;
+        bottom: 0;
         width: 276px;
         z-index: 1100;
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        padding: 14px 12px 12px;
+        padding: 72px 16px 16px 14px;
         font-size: 13px;
         background: var(--glass);
-        border: 1px solid var(--line);
-        border-radius: 12px;
+        border: none;
+        border-left: 1px solid var(--line);
+        border-radius: 0;
         backdrop-filter: blur(18px);
         -webkit-backdrop-filter: blur(18px);
         transition: transform 280ms ease, opacity 220ms ease;
       }
       #app.panel-collapsed #sidebar {
-        transform: translateX(calc(100% + 28px));
+        transform: translateX(100%);
         opacity: 0;
         pointer-events: none;
       }
       .panel-toggle {
         position: absolute;
-        top: 86px;
-        right: 292px;
+        top: 78px;
+        right: 276px;
         z-index: 1110;
         width: 22px;
         height: 36px;
@@ -417,21 +435,21 @@
         border-right: none;
         border-radius: 8px 0 0 8px;
         background: var(--glass);
-        color: var(--ink);
+        color: var(--muted);
         font-size: 14px;
         line-height: 1;
         cursor: pointer;
         backdrop-filter: blur(18px);
         -webkit-backdrop-filter: blur(18px);
-        transition: right 280ms ease;
+        transition: right 280ms ease, background 160ms ease;
+      }
+      .panel-toggle:hover {
+        color: var(--ink);
+        background: rgba(243, 238, 228, 0.08);
       }
       #app.panel-collapsed .panel-toggle {
         right: 0;
-        border-right: 1px solid var(--line);
-        border-radius: 8px 0 0 8px;
-      }
-      .panel-toggle:hover {
-        color: var(--accent);
+        color: var(--ink);
       }
       #app.panel-collapsed #timeline {
         right: 16px;
@@ -657,7 +675,7 @@
       #timeline {
         position: absolute;
         left: 16px;
-        right: 308px;
+        right: 276px;
         bottom: 16px;
         z-index: 1100;
         background: var(--glass);
@@ -760,7 +778,7 @@
           width: 240px;
         }
         .panel-toggle {
-          right: 256px;
+          right: 240px;
         }
       }
       @media (max-width: 560px) {
@@ -774,11 +792,14 @@
         }
         #sidebar {
           top: auto;
-          left: 12px;
-          right: 12px;
-          bottom: 12px;
+          left: 0;
+          right: 0;
+          bottom: 0;
           width: auto;
           max-height: 34%;
+          padding: 14px 16px 16px;
+          border-left: none;
+          border-top: 1px solid var(--line);
         }
         .panel-toggle {
           top: auto;
@@ -2654,7 +2675,7 @@
         if (layer.getBounds().isValid()) {
           map.fitBounds(layer.getBounds(), {
             paddingTopLeft: [28, 96],
-            paddingBottomRight: [panelCollapsed ? 36 : 300, 28],
+            paddingBottomRight: [panelCollapsed ? 36 : 276, 0],
             maxZoom: 7,
           });
         }

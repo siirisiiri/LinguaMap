@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-09-20T13:17:14.511041+00:00",
+  "started_at": "2026-09-20T13:23:09.247989+00:00",
   "overlap": true,
   "max_crawls": 2,
   "max_fetches": 1,
@@ -13,9 +13,25 @@
     "Brazil",
     "Canada"
   ],
-  "completed": [],
+  "completed": [
+    {
+      "id": "chile",
+      "name": "Chile",
+      "result": "crawled"
+    },
+    {
+      "id": "peru",
+      "name": "Peru",
+      "result": "crawled"
+    },
+    {
+      "id": "colombia",
+      "name": "Colombia",
+      "result": "crawled"
+    }
+  ],
   "failed": [],
-  "current": "Russia, Chile, Peru",
-  "updated_at": "2026-09-20T13:23:06.567843+00:00",
-  "phase": "crawls=['Russia', 'Chile'] fetches=['Peru']"
+  "current": "Russia, Argentina",
+  "updated_at": "2026-09-20T13:29:26.283650+00:00",
+  "phase": "crawls=['Russia'] fetches=['Argentina']"
 }

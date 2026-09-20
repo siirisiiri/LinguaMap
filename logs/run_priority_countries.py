@@ -165,13 +165,23 @@ class CountryJob:
     def needs_crawl(self) -> bool:
         if self.crawl_done or self.crawl_pid is not None:
             return False
-        if not self.records_ready():
+        recs = load_records(self.path)
+        if not recs:
             return False
-        n = self.unlabeled()
-        if n == 0:
+        n = len(recs)
+        u = unlabeled_count(recs)
+        if u == 0:
             self.crawl_done = True
             self.fetch_done = True
             self.result = "complete"
+            return False
+        labeled_frac = (n - u) / n
+        # A finished crawl still leaves fetch-failed URLs unlabeled. Don't
+        # occupy a slot retrying those unless almost nothing was labeled.
+        if labeled_frac >= 0.15:
+            self.crawl_done = True
+            self.fetch_done = True
+            self.result = "crawled"
             return False
         return True
 
