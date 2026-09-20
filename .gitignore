@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Overpass tile cache for --by-area runs
+.osm_tile_cache/

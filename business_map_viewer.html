@@ -370,7 +370,7 @@
       }
 
       function titleCase(s) {
-        return s.charAt(0).toUpperCase() + s.slice(1);
+        return s.replace(/(^|\s)\S/g, (c) => c.toUpperCase());
       }
 
       function pct(fraction) {
@@ -569,6 +569,10 @@
       let hierarchy = [];
       let currentParent = null;
       const authorityCache = new Map();
+      // In-flight boundary fetches, so a background warm-up and a click on the
+      // same area share one request instead of racing each other.
+      const childrenRequests = new Map();
+      let admin1Index = null;
       let drillBusy = false;
 
       // ------------------------------------------------------------ data loading
@@ -1186,6 +1190,7 @@
         render();
         if (index === 0) map.setView([20, 0], 2);
         else fitToAreas();
+        warmNextLevel();
       }
 
       function escapeOverpass(value) {
@@ -1267,25 +1272,43 @@
           .map((el) => el.id);
       }
 
-      async function fetchRelationsGeom(ids, label) {
-        const features = [];
-        const chunks = Math.ceil(ids.length / 25);
-        for (let i = 0; i < ids.length; i += 25) {
-          setProgress(
-            `Downloading boundaries for ${label} (part ${i / 25 + 1} of ${chunks})…`,
-          );
-          const data = await postOverpass(`
-            [out:json][timeout:180];
-            rel(id:${ids.slice(i, i + 25).join(",")});
-            out geom;
-          `);
-          if (data) features.push(...osmToGeoJSON(data).features);
+      /**
+       * Overpass grants a client two query slots, so two chunks in flight is
+       * the most that helps; the queue wait dominates, which is why chunks are
+       * large.
+       */
+      const GEOM_CHUNK = 100;
+      const GEOM_CONCURRENCY = 2;
+
+      async function fetchRelationsGeom(ids, label, report) {
+        const queue = [];
+        for (let i = 0; i < ids.length; i += GEOM_CHUNK) {
+          queue.push(ids.slice(i, i + GEOM_CHUNK));
         }
+        const parts = queue.length;
+        const features = [];
+        let done = 0;
+        const worker = async () => {
+          while (queue.length) {
+            const chunk = queue.shift();
+            report(`Downloading boundaries for ${label} (part ${done + 1} of ${parts})…`);
+            const data = await postOverpass(`
+              [out:json][timeout:240];
+              rel(id:${chunk.join(",")});
+              out geom;
+            `);
+            if (data) features.push(...osmToGeoJSON(data).features);
+            done += 1;
+          }
+        };
+        await Promise.all(
+          Array.from({ length: Math.min(GEOM_CONCURRENCY, parts) }, worker),
+        );
         return features;
       }
 
-      async function fetchChildrenByArea(parentId, adminLevel, label) {
-        setProgress(`Looking for level-${adminLevel} areas inside ${label}…`);
+      async function fetchChildrenByArea(parentId, adminLevel, label, report) {
+        report(`Looking for level-${adminLevel} areas inside ${label}…`);
         const data = await postOverpass(`
           [out:json][timeout:180];
           rel(${parentId});
@@ -1296,28 +1319,46 @@
         return data ? osmToGeoJSON(data).features : [];
       }
 
-      async function fetchChildrenOfRelation(parent) {
+      async function fetchChildrenOfRelation(parent, { quiet = false } = {}) {
         const cacheKey = "children:" + parent.osm_id;
         if (authorityCache.has(cacheKey)) return authorityCache.get(cacheKey);
-        setProgress(`Listing subdivisions of ${parent.name}…`);
-        const childIds = await fetchChildRelationIds(parent.osm_id);
-        let features = childIds.length ? await fetchRelationsGeom(childIds, parent.name) : [];
-        if (features.length < 2) {
-          const parentLevel = parseInt(parent.admin_level || "4", 10);
-          const guess = parentLevel <= 2 ? "4" : parentLevel <= 4 ? "6" : "8";
-          const byArea = await fetchChildrenByArea(parent.osm_id, guess, parent.name);
-          if (byArea.length >= 2) features = byArea;
-          else {
-            const deeper = await fetchChildrenByArea(
+        if (childrenRequests.has(cacheKey)) return childrenRequests.get(cacheKey);
+        const report = quiet ? () => {} : setProgress;
+        const job = (async () => {
+          report(`Listing subdivisions of ${parent.name}…`);
+          const childIds = await fetchChildRelationIds(parent.osm_id);
+          let features = childIds.length
+            ? await fetchRelationsGeom(childIds, parent.name, report)
+            : [];
+          if (features.length < 2) {
+            const parentLevel = parseInt(parent.admin_level || "4", 10);
+            const guess = parentLevel <= 2 ? "4" : parentLevel <= 4 ? "6" : "8";
+            const byArea = await fetchChildrenByArea(
               parent.osm_id,
-              String(Math.min(10, parseInt(guess, 10) + 2)),
+              guess,
               parent.name,
+              report,
             );
-            if (deeper.length) features = deeper;
+            if (byArea.length >= 2) features = byArea;
+            else {
+              const deeper = await fetchChildrenByArea(
+                parent.osm_id,
+                String(Math.min(10, parseInt(guess, 10) + 2)),
+                parent.name,
+                report,
+              );
+              if (deeper.length) features = deeper;
+            }
           }
+          if (features.length) authorityCache.set(cacheKey, features);
+          return features;
+        })();
+        childrenRequests.set(cacheKey, job);
+        try {
+          return await job;
+        } finally {
+          childrenRequests.delete(cacheKey);
         }
-        if (features.length) authorityCache.set(cacheKey, features);
-        return features;
       }
 
       async function loadWorldCountries() {
@@ -1330,6 +1371,65 @@
         return features;
       }
 
+      // ------------------------------------------------- prebuilt first level
+
+      /**
+       * fetch_admin1.py bakes every country's states/provinces into
+       * data/admin1/, one file per country, with the OSM relation ids needed to
+       * keep drilling. Anything covered there loads from disk in milliseconds
+       * instead of costing a live Overpass geometry query.
+       */
+      async function loadAdmin1Index() {
+        if (admin1Index) return admin1Index;
+        admin1Index = {};
+        try {
+          const resp = await fetch("data/admin1/index.json");
+          if (resp.ok) admin1Index = await resp.json();
+          else console.warn("No prebuilt admin1 index; run fetch_admin1.py.");
+        } catch (err) {
+          console.warn("Could not read prebuilt admin1 index", err);
+        }
+        return admin1Index;
+      }
+
+      /** Prebuilt subdivisions of a country, or null if it is not covered. */
+      async function loadPrebuiltChildren(parentOsmId) {
+        if (!parentOsmId) return null;
+        const cacheKey = "prebuilt:" + parentOsmId;
+        if (authorityCache.has(cacheKey)) return authorityCache.get(cacheKey);
+        const entry = (await loadAdmin1Index())[String(parentOsmId)];
+        if (!entry) return null;
+        try {
+          const resp = await fetch(entry.url);
+          if (!resp.ok) return null;
+          const features = (await resp.json()).features || [];
+          if (features.length < 2) return null;
+          authorityCache.set(cacheKey, features);
+          return features;
+        } catch (err) {
+          console.warn("Could not read prebuilt boundaries", entry.url, err);
+          return null;
+        }
+      }
+
+      /**
+       * Prebuilt areas keep their OSM id so the next level still works, but a
+       * few hundred worldwide have no id to match; those fall back to a name
+       * lookup at the moment they are drilled.
+       */
+      async function resolveParent(feature) {
+        const name = feature.properties.name;
+        if (feature.properties.osm_id) {
+          return {
+            osm_id: feature.properties.osm_id,
+            name,
+            admin_level: feature.properties.admin_level,
+          };
+        }
+        setProgress(`Finding “${name}” in OpenStreetMap…`);
+        return findParentRelation(name);
+      }
+
       async function drillInto(feature) {
         if (drillBusy) return;
         showMapMessage("");
@@ -1340,22 +1440,29 @@
           return;
         }
         drillBusy = true;
-        showMapMessage(
-          `Fetching ${name}'s boundaries from OpenStreetMap. This takes a minute or two the first time, then it is cached.`,
-        );
         try {
-          const children = await fetchChildrenOfRelation({
-            osm_id: feature.properties.osm_id,
-            name,
-            admin_level: feature.properties.admin_level,
-          });
+          let children = await loadPrebuiltChildren(feature.properties.osm_id);
+          let parentId = feature.properties.osm_id;
+          if (!children) {
+            showMapMessage(
+              `Fetching ${name}'s boundaries from OpenStreetMap. This takes a minute or two the first time, then it is cached.`,
+            );
+            const parent = await resolveParent(feature);
+            if (!parent) {
+              showMapMessage(`No OSM administrative area matches ${name}.`);
+              updateStats();
+              return;
+            }
+            parentId = parent.osm_id;
+            children = await fetchChildrenOfRelation(parent);
+          }
           if (!children.length) {
             showMapMessage(`${name} has no OSM administrative subdivisions.`);
             updateStats();
             return;
           }
-          hierarchy.push({ name, osm_id: feature.properties.osm_id, features: children });
-          currentParent = { name, osm_id: feature.properties.osm_id };
+          hierarchy.push({ name, osm_id: parentId, features: children });
+          currentParent = { name, osm_id: parentId };
           authorityFeatures = children;
           assignAuthorities();
           showMapMessage("");
@@ -1363,6 +1470,65 @@
           fitToAreas();
         } finally {
           drillBusy = false;
+        }
+        warmNextLevel();
+      }
+
+      // ---------------------------------------------------- background warm-up
+
+      /**
+       * The areas most likely to be clicked next are the ones holding the most
+       * data, so their children are fetched before anyone asks. Prebuilt levels
+       * cost a local file read; below that we speculate on one live query at a
+       * time, and serve.py caches it on disk so the guess also pays off after a
+       * reload.
+       */
+      const WARM_AREAS = 3;
+      const WARM_LIVE_QUERIES = 1;
+      const warmQueue = [];
+      let warming = false;
+
+      function warmNextLevel() {
+        if (viewMode !== "areas") return;
+        warmQueue.length = 0;
+        warmQueue.push(
+          ...[...authorityStats().values()]
+            .filter((rec) => rec.classified)
+            .sort((a, b) => b.classified - a.classified)
+            .slice(0, WARM_AREAS)
+            .map((rec) => rec.feature),
+        );
+        drainWarmQueue();
+      }
+
+      async function drainWarmQueue() {
+        if (warming) return;
+        warming = true;
+        let liveBudget = WARM_LIVE_QUERIES;
+        try {
+          while (warmQueue.length) {
+            const feature = warmQueue.shift();
+            const props = feature.properties;
+            if (drillBusy) {
+              // A real drill is running; don't compete for Overpass slots.
+              warmQueue.unshift(feature);
+              await new Promise((resolve) => setTimeout(resolve, 1500));
+              continue;
+            }
+            try {
+              if (await loadPrebuiltChildren(props.osm_id)) continue;
+              if (!props.osm_id || liveBudget <= 0) continue;
+              liveBudget -= 1;
+              await fetchChildrenOfRelation(
+                { osm_id: props.osm_id, name: props.name, admin_level: props.admin_level },
+                { quiet: true },
+              );
+            } catch (err) {
+              console.warn("Boundary warm-up failed for", props.name, err);
+            }
+          }
+        } finally {
+          warming = false;
         }
       }
 
@@ -1390,6 +1556,7 @@
           }
         }
         render();
+        if (mode === "areas") warmNextLevel();
       }
 
       // ------------------------------------------------------------------ events
@@ -1401,14 +1568,17 @@
         e.preventDefault();
         const name = document.getElementById("areaName").value.trim();
         if (!name) return;
-        showMapMessage(
-          `Fetching boundaries for “${name}” from OpenStreetMap. This takes a minute or two the first time, then it is cached.`,
-        );
         setProgress(`Finding “${name}”…`);
         try {
           const parent = await findParentRelation(name);
           if (!parent) throw new Error(`No OSM administrative area named “${name}”.`);
-          const children = await fetchChildrenOfRelation(parent);
+          let children = await loadPrebuiltChildren(parent.osm_id);
+          if (!children) {
+            showMapMessage(
+              `Fetching boundaries for “${parent.name}” from OpenStreetMap. This takes a minute or two the first time, then it is cached.`,
+            );
+            children = await fetchChildrenOfRelation(parent);
+          }
           if (!children.length) {
             throw new Error(`OSM has no administrative subdivisions for ${parent.name}.`);
           }
@@ -1426,6 +1596,7 @@
           showMapMessage("");
           render();
           fitToAreas();
+          warmNextLevel();
         } catch (err) {
           showMapMessage(err.message || String(err));
           updateStats();
@@ -1443,6 +1614,7 @@
       // -------------------------------------------------------------------- boot
 
       (async () => {
+        loadAdmin1Index(); // in flight before the first click needs it
         await loadDatasets();
         if (!points.length) return;
         setOverlay("");

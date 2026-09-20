@@ -1,0 +1,842 @@
+{
+ "108089": {
+  "count": 24,
+  "iso": "EC",
+  "url": "data/admin1/EC.geojson"
+ },
+ "114686": {
+  "count": 33,
+  "iso": "MX",
+  "url": "data/admin1/MX.geojson"
+ },
+ "120027": {
+  "count": 34,
+  "iso": "CO",
+  "url": "data/admin1/CO.geojson"
+ },
+ "1311341": {
+  "count": 52,
+  "iso": "ES",
+  "url": "data/admin1/ES.geojson"
+ },
+ "1428125": {
+  "count": 13,
+  "iso": "CA",
+  "url": "data/admin1/CA.geojson"
+ },
+ "14296": {
+  "count": 8,
+  "iso": "SK",
+  "url": "data/admin1/SK.geojson"
+ },
+ "1473946": {
+  "count": 6,
+  "iso": "IL",
+  "url": "data/admin1/IL.geojson"
+ },
+ "1473947": {
+  "count": 27,
+  "iso": "EG",
+  "url": "data/admin1/EG.geojson"
+ },
+ "148838": {
+  "count": 52,
+  "iso": "US",
+  "url": "data/admin1/US.geojson"
+ },
+ "1520612": {
+  "count": 14,
+  "iso": "SV",
+  "url": "data/admin1/SV.geojson"
+ },
+ "1521463": {
+  "count": 22,
+  "iso": "GT",
+  "url": "data/admin1/GT.geojson"
+ },
+ "161033": {
+  "count": 22,
+  "iso": "MN",
+  "url": "data/admin1/MN.geojson"
+ },
+ "16239": {
+  "count": 9,
+  "iso": "AT",
+  "url": "data/admin1/AT.geojson"
+ },
+ "1656678": {
+  "count": 10,
+  "iso": "SS",
+  "url": "data/admin1/SS.geojson"
+ },
+ "167454": {
+  "count": 16,
+  "iso": "CL",
+  "url": "data/admin1/CL.geojson"
+ },
+ "171496": {
+  "count": 5,
+  "iso": "RW",
+  "url": "data/admin1/RW.geojson"
+ },
+ "1741311": {
+  "count": 25,
+  "iso": "RS",
+  "url": "data/admin1/RS.geojson"
+ },
+ "174737": {
+  "count": 81,
+  "iso": "TR",
+  "url": "data/admin1/TR.geojson"
+ },
+ "178009": {
+  "count": 8,
+  "iso": "KG",
+  "url": "data/admin1/KG.geojson"
+ },
+ "184629": {
+  "count": 20,
+  "iso": "BT",
+  "url": "data/admin1/BT.geojson"
+ },
+ "184633": {
+  "count": 14,
+  "iso": "NP",
+  "url": "data/admin1/NP.geojson"
+ },
+ "184640": {
+  "count": 7,
+  "iso": "BD",
+  "url": "data/admin1/BD.geojson"
+ },
+ "184818": {
+  "count": 12,
+  "iso": "JO",
+  "url": "data/admin1/JO.geojson"
+ },
+ "184840": {
+  "count": 15,
+  "iso": "SY",
+  "url": "data/admin1/SY.geojson"
+ },
+ "184843": {
+  "count": 6,
+  "iso": "LB",
+  "url": "data/admin1/LB.geojson"
+ },
+ "1857436": {
+  "count": 10,
+  "iso": "SB",
+  "url": "data/admin1/SB.geojson"
+ },
+ "186382": {
+  "count": 28,
+  "iso": "BG",
+  "url": "data/admin1/BG.geojson"
+ },
+ "1889339": {
+  "count": 15,
+  "iso": "BW",
+  "url": "data/admin1/BW.geojson"
+ },
+ "192307": {
+  "count": 14,
+  "iso": "GR",
+  "url": "data/admin1/GR.geojson"
+ },
+ "192734": {
+  "count": 11,
+  "iso": "KP",
+  "url": "data/admin1/KP.geojson"
+ },
+ "192756": {
+  "count": 48,
+  "iso": "DZ",
+  "url": "data/admin1/DZ.geojson"
+ },
+ "192757": {
+  "count": 23,
+  "iso": "TN",
+  "url": "data/admin1/TN.geojson"
+ },
+ "192758": {
+  "count": 22,
+  "iso": "LY",
+  "url": "data/admin1/LY.geojson"
+ },
+ "192763": {
+  "count": 13,
+  "iso": "MR",
+  "url": "data/admin1/MR.geojson"
+ },
+ "192774": {
+  "count": 6,
+  "iso": "GM",
+  "url": "data/admin1/GM.geojson"
+ },
+ "192775": {
+  "count": 14,
+  "iso": "SN",
+  "url": "data/admin1/SN.geojson"
+ },
+ "192776": {
+  "count": 9,
+  "iso": "GW",
+  "url": "data/admin1/GW.geojson"
+ },
+ "192777": {
+  "count": 4,
+  "iso": "SL",
+  "url": "data/admin1/SL.geojson"
+ },
+ "192778": {
+  "count": 34,
+  "iso": "GN",
+  "url": "data/admin1/GN.geojson"
+ },
+ "192779": {
+  "count": 19,
+  "iso": "CI",
+  "url": "data/admin1/CI.geojson"
+ },
+ "192780": {
+  "count": 15,
+  "iso": "LR",
+  "url": "data/admin1/LR.geojson"
+ },
+ "192781": {
+  "count": 10,
+  "iso": "GH",
+  "url": "data/admin1/GH.geojson"
+ },
+ "192782": {
+  "count": 5,
+  "iso": "TG",
+  "url": "data/admin1/TG.geojson"
+ },
+ "192783": {
+  "count": 45,
+  "iso": "BF",
+  "url": "data/admin1/BF.geojson"
+ },
+ "192784": {
+  "count": 12,
+  "iso": "BJ",
+  "url": "data/admin1/BJ.geojson"
+ },
+ "192785": {
+  "count": 9,
+  "iso": "ML",
+  "url": "data/admin1/ML.geojson"
+ },
+ "192786": {
+  "count": 8,
+  "iso": "NE",
+  "url": "data/admin1/NE.geojson"
+ },
+ "192787": {
+  "count": 37,
+  "iso": "NG",
+  "url": "data/admin1/NG.geojson"
+ },
+ "192789": {
+  "count": 17,
+  "iso": "SD",
+  "url": "data/admin1/SD.geojson"
+ },
+ "192790": {
+  "count": 17,
+  "iso": "CF",
+  "url": "data/admin1/CF.geojson"
+ },
+ "192791": {
+  "count": 7,
+  "iso": "GQ",
+  "url": "data/admin1/GQ.geojson"
+ },
+ "192793": {
+  "count": 9,
+  "iso": "GA",
+  "url": "data/admin1/GA.geojson"
+ },
+ "192794": {
+  "count": 12,
+  "iso": "CG",
+  "url": "data/admin1/CG.geojson"
+ },
+ "192795": {
+  "count": 11,
+  "iso": "CD",
+  "url": "data/admin1/CD.geojson"
+ },
+ "192796": {
+  "count": 112,
+  "iso": "UG",
+  "url": "data/admin1/UG.geojson"
+ },
+ "192798": {
+  "count": 8,
+  "iso": "KE",
+  "url": "data/admin1/KE.geojson"
+ },
+ "192799": {
+  "count": 13,
+  "iso": "SO",
+  "url": "data/admin1/SO.geojson"
+ },
+ "192800": {
+  "count": 11,
+  "iso": "ET",
+  "url": "data/admin1/ET.geojson"
+ },
+ "192801": {
+  "count": 6,
+  "iso": "DJ",
+  "url": "data/admin1/DJ.geojson"
+ },
+ "192830": {
+  "count": 10,
+  "iso": "CM",
+  "url": "data/admin1/CM.geojson"
+ },
+ "195266": {
+  "count": 13,
+  "iso": "NA",
+  "url": "data/admin1/NA.geojson"
+ },
+ "195267": {
+  "count": 18,
+  "iso": "AO",
+  "url": "data/admin1/AO.geojson"
+ },
+ "195269": {
+  "count": 17,
+  "iso": "BI",
+  "url": "data/admin1/BI.geojson"
+ },
+ "195270": {
+  "count": 30,
+  "iso": "TZ",
+  "url": "data/admin1/TZ.geojson"
+ },
+ "195271": {
+  "count": 10,
+  "iso": "ZM",
+  "url": "data/admin1/ZM.geojson"
+ },
+ "195272": {
+  "count": 10,
+  "iso": "ZW",
+  "url": "data/admin1/ZW.geojson"
+ },
+ "195273": {
+  "count": 11,
+  "iso": "MZ",
+  "url": "data/admin1/MZ.geojson"
+ },
+ "195290": {
+  "count": 28,
+  "iso": "MW",
+  "url": "data/admin1/MW.geojson"
+ },
+ "196240": {
+  "count": 14,
+  "iso": "UZ",
+  "url": "data/admin1/UZ.geojson"
+ },
+ "2067731": {
+  "count": 77,
+  "iso": "TH",
+  "url": "data/admin1/TH.geojson"
+ },
+ "2088990": {
+  "count": 30,
+  "iso": "XK",
+  "url": "data/admin1/XK.geojson"
+ },
+ "2093234": {
+  "count": 10,
+  "iso": "LS",
+  "url": "data/admin1/LS.geojson"
+ },
+ "2103120": {
+  "count": 4,
+  "iso": "BN",
+  "url": "data/admin1/BN.geojson"
+ },
+ "2108121": {
+  "count": 16,
+  "iso": "MY",
+  "url": "data/admin1/MY.geojson"
+ },
+ "21335": {
+  "count": 43,
+  "iso": "HU",
+  "url": "data/admin1/HU.geojson"
+ },
+ "214626": {
+  "count": 5,
+  "iso": "TJ",
+  "url": "data/admin1/TJ.geojson"
+ },
+ "214665": {
+  "count": 16,
+  "iso": "KZ",
+  "url": "data/admin1/KZ.geojson"
+ },
+ "214885": {
+  "count": 21,
+  "iso": "HR",
+  "url": "data/admin1/HR.geojson"
+ },
+ "2171347": {
+  "count": 3,
+  "iso": "LU",
+  "url": "data/admin1/LU.geojson"
+ },
+ "2177246": {
+  "count": 6,
+  "iso": "VU",
+  "url": "data/admin1/VU.geojson"
+ },
+ "2184073": {
+  "count": 6,
+  "iso": "GL",
+  "url": "data/admin1/GL.geojson"
+ },
+ "2185374": {
+  "count": 1,
+  "iso": "FK",
+  "url": "data/admin1/FK.geojson"
+ },
+ "218657": {
+  "count": 193,
+  "iso": "SI",
+  "url": "data/admin1/SI.geojson"
+ },
+ "2202162": {
+  "count": 101,
+  "iso": "FR",
+  "url": "data/admin1/FR.geojson"
+ },
+ "223026": {
+  "count": 5,
+  "iso": "TM",
+  "url": "data/admin1/TM.geojson"
+ },
+ "2323309": {
+  "count": 16,
+  "iso": "NL",
+  "url": "data/admin1/NL.geojson"
+ },
+ "2361304": {
+  "count": 22,
+  "iso": "TD",
+  "url": "data/admin1/TD.geojson"
+ },
+ "252645": {
+  "count": 9,
+  "iso": "BO",
+  "url": "data/admin1/BO.geojson"
+ },
+ "2528142": {
+  "count": 18,
+  "iso": "BA",
+  "url": "data/admin1/BA.geojson"
+ },
+ "270056": {
+  "count": 32,
+  "iso": "CN",
+  "url": "data/admin1/CN.geojson"
+ },
+ "272644": {
+  "count": 26,
+  "iso": "VE",
+  "url": "data/admin1/VE.geojson"
+ },
+ "286393": {
+  "count": 24,
+  "iso": "AR",
+  "url": "data/admin1/AR.geojson"
+ },
+ "28699": {
+  "count": 12,
+  "iso": "GE",
+  "url": "data/admin1/GE.geojson"
+ },
+ "287072": {
+  "count": 19,
+  "iso": "UY",
+  "url": "data/admin1/UY.geojson"
+ },
+ "287077": {
+  "count": 18,
+  "iso": "PY",
+  "url": "data/admin1/PY.geojson"
+ },
+ "287082": {
+  "count": 10,
+  "iso": "SR",
+  "url": "data/admin1/SR.geojson"
+ },
+ "287083": {
+  "count": 10,
+  "iso": "GY",
+  "url": "data/admin1/GY.geojson"
+ },
+ "287666": {
+  "count": 17,
+  "iso": "NI",
+  "url": "data/admin1/NI.geojson"
+ },
+ "287667": {
+  "count": 7,
+  "iso": "CR",
+  "url": "data/admin1/CR.geojson"
+ },
+ "287668": {
+  "count": 12,
+  "iso": "PA",
+  "url": "data/admin1/PA.geojson"
+ },
+ "287670": {
+  "count": 18,
+  "iso": "HN",
+  "url": "data/admin1/HN.geojson"
+ },
+ "287827": {
+  "count": 6,
+  "iso": "BZ",
+  "url": "data/admin1/BZ.geojson"
+ },
+ "288247": {
+  "count": 26,
+  "iso": "PE",
+  "url": "data/admin1/PE.geojson"
+ },
+ "295480": {
+  "count": 20,
+  "iso": "PT",
+  "url": "data/admin1/PT.geojson"
+ },
+ "296961": {
+  "count": 6,
+  "iso": "ER",
+  "url": "data/admin1/ER.geojson"
+ },
+ "2978650": {
+  "count": 21,
+  "iso": "NO",
+  "url": "data/admin1/NO.geojson"
+ },
+ "299133": {
+  "count": 9,
+  "iso": "IS",
+  "url": "data/admin1/IS.geojson"
+ },
+ "303427": {
+  "count": 34,
+  "iso": "AF",
+  "url": "data/admin1/AF.geojson"
+ },
+ "304716": {
+  "count": 36,
+  "iso": "IN",
+  "url": "data/admin1/IN.geojson"
+ },
+ "304751": {
+  "count": 33,
+  "iso": "ID",
+  "url": "data/admin1/ID.geojson"
+ },
+ "304934": {
+  "count": 18,
+  "iso": "IQ",
+  "url": "data/admin1/IQ.geojson"
+ },
+ "304938": {
+  "count": 31,
+  "iso": "IR",
+  "url": "data/admin1/IR.geojson"
+ },
+ "305092": {
+  "count": 21,
+  "iso": "YE",
+  "url": "data/admin1/YE.geojson"
+ },
+ "305095": {
+  "count": 7,
+  "iso": "QA",
+  "url": "data/admin1/QA.geojson"
+ },
+ "305099": {
+  "count": 6,
+  "iso": "KW",
+  "url": "data/admin1/KW.geojson"
+ },
+ "305138": {
+  "count": 11,
+  "iso": "OM",
+  "url": "data/admin1/OM.geojson"
+ },
+ "305142": {
+  "count": 13,
+  "iso": "TL",
+  "url": "data/admin1/TL.geojson"
+ },
+ "307573": {
+  "count": 8,
+  "iso": "PK",
+  "url": "data/admin1/PK.geojson"
+ },
+ "307584": {
+  "count": 13,
+  "iso": "SA",
+  "url": "data/admin1/SA.geojson"
+ },
+ "307756": {
+  "count": 17,
+  "iso": "KR",
+  "url": "data/admin1/KR.geojson"
+ },
+ "307763": {
+  "count": 9,
+  "iso": "AE",
+  "url": "data/admin1/AE.geojson"
+ },
+ "307787": {
+  "count": 5,
+  "iso": "CY",
+  "url": "data/admin1/CY.geojson"
+ },
+ "307828": {
+  "count": 32,
+  "iso": "DO",
+  "url": "data/admin1/DO.geojson"
+ },
+ "307829": {
+  "count": 10,
+  "iso": "HT",
+  "url": "data/admin1/HT.geojson"
+ },
+ "307833": {
+  "count": 16,
+  "iso": "CU",
+  "url": "data/admin1/CU.geojson"
+ },
+ "307866": {
+  "count": 20,
+  "iso": "PG",
+  "url": "data/admin1/PG.geojson"
+ },
+ "3630439": {
+  "count": 16,
+  "iso": "MA",
+  "url": "data/admin1/MA.geojson"
+ },
+ "364066": {
+  "count": 11,
+  "iso": "AM",
+  "url": "data/admin1/AM.geojson"
+ },
+ "364110": {
+  "count": 78,
+  "iso": "AZ",
+  "url": "data/admin1/AZ.geojson"
+ },
+ "365331": {
+  "count": 110,
+  "iso": "IT",
+  "url": "data/admin1/IT.geojson"
+ },
+ "382313": {
+  "count": 47,
+  "iso": "JP",
+  "url": "data/admin1/JP.geojson"
+ },
+ "443174": {
+  "count": 118,
+  "iso": "PH",
+  "url": "data/admin1/PH.geojson"
+ },
+ "447325": {
+  "count": 22,
+  "iso": "MG",
+  "url": "data/admin1/MG.geojson"
+ },
+ "49715": {
+  "count": 16,
+  "iso": "PL",
+  "url": "data/admin1/PL.geojson"
+ },
+ "49898": {
+  "count": 24,
+  "iso": "KH",
+  "url": "data/admin1/KH.geojson"
+ },
+ "49903": {
+  "count": 17,
+  "iso": "LA",
+  "url": "data/admin1/LA.geojson"
+ },
+ "49915": {
+  "count": 63,
+  "iso": "VN",
+  "url": "data/admin1/VN.geojson"
+ },
+ "50046": {
+  "count": 5,
+  "iso": "DK",
+  "url": "data/admin1/DK.geojson"
+ },
+ "50371": {
+  "count": 14,
+  "iso": "MM",
+  "url": "data/admin1/MM.geojson"
+ },
+ "51477": {
+  "count": 16,
+  "iso": "DE",
+  "url": "data/admin1/DE.geojson"
+ },
+ "51684": {
+  "count": 14,
+  "iso": "CZ",
+  "url": "data/admin1/CZ.geojson"
+ },
+ "51701": {
+  "count": 26,
+  "iso": "CH",
+  "url": "data/admin1/CH.geojson"
+ },
+ "52411": {
+  "count": 11,
+  "iso": "BE",
+  "url": "data/admin1/BE.geojson"
+ },
+ "52822": {
+  "count": 21,
+  "iso": "SE",
+  "url": "data/admin1/SE.geojson"
+ },
+ "53292": {
+  "count": 12,
+  "iso": "AL",
+  "url": "data/admin1/AL.geojson"
+ },
+ "53293": {
+  "count": 84,
+  "iso": "MK",
+  "url": "data/admin1/MK.geojson"
+ },
+ "53296": {
+  "count": 21,
+  "iso": "ME",
+  "url": "data/admin1/ME.geojson"
+ },
+ "536807": {
+  "count": 25,
+  "iso": "LK",
+  "url": "data/admin1/LK.geojson"
+ },
+ "54224": {
+  "count": 18,
+  "iso": "FI",
+  "url": "data/admin1/FI.geojson"
+ },
+ "547469": {
+  "count": 30,
+  "iso": "BS",
+  "url": "data/admin1/BS.geojson"
+ },
+ "555017": {
+  "count": 14,
+  "iso": "JM",
+  "url": "data/admin1/JM.geojson"
+ },
+ "555717": {
+  "count": 16,
+  "iso": "TT",
+  "url": "data/admin1/TT.geojson"
+ },
+ "556706": {
+  "count": 23,
+  "iso": "NZ",
+  "url": "data/admin1/NZ.geojson"
+ },
+ "571747": {
+  "count": 5,
+  "iso": "FJ",
+  "url": "data/admin1/FJ.geojson"
+ },
+ "58974": {
+  "count": 40,
+  "iso": "MD",
+  "url": "data/admin1/MD.geojson"
+ },
+ "59065": {
+  "count": 7,
+  "iso": "BY",
+  "url": "data/admin1/BY.geojson"
+ },
+ "59470": {
+  "count": 27,
+  "iso": "BR",
+  "url": "data/admin1/BR.geojson"
+ },
+ "60189": {
+  "count": 84,
+  "iso": "RU",
+  "url": "data/admin1/RU.geojson"
+ },
+ "60199": {
+  "count": 27,
+  "iso": "UA",
+  "url": "data/admin1/UA.geojson"
+ },
+ "62149": {
+  "count": 232,
+  "iso": "GB",
+  "url": "data/admin1/GB.geojson"
+ },
+ "62273": {
+  "count": 34,
+  "iso": "IE",
+  "url": "data/admin1/IE.geojson"
+ },
+ "72594": {
+  "count": 119,
+  "iso": "LV",
+  "url": "data/admin1/LV.geojson"
+ },
+ "72596": {
+  "count": 10,
+  "iso": "LT",
+  "url": "data/admin1/LT.geojson"
+ },
+ "79510": {
+  "count": 15,
+  "iso": "EE",
+  "url": "data/admin1/EE.geojson"
+ },
+ "80500": {
+  "count": 12,
+  "iso": "AU",
+  "url": "data/admin1/AU.geojson"
+ },
+ "87565": {
+  "count": 9,
+  "iso": "ZA",
+  "url": "data/admin1/ZA.geojson"
+ },
+ "88210": {
+  "count": 4,
+  "iso": "SZ",
+  "url": "data/admin1/SZ.geojson"
+ },
+ "90689": {
+  "count": 42,
+  "iso": "RO",
+  "url": "data/admin1/RO.geojson"
+ }
+}

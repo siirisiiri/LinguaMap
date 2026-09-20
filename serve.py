@@ -5,8 +5,10 @@ Usage: python3 serve.py [--port 8000] [--no-browser]
 
 The viewer asks /api/datasets which files to load, so dropping a new
 data/<Region>.json in place is enough to make it show up on the next refresh.
-Boundary lookups go through /api/overpass, which caches every response under
-.cache/overpass so drilling into an area is slow only the first time.
+Country and first-level boundaries are served straight from data/, prebuilt by
+fetch_countries.py and fetch_admin1.py. Deeper levels go through
+/api/overpass, which caches every response under .cache/overpass so drilling
+into an area is slow only the first time.
 """
 
 from __future__ import annotations

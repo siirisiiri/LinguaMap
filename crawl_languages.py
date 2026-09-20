@@ -2,8 +2,13 @@
 """
 Lightweight multi-language homepage classifier for OSM websites.
 
-Fetches a small homepage prefix, scores distinctive function-word hits for
-several languages, and detects language-switch signals (hreflang + nav links).
+Fetches a small homepage prefix, then labels it from three signals: the
+writing system and script-exclusive letters, distinctive function-word hits,
+and language-switch markers (hreflang + nav links).
+
+Script evidence does most of the work outside the Latin alphabet. Ukrainian
+and Russian share most of their short function words but never share і/ї/є/ґ
+with ы/э/ё, and Greek, Armenian or Hebrew text needs no vocabulary at all.
 
 `language` is always a list of language names, e.g.:
   ["english"]
@@ -117,7 +122,7 @@ LANGUAGE_WORDS: dict[str, frozenset[str]] = {
     }),
     "spanish": frozenset({
         "los", "las", "una", "del", "que", "con", "por", "para", "como",
-        "más", "mas", "pero", "todo", "esta", "este", "estos", "estas",
+        "más", "mas", "pero", "todo", "esta", "estos", "estas",
         "hay", "son", "está", "esta", "también", "tambien", "gracias",
         "inicio", "contacto", "español", "espanol", "inglés", "ingles",
         "privacidad", "nosotros", "nuestro", "nuestra", "sobre", "desde",
@@ -171,6 +176,68 @@ LANGUAGE_WORDS: dict[str, frozenset[str]] = {
         "niitsitapi", "blackfoot", "siksika", "kainai", "piikani",
         "niitsi'powahsin",
     }),
+    # Languages of Ukraine. Packs stay disjoint because score_languages gives
+    # a shared token to whichever pack is declared first; for these, letter
+    # evidence in SCRIPT_MARKERS is the stronger signal anyway.
+    "ukrainian": frozenset({
+        "що", "але", "від", "або", "дуже", "ласка", "головна", "послуги",
+        "детальніше", "також", "щоб", "який", "немає", "українська",
+        "українською", "вартість", "замовити", "розклад", "сторінка",
+        "зателефонуйте", "наші", "ваші", "адреса", "більше",
+    }),
+    "russian": frozenset({
+        "что", "это", "очень", "пожалуйста", "главная", "подробнее",
+        "новости", "если", "чтобы", "можно", "была", "были", "заказать",
+        "стоимость", "русский", "сейчас", "здесь", "наши", "ваши",
+    }),
+    "belarusian": frozenset({
+        "беларуская", "беларусь", "што", "кантакты", "галоўная", "навіны",
+        "паслугі", "таксама", "падрабязней", "старонка", "нашы",
+    }),
+    "bulgarian": frozenset({
+        "български", "съм", "това", "които", "към", "ще", "също", "моля",
+        "начало", "повече", "всички", "каквото", "защото", "дошли",
+    }),
+    "rusyn": frozenset({
+        "русинськый", "русиньскый", "русины", "руснак", "русинська",
+    }),
+    "crimean tatar": frozenset({
+        "qırım", "qırımtatar", "qırımtatarca", "qırımtatarlar",
+        "къырым", "къырымтатар", "къырымтатарджа",
+    }),
+    "romanian": frozenset({
+        "și", "este", "pentru", "această", "acest", "despre", "servicii",
+        "acasă", "sunt", "către", "română", "românește", "mulțumim",
+        "contactați", "informații", "pagina",
+    }),
+    "hungarian": frozenset({
+        "és", "nem", "hogy", "egy", "vagy", "meg", "kapcsolat",
+        "kezdőlap", "szolgáltatások", "magyar", "több", "minden", "csak",
+        "már", "köszönjük", "elérhetőség", "rólunk", "hírek",
+    }),
+    "polish": frozenset({
+        "się", "nie", "jest", "oraz", "przez", "strona", "główna",
+        "usługi", "więcej", "wszystkie", "polski", "dziękujemy",
+        "zapraszamy", "można", "naszej", "oferta", "aktualności",
+    }),
+    "slovak": frozenset({
+        "ktoré", "viac", "domov", "služby", "slovenčina", "ďakujeme",
+        "všetky", "môže", "stránka", "ponuka", "informácie",
+    }),
+    "gagauz": frozenset({
+        "gagauzca", "gagauz", "gagauziya", "gagauzlar",
+    }),
+    "greek": frozenset({
+        "ελληνικά", "και", "για", "στην", "είναι", "των", "αρχική",
+        "επικοινωνία", "υπηρεσίες", "περισσότερα", "μας",
+    }),
+    "yiddish": frozenset({
+        "ייִדיש", "אונדזער", "מיר", "זענען", "פֿון", "אויף",
+    }),
+    "armenian": frozenset({
+        "հայերեն", "մեր", "ենք", "կապ", "ծառայություններ", "մասին",
+        "գլխավոր", "նորություններ",
+    }),
 }
 
 # ISO / BCP47 style codes -> language name
@@ -207,7 +274,43 @@ CODE_TO_LANGUAGE: dict[str, str] = {
     "den": "dene",
     "scs": "dene",
     "bla": "blackfoot",
+    "uk": "ukrainian",
+    "ukr": "ukrainian",
+    "ru": "russian",
+    "rus": "russian",
+    "be": "belarusian",
+    "bel": "belarusian",
+    "bg": "bulgarian",
+    "bul": "bulgarian",
+    "rue": "rusyn",
+    "crh": "crimean tatar",
+    "ro": "romanian",
+    "ron": "romanian",
+    "rum": "romanian",
+    "mo": "romanian",
+    "mol": "romanian",
+    "hu": "hungarian",
+    "hun": "hungarian",
+    "pl": "polish",
+    "pol": "polish",
+    "sk": "slovak",
+    "slk": "slovak",
+    "slo": "slovak",
+    "gag": "gagauz",
+    "el": "greek",
+    "ell": "greek",
+    "gre": "greek",
+    "yi": "yiddish",
+    "yid": "yiddish",
+    "hy": "armenian",
+    "hye": "armenian",
+    "arm": "armenian",
 }
+
+# Codes that routinely appear in URL paths as something other than a language
+# ("/uk/" for United Kingdom, "/be/" for Belgium). hreflang and switcher text
+# for these are still trusted; only the path guess is not.
+AMBIGUOUS_PATH_CODES = frozenset({"uk", "be", "el", "ro", "sk", "mo", "no", "is"})
 
 # Nav / switcher link labels (lowercased exact-ish matches via SWITCH_LABEL_RE)
 SWITCH_LABEL_TO_LANGUAGE: dict[str, str] = {
@@ -254,6 +357,53 @@ SWITCH_LABEL_TO_LANGUAGE: dict[str, str] = {
     "blackfoot": "blackfoot",
     "niitsitapi": "blackfoot",
     "siksika": "blackfoot",
+    "ukrainian": "ukrainian",
+    "українська": "ukrainian",
+    "українською": "ukrainian",
+    "укр": "ukrainian",
+    "russian": "russian",
+    "русский": "russian",
+    "російська": "russian",
+    "рус": "russian",
+    "belarusian": "belarusian",
+    "беларуская": "belarusian",
+    "білоруська": "belarusian",
+    "bulgarian": "bulgarian",
+    "български": "bulgarian",
+    "болгарська": "bulgarian",
+    "rusyn": "rusyn",
+    "русинськый": "rusyn",
+    "crimean tatar": "crimean tatar",
+    "qırımtatarca": "crimean tatar",
+    "kırımtatarca": "crimean tatar",
+    "къырымтатарджа": "crimean tatar",
+    "кримськотатарська": "crimean tatar",
+    "romanian": "romanian",
+    "română": "romanian",
+    "romana": "romanian",
+    "moldovenească": "romanian",
+    "румунська": "romanian",
+    "hungarian": "hungarian",
+    "magyar": "hungarian",
+    "magyarul": "hungarian",
+    "угорська": "hungarian",
+    "polish": "polish",
+    "polski": "polish",
+    "польська": "polish",
+    "slovak": "slovak",
+    "slovenčina": "slovak",
+    "slovensky": "slovak",
+    "gagauz": "gagauz",
+    "gagauzca": "gagauz",
+    "greek": "greek",
+    "ελληνικά": "greek",
+    "грецька": "greek",
+    "yiddish": "yiddish",
+    "ייִדיש": "yiddish",
+    "їдиш": "yiddish",
+    "armenian": "armenian",
+    "հայերեն": "armenian",
+    "вірменська": "armenian",
 }
 
 SUPPORTED_LANGUAGES = tuple(LANGUAGE_WORDS.keys())
@@ -273,9 +423,11 @@ BLOCK_RE = re.compile(
 )
 TAG_RE = re.compile(r"<[^>]+>")
 ENTITY_RE = re.compile(r"&(?:[a-z]+|#\d+|#x[0-9a-f]+);", re.I)
-# Latin + accents + Canadian Aboriginal Syllabics
+# Latin (incl. accents and the extended blocks Polish/Romanian/Slovak need),
+# Greek, Cyrillic, Armenian, Hebrew, Canadian Aboriginal Syllabics
 WORD_RE = re.compile(
-    r"[a-zA-ZâêîôûŵŷäëïöüáéíóúẃỳàèùçñœæÀ-ÖØ-öø-ÿ᐀-ᙿ']{2,}"
+    r"[a-zA-ZÀ-ÖØ-öø-ÿ\u0100-\u024f\u0370-\u03ff\u0400-\u052f\u0530-\u058f"
+    r"\u0590-\u05ff\u1400-\u167f\u1e00-\u1eff\u1f00-\u1fff']{2,}"
 )
 BODY_RE = re.compile(r"(?is)<body[^>]*>")
 HTML_LANG_RE = re.compile(r"(?is)<html[^>]*\slang=[\"']([^\"']+)[\"']")
@@ -300,6 +452,60 @@ SWITCH_LABEL_RE = re.compile(
 )
 
 VOWELS = set("aeiouwyâêîôûŵŷäëïöüáéíóúẃỳàèù")
+
+# ---------------------------------------------------------------------------
+# Script signals.
+#
+# Outside the Latin alphabet the writing system alone narrows a page to a
+# handful of candidates, and inside a script a few exclusive letters separate
+# them. This beats function words for Cyrillic in particular: Ukrainian and
+# Russian share most short words, but і/ї/є/ґ and ы/э/ё never co-occur in
+# monolingual text.
+# ---------------------------------------------------------------------------
+
+MIN_SCRIPT_CHARS = 40
+
+SCRIPT_BLOCKS: tuple[tuple[str, int, int], ...] = (
+    ("greek", 0x0370, 0x03FF),
+    ("greek", 0x1F00, 0x1FFF),
+    ("cyrillic", 0x0400, 0x052F),
+    ("armenian", 0x0530, 0x058F),
+    ("hebrew", 0x0590, 0x05FF),
+    ("syllabics", 0x1400, 0x167F),
+)
+
+# language -> (script, letters only this language uses, min hits, min share
+# of that script's letters). Shares are set an order of magnitude below the
+# natural frequency of the letters so a short page still trips them.
+SCRIPT_MARKERS: dict[str, tuple[str, str, int, float]] = {
+    # Ukrainian also uses і, but so do Belarusian and Rusyn; ї/є/ґ are its own.
+    "ukrainian": ("cyrillic", "їєґ", 3, 0.004),
+    "russian": ("cyrillic", "ыэё", 3, 0.008),
+    "belarusian": ("cyrillic", "ў", 3, 0.003),
+    "polish": ("latin", "ąćęłńśźż", 4, 0.004),
+    "hungarian": ("latin", "őű", 3, 0.002),
+    "romanian": ("latin", "ășțşţ", 4, 0.003),
+    "slovak": ("latin", "ľĺŕďťň", 4, 0.003),
+    # Dotless i marks the Latin Crimean Tatar orthography; ñ alone would
+    # collide with Spanish.
+    "crimean tatar": ("latin", "ı", 4, 0.002),
+}
+
+YIDDISH_LETTERS = "װױײ"
+# Bulgarian uses ъ as a plain vowel (~1.5% of letters); Russian barely uses it.
+BULGARIAN_HARD_SIGN_SHARE = 0.006
+# Cyrillic Crimean Tatar writes ъ only inside the къ/гъ/нъ digraphs.
+CRIMEAN_DIGRAPH_LEADERS = "кгн"
+
+
+def _script_of(ch: str) -> str | None:
+    code = ord(ch)
+    for name, low, high in SCRIPT_BLOCKS:
+        if low <= code <= high:
+            return name
+    if ch.isalpha() and (code < 0x0250 or 0x1E00 <= code <= 0x1EFF):
+        return "latin"
+    return None
 
 
 def normalize_url(url: str) -> str | None:
@@ -354,8 +560,8 @@ def is_good_label(value: object) -> bool:
 def _keep_token(word: str) -> bool:
     if len(word) > 32:
         return False
-    # Syllabic tokens need not contain Latin vowels.
-    if any("\u1400" <= ch <= "\u167f" for ch in word):
+    # Non-Latin scripts have their own vowel systems, or none at all.
+    if any(_script_of(ch) not in (None, "latin") for ch in word):
         return True
     return any(ch in VOWELS for ch in word.lower())
 
@@ -426,7 +632,7 @@ def languages_from_switchers(html: str) -> set[str]:
                     break
 
         path_m = re.search(r"(?:^|/)([a-z]{2,3})(?:/|$|\?)", href)
-        if path_m:
+        if path_m and path_m.group(1) not in AMBIGUOUS_PATH_CODES:
             lang = _code_to_language(path_m.group(1))
             if lang:
                 found.add(lang)
@@ -442,6 +648,56 @@ def score_languages(words: list[str]) -> dict[str, int]:
                 scores[name] += 1
                 break  # first matching pack wins; packs are mostly disjoint
     return scores
+
+
+def languages_from_script(words: list[str]) -> set[str]:
+    """Languages implied by the writing system and script-exclusive letters."""
+    text = " ".join(words)
+    script_totals: Counter = Counter()
+    letters: Counter = Counter()
+    for ch in text:
+        script = _script_of(ch)
+        if script:
+            script_totals[script] += 1
+            letters[ch.lower()] += 1
+
+    found: set[str] = set()
+    for name, (script, marks, min_hits, min_share) in SCRIPT_MARKERS.items():
+        total = script_totals[script]
+        if total < MIN_SCRIPT_CHARS:
+            continue
+        hits = sum(letters[mark] for mark in marks)
+        if hits >= min_hits and hits / total >= min_share:
+            found.add(name)
+
+    if "belarusian" in found:
+        # Belarusian shares ы/э with Russian; only ў is exclusive to it.
+        found.discard("russian")
+
+    # Scripts with a single candidate language in this set.
+    if script_totals["armenian"] >= MIN_SCRIPT_CHARS:
+        found.add("armenian")
+    if script_totals["greek"] >= MIN_SCRIPT_CHARS:
+        found.add("greek")
+    if script_totals["hebrew"] >= MIN_SCRIPT_CHARS and any(
+        letters[ch] for ch in YIDDISH_LETTERS
+    ):
+        found.add("yiddish")
+
+    cyrillic = script_totals["cyrillic"]
+    if cyrillic >= MIN_SCRIPT_CHARS and letters["ъ"]:
+        digraphs = sum(
+            1
+            for i, ch in enumerate(text)
+            if ch.lower() == "ъ" and i and text[i - 1].lower() in CRIMEAN_DIGRAPH_LEADERS
+        )
+        if digraphs >= 3:
+            found.add("crimean tatar")
+        elif (letters["ъ"] - digraphs) / cyrillic >= BULGARIAN_HARD_SIGN_SHARE and not (
+            found & {"ukrainian", "russian", "belarusian"}
+        ):
+            found.add("bulgarian")
+    return found
 
 
 def languages_from_words(words: list[str]) -> set[str]:
@@ -463,15 +719,18 @@ def languages_from_words(words: list[str]) -> set[str]:
     return out
 
 
+def languages_from_content(words: list[str]) -> set[str]:
+    return languages_from_script(words) | languages_from_words(words)
+
+
 def classify_words(words: list[str]) -> list[str]:
-    return sorted(languages_from_words(words))
+    return sorted(languages_from_content(words))
 
 
 def classify_html(html: str) -> list[str]:
     switch = languages_from_switchers(html)
     words = visible_words(html, N_WORDS)
-    content = languages_from_words(words)
-    return sorted(switch | content)
+    return sorted(switch | languages_from_content(words))
 
 
 def confident_label_from_prefix(html: str) -> list[str] | None:
@@ -490,8 +749,7 @@ def confident_label_from_prefix(html: str) -> list[str] | None:
     words = visible_words(html, N_WORDS)
     if len(words) < N_WORDS:
         return None
-    content = languages_from_words(words)
-    combined = switch | content
+    combined = switch | languages_from_content(words)
     if combined:
         return sorted(combined)
     return None

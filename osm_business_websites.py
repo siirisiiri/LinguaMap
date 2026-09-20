@@ -10,19 +10,49 @@ Given an area of interest (place name), this script:
      etc. are all included).
   3. Writes the results (name, website, category, lat/lon) to a JSON file.
 
+For a country-sized area, pass --by-area: results are clipped to the real
+OSM boundary instead of its bounding box (a Ukraine box also covers Moldova,
+Romania, Poland, Belarus and western Russia), and the query is split into a
+grid of tiles, since one nationwide Overpass request will time out. Tiles
+that still time out are split into quarters and retried.
+
 Usage:
     python osm_business_websites.py "Cambridge, MA"
+    python osm_business_websites.py "Ukraine" --by-area -o data/Ukraine.json
     python osm_business_websites.py            # will prompt interactively
 """
 
 import argparse
 import json
+import math
+import os
 import sys
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
+
 import requests
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
+# Rotated through on failure; the first two tolerate heavy queries best.
+OVERPASS_URLS = [
+    "https://overpass.kumi.systems/api/interpreter",
+    "https://lz4.overpass-api.de/api/interpreter",
+    "https://overpass-api.de/api/interpreter",
+]
+TILE_TIMEOUT = 180
+MIN_TILE_DEG = 0.25
+TILE_PAUSE_S = 2.0
+# Tiles are cached so a country-sized run can be interrupted and resumed.
+TILE_CACHE_DIR = ".osm_tile_cache"
+
+_print_lock = threading.Lock()
+
+
+def log(message: str) -> None:
+    with _print_lock:
+        print(message, flush=True)
 
 # Required by Nominatim's usage policy: identify your app with a real
 # contact so they can reach you if something goes wrong.
@@ -80,7 +110,117 @@ def geocode_area(place_name: str):
     # Nominatim returns boundingbox as [min_lat, max_lat, min_lon, max_lon]
     min_lat, max_lat, min_lon, max_lon = (float(x) for x in results[0]["boundingbox"])
     display_name = results[0]["display_name"]
-    return display_name, (min_lat, min_lon, max_lat, max_lon)  # south, west, north, east
+    hit = results[0]
+    return (
+        display_name,
+        (min_lat, min_lon, max_lat, max_lon),  # south, west, north, east
+        (hit.get("osm_type"), hit.get("osm_id")),
+    )
+
+
+def overpass_area_id(osm_type: str, osm_id) -> int:
+    """Overpass area ids are the OSM id plus a per-type offset."""
+    if osm_type == "relation":
+        return 3600000000 + int(osm_id)
+    if osm_type == "way":
+        return 2400000000 + int(osm_id)
+    raise ValueError(f"Cannot clip to a {osm_type}; need a way or relation boundary.")
+
+
+def tiles(bbox, step_deg):
+    """Split a bbox into a grid of (south, west, north, east) tiles."""
+    south, west, north, east = bbox
+    rows = math.ceil((north - south) / step_deg)
+    cols = math.ceil((east - west) / step_deg)
+    for r in range(rows):
+        for col in range(cols):
+            yield (
+                south + r * step_deg,
+                west + col * step_deg,
+                min(south + (r + 1) * step_deg, north),
+                min(west + (col + 1) * step_deg, east),
+            )
+
+
+def build_area_query(area_id: int, tile) -> str:
+    south, west, north, east = tile
+    bbox_str = f"{south:.4f},{west:.4f},{north:.4f},{east:.4f}"
+    return f"""
+    [out:json][timeout:{TILE_TIMEOUT}];
+    area({area_id})->.a;
+    (
+      nwr["website"](area.a)({bbox_str});
+      nwr["contact:website"](area.a)({bbox_str});
+    );
+    out center tags;
+    """
+
+
+def query_overpass_resilient(query: str):
+    """POST a query, rotating endpoints and backing off on rate limits."""
+    last_error = None
+    for attempt, url in enumerate(OVERPASS_URLS):
+        try:
+            resp = requests.post(
+                url, data={"data": query}, headers=HEADERS, timeout=(15, TILE_TIMEOUT + 30)
+            )
+            if resp.status_code in {429, 502, 503, 504}:
+                last_error = RuntimeError(f"{resp.status_code} from {url}")
+                time.sleep(5 * (attempt + 1))
+                continue
+            resp.raise_for_status()
+            return resp.json()
+        except (requests.Timeout, requests.ConnectionError, ValueError) as e:
+            last_error = e
+            time.sleep(3)
+    raise last_error or RuntimeError("All Overpass endpoints failed")
+
+
+def tile_cache_path(area_id: int, tile) -> str:
+    south, west, north, east = tile
+    name = f"{area_id}_{south:.4f}_{west:.4f}_{north:.4f}_{east:.4f}.json"
+    return os.path.join(TILE_CACHE_DIR, name)
+
+
+def fetch_tile(area_id: int, tile, depth: int = 0):
+    """Fetch one tile, splitting it into quarters if Overpass cannot finish."""
+    south, west, north, east = tile
+    label = f"{south:.2f},{west:.2f} .. {north:.2f},{east:.2f}"
+
+    cached = tile_cache_path(area_id, tile)
+    if os.path.exists(cached):
+        with open(cached, encoding="utf-8") as f:
+            elements = json.load(f)
+        log(f"    {label}  {len(elements)} elements (cached)")
+        return elements
+
+    try:
+        data = query_overpass_resilient(build_area_query(area_id, tile))
+        elements = data.get("elements", [])
+        os.makedirs(TILE_CACHE_DIR, exist_ok=True)
+        with open(cached, "w", encoding="utf-8") as f:
+            json.dump(elements, f)
+        log(f"    {label}  {len(elements)} elements")
+        return elements
+    except Exception as e:
+        span = min(north - south, east - west)
+        if span / 2 < MIN_TILE_DEG:
+            log(f"    {label}  GIVING UP ({e})")
+            return []
+        log(f"    {label}  splitting after: {e}")
+        mid_lat = (south + north) / 2
+        mid_lon = (west + east) / 2
+        quarters = [
+            (south, west, mid_lat, mid_lon),
+            (south, mid_lon, mid_lat, east),
+            (mid_lat, west, north, mid_lon),
+            (mid_lat, mid_lon, north, east),
+        ]
+        out = []
+        for quarter in quarters:
+            out.extend(fetch_tile(area_id, quarter, depth + 1))
+            time.sleep(TILE_PAUSE_S)
+        return out
 
 
 def build_overpass_query(bbox):
@@ -110,6 +250,15 @@ def main():
     parser = argparse.ArgumentParser(description="Fetch business websites from OSM for an area.")
     parser.add_argument("area", nargs="?", help="Area of interest, e.g. 'Cambridge, MA'")
     parser.add_argument("-o", "--output", default="businesses.json", help="Output JSON file path")
+    parser.add_argument(
+        "--by-area",
+        action="store_true",
+        help="Clip to the OSM boundary and fetch in tiles (use for countries)",
+    )
+    parser.add_argument("--tile-deg", type=float, default=1.0, help="Tile size in degrees")
+    parser.add_argument(
+        "--workers", type=int, default=3, help="Tiles to fetch in parallel (--by-area)"
+    )
     args = parser.parse_args()
 
     area = args.area or input("Enter an area of interest (e.g. 'Cambridge, MA'): ").strip()
@@ -118,7 +267,7 @@ def main():
 
     print(f"Geocoding '{area}'...")
     try:
-        display_name, bbox = geocode_area(area)
+        display_name, bbox, (osm_type, osm_id) = geocode_area(area)
     except (requests.RequestException, ValueError) as e:
         sys.exit(f"Geocoding failed: {e}")
     print(f"Resolved to: {display_name}")
@@ -126,19 +275,65 @@ def main():
 
     time.sleep(1)  # be polite to Nominatim before hitting Overpass
 
-    query = build_overpass_query(bbox)
-    print("Querying Overpass API (this can take a while for large areas)...")
-    try:
-        data = query_overpass(query)
-    except requests.RequestException as e:
-        sys.exit(f"Overpass query failed: {e}")
+    if args.by_area:
+        try:
+            area_id = overpass_area_id(osm_type, osm_id)
+        except ValueError as e:
+            sys.exit(str(e))
+        grid = list(tiles(bbox, args.tile_deg))
+        print(
+            f"Clipping to {osm_type} {osm_id} (area {area_id}) over {len(grid)} tiles "
+            f"with {args.workers} workers...",
+            flush=True,
+        )
+        elements = []
+        with ThreadPoolExecutor(max_workers=args.workers) as pool:
+            for i, tile_elements in enumerate(
+                pool.map(lambda t: fetch_tile(area_id, t), grid), 1
+            ):
+                elements.extend(tile_elements)
+                log(f"  tile {i}/{len(grid)} done, {len(elements)} elements so far")
+    else:
+        print("Querying Overpass API (this can take a while for large areas)...")
+        try:
+            data = query_overpass(build_overpass_query(bbox))
+        except requests.RequestException as e:
+            sys.exit(f"Overpass query failed: {e}")
+        elements = data.get("elements", [])
 
-    elements = data.get("elements", [])
     print(f"Retrieved {len(elements)} raw elements with a website tag.")
 
-    businesses = [b for e in elements if (b := extract_business(e)) is not None]
-    print(f"Kept {len(businesses)} elements with a usable website.")
+    # Tiles overlap on their shared edges, and an element can carry both
+    # website and contact:website, so the same element can arrive twice.
+    seen = set()
+    businesses = []
+    for element in elements:
+        key = (element.get("type"), element.get("id"))
+        if key in seen:
+            continue
+        seen.add(key)
+        business = extract_business(element)
+        if business is not None:
+            businesses.append(business)
+    print(f"Kept {len(businesses)} unique elements with a usable website.")
 
+    if args.by_area:
+        # A cross-border route or boundary relation only has to touch the area
+        # to be returned, and its center can land in another country.
+        south, west, north, east = bbox
+        inside = [
+            b for b in businesses
+            if b["lat"] is not None and b["lon"] is not None
+            and south <= b["lat"] <= north and west <= b["lon"] <= east
+        ]
+        dropped = len(businesses) - len(inside)
+        if dropped:
+            print(f"Dropped {dropped} elements centred outside the bounding box.")
+        businesses = inside
+
+    out_dir = os.path.dirname(args.output)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
     with open(args.output, "w", encoding="utf-8") as f:
         json.dump(businesses, f, indent=2, ensure_ascii=False)
 
