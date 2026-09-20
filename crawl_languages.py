@@ -69,6 +69,9 @@ LABEL_CHECK_EVERY = 12_288
 DEFAULT_WORKERS = 250
 DEFAULT_PER_HOST = 3
 DEFAULT_BATCH_SIZE = 500
+# asyncio.gather waits for every URL in the batch. If ClientTimeout never
+# fires (uvloop FD-reuse bug), one hung socket stalls the whole crawl.
+BATCH_HARD_TIMEOUT = TOTAL_TIMEOUT + SOCK_READ_TIMEOUT + 8.0
 SKIP_SUFFIXES = (
     ".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".ico",
     ".pdf", ".mp4", ".mp3", ".zip", ".css", ".js", ".xml",
@@ -671,10 +674,27 @@ async def crawl(
         total = len(urls)
         for start in range(0, total, batch_size):
             batch = urls[start : start + batch_size]
-            raw = await asyncio.gather(
-                *(classify_url(session, u, sem) for u in batch),
-                return_exceptions=True,
+            tasks = [
+                asyncio.create_task(classify_url(session, u, sem))
+                for u in batch
+            ]
+            _done, pending = await asyncio.wait(
+                tasks, timeout=BATCH_HARD_TIMEOUT
             )
+            if pending:
+                print(
+                    f"  batch timeout: cancelling {len(pending)}/{len(tasks)} hung urls",
+                    flush=True,
+                )
+                for task in pending:
+                    task.cancel()
+                await asyncio.gather(*pending, return_exceptions=True)
+            raw = []
+            for task in tasks:
+                try:
+                    raw.append(task.result())
+                except BaseException as exc:
+                    raw.append(exc)
             batch_labels: list[list[str]] = []
             for item in raw:
                 if isinstance(item, BaseException):

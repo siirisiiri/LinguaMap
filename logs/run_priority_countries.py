@@ -35,48 +35,6 @@ MAX_FETCHES = 1
 
 COUNTRIES = [
     {
-        "id": "russia",
-        "name": "Russian Federation",
-        "display": "Russia",
-        "query": "Russia",
-        "parent": "russia",
-    },
-    {
-        "id": "chile",
-        "name": "Chile",
-        "display": "Chile",
-        "query": "Chile",
-        "parent": "south-america",
-    },
-    {
-        "id": "peru",
-        "name": "Peru",
-        "display": "Peru",
-        "query": "Peru",
-        "parent": "south-america",
-    },
-    {
-        "id": "colombia",
-        "name": "Colombia",
-        "display": "Colombia",
-        "query": "Colombia",
-        "parent": "south-america",
-    },
-    {
-        "id": "argentina",
-        "name": "Argentina",
-        "display": "Argentina",
-        "query": "Argentina",
-        "parent": "south-america",
-    },
-    {
-        "id": "mexico",
-        "name": "Mexico",
-        "display": "Mexico",
-        "query": "Mexico",
-        "parent": "north-america",
-    },
-    {
         "id": "brazil",
         "name": "Brazil",
         "display": "Brazil",
@@ -89,6 +47,27 @@ COUNTRIES = [
         "display": "Canada",
         "query": "Canada",
         "parent": "north-america",
+    },
+    {
+        "id": "united-kingdom",
+        "name": "United Kingdom",
+        "display": "United Kingdom",
+        "query": "United Kingdom",
+        "parent": "europe",
+    },
+    {
+        "id": "australia",
+        "name": "Australia",
+        "display": "Australia",
+        "query": "Australia",
+        "parent": "australia-oceania",
+    },
+    {
+        "id": "new-zealand",
+        "name": "New Zealand",
+        "display": "New Zealand",
+        "query": "New Zealand",
+        "parent": "australia-oceania",
     },
 ]
 
@@ -126,14 +105,15 @@ def _wait_exit(pid: int) -> int | None:
     try:
         waited, status = os.waitpid(pid, os.WNOHANG)
     except ChildProcessError:
-        return 0 if not _alive(pid) else None
+        # Adopted (non-child) processes: do not pretend they exited 0.
+        return None if _alive(pid) else -1
     if waited == 0:
-        return None if _alive(pid) else 0
+        return None if _alive(pid) else -1
     if os.WIFEXITED(status):
         return os.WEXITSTATUS(status)
     if os.WIFSIGNALED(status):
         return 128 + os.WTERMSIG(status)
-    return 0
+    return -1
 
 
 class CountryJob:

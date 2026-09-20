@@ -65,6 +65,9 @@
         border: none !important;
         margin: 0 0 18px 18px !important;
       }
+      #app:has(#timeline:not(.hidden)) .leaflet-control-zoom {
+        display: none !important;
+      }
       .leaflet-bar {
         border: none !important;
         box-shadow: none !important;
@@ -936,8 +939,8 @@
       // ---------------------------------------------------------------- config
 
       const LANGUAGE_COLORS = {
-        english: "#d8c4a0",
-        french: "#c45c6a",
+        english: "#e098b0",
+        french: "#5088c4",
         welsh: "#6a8f4e",
         spanish: "#d4783c",
         german: "#8a6b9a",
@@ -967,7 +970,7 @@
         korean: "#c45d72",
         "mandarin chinese": "#c9a227",
         arabic: "#6f8a58",
-        portuguese: "#c46b3a",
+        portuguese: "#10b981",
         italian: "#a6844c",
         dutch: "#8a7048",
         hindi: "#cc7a38",
@@ -979,6 +982,9 @@
         azerbaijani: "#8a6a3c",
         kazakh: "#7a8a5a",
         uzbek: "#8a7348",
+        estonian: "#4a7a8a",
+        greenlandic: "#3d6e6a",
+        danish: "#8a6848",
       };
       const LANGUAGE_PALETTE = [
         "#c45c26",
@@ -999,6 +1005,8 @@
       const LEAD_FLOOR = 0.22;
       const MAX_MARKERS = 12000;
       const TOP_LANGUAGES = 8;
+      /** No crawl yet — keep areas empty so stray cross-dataset points cannot paint them. */
+      const FORCE_BLANK_COUNTRY_ISOS = new Set(["AO"]);
 
       const paletteAssignments = new Map();
 
@@ -1282,6 +1290,16 @@
         return `${feature.properties.osm_type}/${feature.properties.osm_id}`;
       }
 
+      function isForceBlankFeature(feature) {
+        const p = (feature && feature.properties) || {};
+        const iso = String(p.iso || "").toUpperCase();
+        const parent = String(p.parent_iso || "").toUpperCase();
+        return (
+          FORCE_BLANK_COUNTRY_ISOS.has(iso) ||
+          (parent && FORCE_BLANK_COUNTRY_ISOS.has(parent))
+        );
+      }
+
       // ------------------------------------------------------------------ state
 
       // One world copy only: OSM tiles wrap by default, which repeats unmarked
@@ -1410,16 +1428,59 @@
       }
 
       // Timeline. Months are ints (year * 12 + month - 1) so the slider and
-      // interval lookups share one coordinate. Only Ukraine (primary name) and
-      // Wales (Welsh on the name / name:cy) have OSM name history.
+      // interval lookups share one coordinate. OSM name history is wired per
+      // place below. `fill` = single-language ramp (Welsh / Greenlandic).
+      // `pair` = lead colour between two languages (Ukraine, Quebec, …).
       //
       // The website crawl is the present-day ground truth. OSM names overstate
-      // Welsh / Ukrainian relative to homepages, so historical shares are
+      // minority languages relative to homepages, so historical shares are
       // ratio-scaled per area to land on today's website mix — the last tick
       // is the live map, not a second data source.
       const TIMED_PLACES = {
-        ukraine: { dataset: "ukraine", useAvailable: false },
-        wales: { dataset: "wales", useAvailable: true },
+        ukraine: {
+          dataset: "ukraine",
+          useAvailable: false,
+          pair: ["ukrainian", "russian"],
+          isos: ["UA"],
+          names: ["ukraine"],
+        },
+        wales: {
+          dataset: "wales",
+          useAvailable: true,
+          fill: "welsh",
+          pair: ["welsh", "english"],
+          isos: ["GB-WLS"],
+          names: ["wales", "cymru"],
+        },
+        greenland: {
+          dataset: "greenland",
+          useAvailable: true,
+          fill: "greenlandic",
+          pair: ["greenlandic", "danish"],
+          isos: ["GL"],
+          names: ["greenland", "kalaallit", "gronland"],
+        },
+        quebec: {
+          dataset: "quebec",
+          useAvailable: true,
+          pair: ["french", "english"],
+          isos: ["CA-QC"],
+          names: ["quebec"],
+        },
+        kazakhstan: {
+          dataset: "kazakhstan",
+          useAvailable: false,
+          pair: ["kazakh", "russian"],
+          isos: ["KZ"],
+          names: ["kazakhstan", "qazaqstan"],
+        },
+        estonia: {
+          dataset: "estonia",
+          useAvailable: false,
+          pair: ["estonian", "russian"],
+          isos: ["EE"],
+          names: ["estonia", "eesti"],
+        },
       };
       let timeAvailable = false;
       let timeEnabled = false;
@@ -1591,21 +1652,36 @@
         return clamp(web + (osmT - osmLast));
       }
 
+      function foldName(s) {
+        return String(s || "")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+      }
+
       /**
-       * Ukraine country (and its oblasts) or Wales (including UK › Wales).
-       * United Kingdom as a whole, and every other country, stay untimed.
+       * Timed places only after you drill into them. The parent country
+       * (United Kingdom, Canada) stays untimed.
        */
       function placeFromHierarchy() {
         if (hierarchy.length <= 1) return null;
-        const names = hierarchy.slice(1).map((h) => String(h.name || "").toLowerCase());
-        if (names.includes("ukraine")) return "ukraine";
-        if (names.includes("wales") || names.includes("cymru")) return "wales";
+        const names = hierarchy.slice(1).map((h) => foldName(h.name));
+        for (const [place, spec] of Object.entries(TIMED_PLACES)) {
+          if ((spec.names || []).some((n) => names.some((have) => have.includes(n)))) {
+            return place;
+          }
+        }
         const current = hierarchy[hierarchy.length - 1];
         const isos = (current.features || [])
           .map((f) => String((f.properties || {}).parent_iso || (f.properties || {}).iso || "").toUpperCase())
           .filter(Boolean);
-        if (isos.length && isos.every((i) => i === "UA" || i.startsWith("UA-"))) return "ukraine";
-        if (isos.length && isos.every((i) => i === "GB-WLS")) return "wales";
+        if (!isos.length) return null;
+        for (const [place, spec] of Object.entries(TIMED_PLACES)) {
+          const prefixes = spec.isos || [];
+          if (prefixes.length && isos.every((i) => prefixes.some((p) => i === p || i.startsWith(p + "-")))) {
+            return place;
+          }
+        }
         return null;
       }
 
@@ -1640,11 +1716,9 @@
           }
           const langs = langsAtState(stateAt(p, currentMonth), timedPlace);
           p.langs = langs;
-          p.primaryLang = langs.includes("welsh")
-            ? "welsh"
-            : langs.includes("ukrainian")
-              ? "ukrainian"
-              : langs[0] || null;
+          const spec = TIMED_PLACES[timedPlace] || {};
+          const prefer = spec.fill || (spec.pair && spec.pair[0]);
+          p.primaryLang = prefer && langs.includes(prefer) ? prefer : langs[0] || null;
           if (p.marker) {
             const color = p.primaryLang ? colorForLanguage(p.primaryLang) : UNCLASSIFIED_COLOR;
             p.marker.setStyle({ color, fillColor: color });
@@ -1807,9 +1881,7 @@
       function updateTimeSummary() {
         if (!timeEnabled) return;
         document.getElementById("timeLabel").textContent = monthLabel(currentMonth);
-        const preferred = timedPlace === "wales" ? ["welsh", "english"]
-          : timedPlace === "ukraine" ? ["ukrainian", "russian"]
-          : [];
+        const preferred = (TIMED_PLACES[timedPlace] && TIMED_PLACES[timedPlace].pair) || [];
         const writeRows = (order, getCount, total) => {
           if (!total) {
             document.getElementById("timeSummary").textContent = "";
@@ -1972,7 +2044,12 @@
           if (bucket) bucket.push(p);
           else grid.set(k, [p]);
         });
+        const blankIds = new Set();
         for (const { f, id } of ranked) {
+          if (isForceBlankFeature(f)) {
+            blankIds.add(id);
+            continue;
+          }
           eachPartBBox(f.geometry, (poly, bbox) => {
             const minI = Math.floor(bbox[0] / CELL);
             const maxI = Math.floor(bbox[2] / CELL);
@@ -1988,6 +2065,11 @@
                 }
               }
             }
+          });
+        }
+        if (blankIds.size) {
+          points.forEach((p) => {
+            if (blankIds.has(p.authorityId)) p.authorityId = null;
           });
         }
         invalidateTimeSeries();
@@ -2034,15 +2116,29 @@
 
       /**
        * Language the choropleth should track while the time slider is up.
-       * Wales with English+Welsh both on would otherwise paint "English lead",
-       * which shrinks (and washes Gwynedd out) as Welsh grows.
+       * Wales: always Welsh share (English is everywhere, so "lead" would
+       * wash the map beige). Ukraine: do not force one language — Crimea and
+       * Sevastopol are Russian-led, the rest Ukrainian-led, so a single
+       * Ukrainian ramp hides that.
        */
       function timelineFillLanguage() {
-        if (!activeLanguages.length) return null;
-        if (timedPlace === "wales" && activeLanguageSet.has("welsh")) return "welsh";
-        if (timedPlace === "ukraine" && activeLanguageSet.has("ukrainian")) return "ukrainian";
+        if (!activeLanguages.length || !timedPlace) return null;
+        const spec = TIMED_PLACES[timedPlace];
+        if (spec && spec.fill && activeLanguageSet.has(spec.fill)) return spec.fill;
         if (activeLanguages.length === 1) return activeLanguages[0];
         return null;
+      }
+
+      /** Languages that decide the hue on a timed map. Pair places compare
+       *  those two only, so English on the same site cannot steal the lead.
+       */
+      function timelinePairLanguages() {
+        const spec = timedPlace && TIMED_PLACES[timedPlace];
+        if (spec && spec.pair) {
+          const pair = spec.pair.filter((l) => activeLanguageSet.has(l));
+          if (pair.length) return pair;
+        }
+        return activeLanguages.slice();
       }
 
       /** Per-area language counts at every slider stop.
@@ -2203,12 +2299,12 @@
        * leading language, intensity is how far ahead it is in relative share
        * among the selected languages.
        *
-       * With the time slider up, keep painting the tracked language through to
-       * today. Intensity is that language's calibrated share versus the
-       * strongest area on the present-day website map, so Welsh darkens as it
-       * grows without a source-switch or a min–max stretch.
+       * With the time slider up, Wales stays on a Welsh-share ramp. Ukraine
+       * paints each oblast by whichever of Ukrainian / Russian is ahead, so
+       * Crimea stays red and Lviv gold through to today's website mix.
        */
       function areaFill(rec) {
+        if (rec && rec.feature && isForceBlankFeature(rec.feature)) return null;
         if (mapMetric === "multilingual") {
           if (!rec || !rec.classified) return null;
           const share = rec.multilingual / rec.classified;
@@ -2244,6 +2340,34 @@
             localLo: local ? local.lo : null,
             localHi: local ? local.hi : null,
           };
+        }
+        if (timeEnabled) {
+          const pair = timelinePairLanguages();
+          if (pair.length >= 2) {
+            const slot = slotAtCurrentMonth(rec);
+            const shareOf = (lang) => {
+              if (slot && slot.calibrated && slot.calibrated.has(lang)) {
+                return slot.calibrated.get(lang);
+              }
+              return rec && rec.classified ? (rec.counts.get(lang) || 0) / rec.classified : 0;
+            };
+            const ranked = pair
+              .map((l) => [l, shareOf(l)])
+              .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+            const total = ranked.reduce((sum, [, s]) => sum + s, 0);
+            if (!total) {
+              if (!rec || !rec.classified) return null;
+              return { lang: null, color: MISSING_FILL, intensity: 1, share: 0, lead: 0 };
+            }
+            const lead = (ranked[0][1] - ranked[1][1]) / total;
+            return {
+              lang: ranked[0][0],
+              color: colorForLanguage(ranked[0][0]),
+              intensity: LEAD_FLOOR + (1 - LEAD_FLOOR) * clamp01(lead),
+              share: ranked[0][1],
+              lead,
+            };
+          }
         }
         if (!rec || !rec.classified) return null;
         if (activeLanguages.length === 1) {

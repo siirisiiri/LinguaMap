@@ -1,37 +1,24 @@
 {
-  "started_at": "2026-09-20T13:23:09.247989+00:00",
+  "started_at": "2026-09-20T14:25:08.029603+00:00",
   "overlap": true,
   "max_crawls": 2,
   "max_fetches": 1,
   "queue": [
-    "Russia",
-    "Chile",
-    "Peru",
-    "Colombia",
-    "Argentina",
-    "Mexico",
     "Brazil",
-    "Canada"
+    "Canada",
+    "United Kingdom",
+    "Australia",
+    "New Zealand"
   ],
-  "completed": [
+  "completed": [],
+  "failed": [
     {
-      "id": "chile",
-      "name": "Chile",
-      "result": "crawled"
-    },
-    {
-      "id": "peru",
-      "name": "Peru",
-      "result": "crawled"
-    },
-    {
-      "id": "colombia",
-      "name": "Colombia",
-      "result": "crawled"
+      "id": "brazil",
+      "name": "Brazil",
+      "error": "crawl exited -1, unlabeled=25793"
     }
   ],
-  "failed": [],
-  "current": "Russia, Argentina, Brazil",
-  "updated_at": "2026-09-20T13:41:28.855954+00:00",
-  "phase": "crawls=['Russia', 'Argentina'] fetches=['Brazil']"
+  "current": "Canada",
+  "updated_at": "2026-09-20T14:40:04.049283+00:00",
+  "phase": "crawls=['-'] fetches=['Canada']"
 }

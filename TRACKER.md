@@ -12,6 +12,27 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 
 **Combined** is derived: 🟢 if either of you is done, else 🟡 if either is in progress, else blank.
 
+## Aryan current run
+
+Last update: 2026-09-20 10:45 ET
+
+| Country | Status |
+| --- | --- |
+| Chile | 🟢 done |
+| Peru | 🟢 done |
+| Colombia | 🟢 done |
+| Argentina | 🟢 done |
+| Mexico | 🟢 done |
+| Brazil | 🟢 done |
+| Russia | abandoned |
+| Canada | 🟡 paused — Toronto sample written, not crawled |
+| United Kingdom | paused before sample |
+| Australia | paused before sample |
+| New Zealand | paused before sample |
+| Nigeria | paused before sample |
+
+Sample sprint stopped for a git pull/restructure.
+
 ## Africa
 
 | Country | Aryan | Siiri | Combined |
@@ -51,7 +72,7 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 | Mozambique | 🟢 |  | 🟢 |
 | Namibia | 🟢 |  | 🟢 |
 | Niger | 🟢 |  | 🟢 |
-| Nigeria |  |  |  |
+| Nigeria | 🟡 |  | 🟡 |
 | Republic of the Congo | 🟢 |  | 🟢 |
 | Rwanda | 🟢 |  | 🟢 |
 | Saint Helena, Ascension, and Tristan da Cunha | 🟢 |  | 🟢 |
@@ -102,7 +123,7 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 | North Korea | 🟢 | 🟢 | 🟢 |
 | Pakistan | 🟢 | 🟢 | 🟢 |
 | Philippines | 🟢 | 🟢 | 🟢 |
-| Russia | 🟡 |  | 🟡 |
+| Russia |  |  |  |
 | South Korea | 🟢 | 🟢 | 🟢 |
 | Sri Lanka | 🟢 | 🟢 | 🟢 |
 | Syria | 🟢 | 🟢 | 🟢 |
@@ -119,7 +140,7 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 | Country | Aryan | Siiri | Combined |
 | --- | :---: | :---: | :---: |
 | American Oceania |  |  |  |
-| Australia |  |  |  |
+| Australia | 🟡 |  | 🟡 |
 | Cook Islands | 🟢 | 🟢 | 🟢 |
 | Fiji | 🟢 | 🟢 | 🟢 |
 | Kiribati | 🟢 | 🟢 | 🟢 |
@@ -127,12 +148,12 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 | Micronesia | 🟢 | 🟢 | 🟢 |
 | Nauru | 🟢 | 🟢 | 🟢 |
 | New Caledonia | 🟢 | 🟢 | 🟢 |
-| New Zealand |  |  |  |
+| New Zealand | 🟡 |  | 🟡 |
 | Niue | 🟢 | 🟢 | 🟢 |
 | Palau | 🟢 | 🟢 | 🟢 |
 | Papua New Guinea | 🟢 | 🟢 | 🟢 |
 | Pitcairn Islands | 🟢 | 🟢 | 🟢 |
-| Polynésie française | 🟡 |  | 🟡 |
+| Polynésie française |  |  |  |
 | Samoa |  |  |  |
 | Solomon Islands |  |  |  |
 | Tokelau |  |  |  |
@@ -191,15 +212,15 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 | Switzerland |  | 🟢 | 🟢 |
 | Turkey |  |  |  |
 | Ukraine |  |  |  |
-| United Kingdom |  |  |  |
+| United Kingdom | 🟡 |  | 🟡 |
 
 ## North America
 
 | Country | Aryan | Siiri | Combined |
 | --- | :---: | :---: | :---: |
-| Canada |  |  |  |
+| Canada | 🟡 |  | 🟡 |
 | Greenland | 🟢 |  | 🟢 |
-| Mexico |  |  |  |
+| Mexico | 🟢 |  | 🟢 |
 | Puerto Rico | 🟢 |  | 🟢 |
 | United States |  | 🟡 | 🟡 |
 | US Virgin Islands | 🟢 |  | 🟢 |
@@ -224,9 +245,9 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 
 | Country | Aryan | Siiri | Combined |
 | --- | :---: | :---: | :---: |
-| Argentina | 🟡 |  | 🟡 |
+| Argentina | 🟢 |  | 🟢 |
 | Bolivia | 🟢 |  | 🟢 |
-| Brazil | 🟡 |  | 🟡 |
+| Brazil | 🟢 |  | 🟢 |
 | Chile | 🟢 |  | 🟢 |
 | Colombia | 🟢 |  | 🟢 |
 | Ecuador |  |  |  |

@@ -4,10 +4,15 @@ Build lang_history for OSM businesses from Geofabrik yearly snapshots.
 
 Ukraine uses name / name:uk / name:ru. Wales uses name / name:cy / name:en,
 which is how we watch Welsh appearing on shopfronts without hitting Wayback.
+Greenland, Quebec, Kazakhstan, and Estonia follow the same pattern.
 
 Usage:
     python3 osm_name_history.py --region ukraine --data data/Ukraine.json
     python3 osm_name_history.py --region wales --data data/Wales.json
+    python3 osm_name_history.py --region greenland
+    python3 osm_name_history.py --region quebec
+    python3 osm_name_history.py --region kazakhstan
+    python3 osm_name_history.py --region estonia
 """
 
 from __future__ import annotations
@@ -29,8 +34,14 @@ UA = "LinguaMap/0.1 (OSM name history; contact: YOUR_EMAIL@example.com)"
 
 UK_MARKS = "їєґ"
 RU_MARKS = "ыэё"
+KK_MARKS = "әғқңөұүһ"
 WELSH_MARKS = "ŵŷẁẃẅỳýÿ"
-WORD_RE = re.compile(r"[A-Za-zÀ-ÿŵŷẁẃẅỳýÿ']+", re.IGNORECASE)
+FR_MARKS = "éèêëàâùûçœæ"
+EST_MARKS = "õäöü"
+DA_MARKS = "æøå"
+CYRILLIC_RE = re.compile(r"[\u0400-\u04ff]")
+WORD_RE = re.compile(r"[A-Za-zÀ-ÿŵŷẁẃẅỳýÿõäöüæøå']+", re.IGNORECASE)
+YEAR_STAMPS = tuple(f"{y:02d}0101" for y in range(14, 27))
 WELSH_NAME_WORDS = frozenset({
     "siop", "ysgol", "caffi", "tafarn", "capel", "eglwys", "swyddfa",
     "llyfrgell", "meddygfa", "fferyllfa", "cymru", "cymraeg", "gymraeg",
@@ -38,6 +49,23 @@ WELSH_NAME_WORDS = frozenset({
     "deintydd", "optegydd", "marchnad", "cwmni", "cyngor", "llywodraeth",
     "menter", "croeso", "cymdeithas",
 })
+FRENCH_NAME_WORDS = frozenset({
+    "depanneur", "dépanneur", "epicerie", "épicerie", "boulangerie",
+    "patisserie", "pâtisserie", "fromagerie", "coiffure", "pharmacie",
+    "librairie", "quincaillerie", "ecole", "école", "hopital", "hôpital",
+    "caisse", "municipale", "municipalite", "municipalité",
+    "brasserie", "auberge",
+})
+GREENLAND_NAME_WORDS = frozenset({
+    "kalaallit", "kalaallisut", "nunaat", "kommunia", "pisiniarfik",
+    "atuarfik", "allaffeqarfik", "neqeroorut", "illorsuaq", "nunatsinni",
+    "qeqqata", "sermersooq", "kujalleq", "avannaata", "qeqertalik",
+})
+ESTONIAN_NAME_WORDS = frozenset({
+    "eesti", "kohvik", "raamatukogu", "vallavalitsus", "linnavalitsus",
+    "apteek", "pagariäri", "kaubamaja", "teenindus", "kool", "haigla",
+})
+KAZAKH_LATIN_MARKS = "äğñöüşı"
 
 
 def stamp_to_date(stamp: str) -> str:
@@ -99,48 +127,175 @@ def classify_welsh_name(name: str) -> str | None:
     return None
 
 
-def classify_wales_tags(tags: dict[str, str]) -> tuple[str | None, list[str]]:
-    cy = (tags.get("name:cy") or "").strip()
-    en = (tags.get("name:en") or "").strip()
+def classify_pair_tags(
+    tags: dict[str, str],
+    a_key: str,
+    b_key: str,
+    a_lang: str,
+    b_lang: str,
+    classify_name,
+) -> tuple[str | None, list[str]]:
+    a_tag = (tags.get(a_key) or "").strip()
+    b_tag = (tags.get(b_key) or "").strip()
     name = (tags.get("name") or "").strip()
     available: set[str] = set()
-    if cy:
-        available.add("welsh")
-    if en:
-        available.add("english")
-    name_l = name.lower()
-    if name and cy and name_l == cy.lower():
-        available.add("welsh")
-        return "welsh", sorted(available)
-    if name and en and name_l == en.lower():
-        available.add("english")
-        return "english", sorted(available)
-    primary = classify_welsh_name(name)
+    if a_tag:
+        available.add(a_lang)
+    if b_tag:
+        available.add(b_lang)
+    primary = classify_name(name)
     if primary:
         available.add(primary)
         return primary, sorted(available)
+    name_l = name.lower()
+    if name and a_tag and name_l == a_tag.lower():
+        return a_lang, sorted(available)
+    if name and b_tag and name_l == b_tag.lower():
+        return b_lang, sorted(available)
     return None, sorted(available)
+
+
+def classify_wales_tags(tags: dict[str, str]) -> tuple[str | None, list[str]]:
+    return classify_pair_tags(tags, "name:cy", "name:en", "welsh", "english", classify_welsh_name)
+
+
+def classify_french_name(name: str) -> str | None:
+    text = (name or "").strip()
+    if not text:
+        return None
+    lower = text.lower()
+    tokens = {t.lower() for t in WORD_RE.findall(text)}
+    if any(ch in lower for ch in FR_MARKS) or tokens & FRENCH_NAME_WORDS:
+        return "french"
+    if any("a" <= ch.lower() <= "z" for ch in text):
+        return "english"
+    return None
+
+
+def classify_quebec_tags(tags: dict[str, str]) -> tuple[str | None, list[str]]:
+    return classify_pair_tags(tags, "name:fr", "name:en", "french", "english", classify_french_name)
+
+
+def classify_greenland_name(name: str) -> str | None:
+    text = (name or "").strip()
+    if not text:
+        return None
+    lower = text.lower()
+    tokens = {t.lower() for t in WORD_RE.findall(text)}
+    if tokens & GREENLAND_NAME_WORDS:
+        return "greenlandic"
+    has_danish = any(ch in lower for ch in DA_MARKS)
+    has_q = "q" in lower
+    if has_q and not has_danish:
+        return "greenlandic"
+    if has_danish:
+        return "danish"
+    if any("a" <= ch.lower() <= "z" for ch in text):
+        return "danish"
+    return None
+
+
+def classify_greenland_tags(tags: dict[str, str]) -> tuple[str | None, list[str]]:
+    return classify_pair_tags(
+        tags, "name:kl", "name:da", "greenlandic", "danish", classify_greenland_name,
+    )
+
+
+def classify_kazakh_ru_name(name: str) -> str | None:
+    text = (name or "").lower()
+    if not text:
+        return None
+    kk = sum(text.count(ch) for ch in KK_MARKS) + sum(text.count(ch) for ch in KAZAKH_LATIN_MARKS)
+    ru = sum(text.count(ch) for ch in RU_MARKS)
+    if "qazaq" in text or "qazaqstan" in text:
+        kk += 3
+    if kk >= 1 and kk > ru:
+        return "kazakh"
+    if ru >= 1 and ru > kk:
+        return "russian"
+    if CYRILLIC_RE.search(text) and kk == 0:
+        return "russian"
+    return None
+
+
+def classify_kazakhstan_tags(tags: dict[str, str]) -> tuple[str | None, list[str]]:
+    return classify_pair_tags(
+        tags, "name:kk", "name:ru", "kazakh", "russian", classify_kazakh_ru_name,
+    )
+
+
+def classify_estonian_ru_name(name: str) -> str | None:
+    text = (name or "").strip()
+    if not text:
+        return None
+    lower = text.lower()
+    if CYRILLIC_RE.search(text):
+        return "russian"
+    tokens = {t.lower() for t in WORD_RE.findall(text)}
+    if any(ch in lower for ch in EST_MARKS) or tokens & ESTONIAN_NAME_WORDS:
+        return "estonian"
+    if any("a" <= ch.lower() <= "z" for ch in text):
+        return "estonian"
+    return None
+
+
+def classify_estonia_tags(tags: dict[str, str]) -> tuple[str | None, list[str]]:
+    return classify_pair_tags(
+        tags, "name:et", "name:ru", "estonian", "russian", classify_estonian_ru_name,
+    )
 
 
 REGIONS = {
     "ukraine": {
         "url": "https://download.geofabrik.de/europe/ukraine-{stamp}.osm.pbf",
         "file": "ukraine-{stamp}.osm.pbf",
-        # First-of-year extracts Geofabrik still hosts.
         "stamps": (
             "190101", "200101", "210101", "220101",
             "230101", "240101", "250101",
         ),
         "classify": classify_ukraine_tags,
         "default_data": "data/Ukraine.json",
+        "track": "ukrainian",
     },
     "wales": {
         "url": "https://download.geofabrik.de/europe/united-kingdom/wales-{stamp}.osm.pbf",
         "file": "wales-{stamp}.osm.pbf",
-        # Public yearly extracts start 2014-01-01; nothing older is still hosted.
-        "stamps": tuple(f"{y:02d}0101" for y in range(14, 27)),
+        "stamps": YEAR_STAMPS,
         "classify": classify_wales_tags,
         "default_data": "data/Wales.json",
+        "track": "welsh",
+    },
+    "greenland": {
+        "url": "https://download.geofabrik.de/north-america/greenland-{stamp}.osm.pbf",
+        "file": "greenland-{stamp}.osm.pbf",
+        "stamps": YEAR_STAMPS,
+        "classify": classify_greenland_tags,
+        "default_data": "data/Greenland.json",
+        "track": "greenlandic",
+    },
+    "quebec": {
+        "url": "https://download.geofabrik.de/north-america/canada/quebec-{stamp}.osm.pbf",
+        "file": "quebec-{stamp}.osm.pbf",
+        "stamps": YEAR_STAMPS,
+        "classify": classify_quebec_tags,
+        "default_data": "data/Quebec.json",
+        "track": "french",
+    },
+    "kazakhstan": {
+        "url": "https://download.geofabrik.de/asia/kazakhstan-{stamp}.osm.pbf",
+        "file": "kazakhstan-{stamp}.osm.pbf",
+        "stamps": YEAR_STAMPS,
+        "classify": classify_kazakhstan_tags,
+        "default_data": "data/Kazakhstan.json",
+        "track": "kazakh",
+    },
+    "estonia": {
+        "url": "https://download.geofabrik.de/europe/estonia-{stamp}.osm.pbf",
+        "file": "estonia-{stamp}.osm.pbf",
+        "stamps": YEAR_STAMPS,
+        "classify": classify_estonia_tags,
+        "default_data": "data/Estonia.json",
+        "track": "estonian",
     },
 }
 
@@ -178,7 +333,8 @@ def download(url: str, dest: str) -> None:
     os.makedirs(os.path.dirname(dest) or ".", exist_ok=True)
     print(f"Downloading {url} -> {dest}", flush=True)
     subprocess.run(
-        ["curl", "-L", "-C", "-", "-f", "--retry", "5", "--retry-delay", "5",
+        ["curl", "-L", "-C", "-", "-f", "--retry", "8", "--retry-delay", "5",
+         "--retry-all-errors", "--speed-limit", "4000", "--speed-time", "45",
          "-A", UA, "-o", dest, url],
         check=True,
     )
@@ -190,6 +346,28 @@ def extract_snapshot(pbf: str, wanted: set[tuple[str, int]], classify) -> dict:
     handler.apply_file(pbf, locations=False)
     print(f"  matched {len(handler.found)} / {len(wanted)} current businesses", flush=True)
     return handler.found
+
+
+def load_snapshot(url: str, dest: str, wanted: set[tuple[str, int]], classify) -> dict:
+    """Download if missing/tiny; re-fetch if a previous curl left a truncated PBF."""
+    for attempt in range(3):
+        if not os.path.exists(dest) or os.path.getsize(dest) < 1_000_000:
+            download(url, dest)
+        try:
+            return extract_snapshot(dest, wanted, classify)
+        except RuntimeError as exc:
+            msg = str(exc).lower()
+            if "unexpected eof" not in msg and "pbf error" not in msg:
+                raise
+            print(f"  truncated PBF, re-downloading {dest}", flush=True)
+            try:
+                os.remove(dest)
+            except OSError:
+                pass
+            if attempt == 2:
+                raise
+            download(url, dest)
+    raise RuntimeError(f"Could not read {dest}")
 
 
 def build_intervals(obs: list[tuple[str, dict]]) -> list[dict]:
@@ -221,10 +399,9 @@ def build_intervals(obs: list[tuple[str, dict]]) -> list[dict]:
 
 def guess_region(data_path: str) -> str | None:
     name = os.path.basename(data_path).lower()
-    if "ukraine" in name:
-        return "ukraine"
-    if "wales" in name:
-        return "wales"
+    for key in REGIONS:
+        if key in name:
+            return key
     return None
 
 
@@ -240,7 +417,7 @@ def main() -> None:
 
     region_name = args.region or (guess_region(args.data) if args.data else None)
     if not region_name:
-        p.error("Pass --region ukraine|wales, or a --data path that names one")
+        p.error("Pass --region or a --data path that names one")
     region = REGIONS[region_name]
     data_path = args.data or region["default_data"]
     stamps = (args.stamps.split(",") if args.stamps else list(region["stamps"]))
@@ -255,9 +432,7 @@ def main() -> None:
     for stamp in stamps:
         stamp = stamp.strip()
         dest = os.path.join(args.pbf_dir, region["file"].format(stamp=stamp))
-        if not os.path.exists(dest) or os.path.getsize(dest) < 1_000_000:
-            download(region["url"].format(stamp=stamp), dest)
-        found = extract_snapshot(dest, wanted, classify)
+        found = load_snapshot(region["url"].format(stamp=stamp), dest, wanted, classify)
         date = stamp_to_date(stamp)
         for key, rec in found.items():
             series[key].append((date, rec))
@@ -273,8 +448,8 @@ def main() -> None:
         name = rec.get("name") or ""
         last = series[key][-1]
         # The JSON only stores the displayed name. If it has not changed since
-        # the last yearly extract, keep that extract's name:* tags so a Welsh
-        # (or Ukrainian) translation tag is not dropped at "today".
+        # the last yearly extract, keep that extract's name:* tags so a
+        # translation tag is not dropped at "today".
         if last and name == (last[1].get("name") or ""):
             series[key].append((today, last[1]))
             present += 1
@@ -313,10 +488,14 @@ def main() -> None:
             stats["changed"] += 1
             a, b = intervals[0]["primary"], intervals[-1]["primary"]
             stats[f"{a} -> {b}"] += 1
-            if "welsh" in (intervals[-1].get("available") or []) and "welsh" not in (intervals[0].get("available") or []):
-                stats["gained welsh"] += 1
-            if "welsh" in (intervals[0].get("available") or []) and "welsh" not in (intervals[-1].get("available") or []):
-                stats["lost welsh"] += 1
+            track = region.get("track")
+            if track:
+                last_has = track in (intervals[-1].get("available") or []) or intervals[-1]["primary"] == track
+                first_has = track in (intervals[0].get("available") or []) or intervals[0]["primary"] == track
+                if last_has and not first_has:
+                    stats[f"gained {track}"] += 1
+                if first_has and not last_has:
+                    stats[f"lost {track}"] += 1
 
     out = args.output or data_path
     with open(out, "w", encoding="utf-8") as f:
