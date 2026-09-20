@@ -1,0 +1,28 @@
+{
+  "name": "inuktitut",
+  "codes": [
+    "iu",
+    "iku",
+    "ike",
+    "ikt"
+  ],
+  "switch_labels": [
+    "inuktitut",
+    "ᐃᓄᒃᑎᑐᑦ"
+  ],
+  "scripts": [
+    "syllabics",
+    "latin"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "inuit",
+    "inuk",
+    "inuktitut",
+    "inuktitutitut",
+    "nunavut",
+    "ᐃᓄᐃᑦ",
+    "ᐃᓄᒃᑎᑐᑦ",
+    "ᓄᓇᕗᑦ"
+  ]
+}

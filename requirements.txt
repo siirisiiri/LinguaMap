@@ -1,2 +1,3 @@
 aiohttp>=3.9,<4
 uvloop>=0.19; sys_platform != "win32"
+osmium>=4.0

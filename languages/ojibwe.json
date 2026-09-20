@@ -1,0 +1,28 @@
+{
+  "name": "ojibwe",
+  "codes": [
+    "oj",
+    "oji",
+    "ojg",
+    "ciw"
+  ],
+  "switch_labels": [
+    "ojibwe",
+    "ojibwa",
+    "ojibway",
+    "anishinaabemowin"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "anishinaabe",
+    "anishinaabeg",
+    "anishinaabemowin",
+    "anishinabe",
+    "ojibwa",
+    "ojibway",
+    "ojibwe"
+  ]
+}

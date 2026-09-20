@@ -1,0 +1,65 @@
+{
+  "name": "cebuano",
+  "codes": [
+    "ceb"
+  ],
+  "switch_labels": [
+    "cebuano",
+    "bisaya",
+    "binisaya",
+    "sugbuanon",
+    "sinugboanon",
+    "cebuano visayan"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "suppresses": [
+    "tagalog"
+  ],
+  "words": [
+    "adlaw",
+    "aduna",
+    "asa",
+    "atoa",
+    "balay",
+    "baligya",
+    "bisaya",
+    "bisan",
+    "buntag",
+    "cebuano",
+    "dili",
+    "gabii",
+    "ganahan",
+    "gayud",
+    "gikan",
+    "giunsa",
+    "gyud",
+    "hangtod",
+    "inyong",
+    "kaayo",
+    "kamo",
+    "kanamo",
+    "kaninyo",
+    "karon",
+    "kinsa",
+    "kining",
+    "lungsod",
+    "maayong",
+    "mao",
+    "naa",
+    "ngadto",
+    "ngano",
+    "niini",
+    "palihug",
+    "panimalay",
+    "sugbo",
+    "tawo",
+    "tuod",
+    "ugma",
+    "unsa",
+    "unya",
+    "usab"
+  ]
+}

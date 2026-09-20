@@ -1,0 +1,38 @@
+{
+  "name": "belarusian",
+  "codes": [
+    "be",
+    "bel"
+  ],
+  "switch_labels": [
+    "belarusian",
+    "беларуская",
+    "білоруська"
+  ],
+  "scripts": [
+    "cyrillic"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "беларуская",
+    "беларусь",
+    "галоўная",
+    "кантакты",
+    "навіны",
+    "нашы",
+    "падрабязней",
+    "паслугі",
+    "старонка",
+    "таксама",
+    "што"
+  ],
+  "exclusive_letters": {
+    "script": "cyrillic",
+    "letters": "ў",
+    "min_hits": 3,
+    "min_share": 0.003
+  },
+  "suppresses": [
+    "russian"
+  ]
+}

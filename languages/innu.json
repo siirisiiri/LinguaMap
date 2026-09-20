@@ -1,0 +1,21 @@
+{
+  "name": "innu",
+  "codes": [
+    "moe"
+  ],
+  "switch_labels": [
+    "innu",
+    "innu-aimun"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "aimun",
+    "ilnu",
+    "innu",
+    "innu-aimun",
+    "innush"
+  ]
+}

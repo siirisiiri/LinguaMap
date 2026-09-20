@@ -1,0 +1,52 @@
+{
+  "name": "turkmen",
+  "codes": [
+    "tk",
+    "tuk"
+  ],
+  "switch_labels": [
+    "turkmen",
+    "türkmen",
+    "türkmençe",
+    "türkmen dili",
+    "türkmenistan",
+    "turkmène",
+    "turkmenisch",
+    "туркменська"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "suppresses": [
+    "turkish",
+    "albanian",
+    "romanian"
+  ],
+  "words": [
+    "agza",
+    "aşgabat",
+    "gözleg",
+    "habarlaşmak",
+    "hasaba",
+    "hyzmat",
+    "kömek",
+    "maglumat",
+    "önüm",
+    "sahypa",
+    "salgy",
+    "saýt",
+    "sazlamalar",
+    "töleg",
+    "türkmen",
+    "türkmençe",
+    "türkmenistan",
+    "ulanyjy",
+    "ýok",
+    "ýüklemek",
+    "giňişleýin",
+    "gizlinlik",
+    "ibermek",
+    "önümler"
+  ]
+}

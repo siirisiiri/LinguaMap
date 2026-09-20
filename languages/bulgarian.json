@@ -1,0 +1,42 @@
+{
+  "name": "bulgarian",
+  "codes": [
+    "bg",
+    "bul"
+  ],
+  "switch_labels": [
+    "bulgarian",
+    "български",
+    "болгарська"
+  ],
+  "scripts": [
+    "cyrillic"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "български",
+    "всички",
+    "дошли",
+    "защото",
+    "каквото",
+    "които",
+    "към",
+    "моля",
+    "начало",
+    "повече",
+    "съм",
+    "също",
+    "това",
+    "ще"
+  ],
+  "cyrillic_sign": {
+    "mode": "vowel_share",
+    "letter": "ъ",
+    "min_share": 0.006,
+    "blocked_by": [
+      "ukrainian",
+      "russian",
+      "belarusian"
+    ]
+  }
+}

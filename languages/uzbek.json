@@ -1,0 +1,69 @@
+{
+  "name": "uzbek",
+  "codes": [
+    "uz",
+    "uzb"
+  ],
+  "switch_labels": [
+    "uzbek",
+    "oʻzbek",
+    "o'zbek",
+    "oʻzbekcha",
+    "o'zbekcha",
+    "oʻzbekiston",
+    "ўзбек",
+    "ўзбекча",
+    "ouzbek",
+    "usbekisch",
+    "узбецька"
+  ],
+  "scripts": [
+    "latin",
+    "cyrillic"
+  ],
+  "script_sufficient": false,
+  "suppresses": [
+    "russian",
+    "belarusian"
+  ],
+  "words": [
+    "aloqa",
+    "foydalanuvchi",
+    "haqida",
+    "kirish",
+    "koʻrish",
+    "mahsulot",
+    "maʼlumot",
+    "maxfiylik",
+    "narx",
+    "oʻqish",
+    "oʻzbek",
+    "oʻzbekcha",
+    "oʻzbekiston",
+    "qidiruv",
+    "qoʻshish",
+    "roʻyxat",
+    "sahifa",
+    "savat",
+    "sozlamalar",
+    "toshkent",
+    "toʻlov",
+    "xizmat",
+    "yetkazib",
+    "yuklab",
+    "алоқа",
+    "маълумот",
+    "махфийлик",
+    "маҳсулот",
+    "рўйхат",
+    "саҳифа",
+    "тошкент",
+    "тўлов",
+    "фойдаланувчи",
+    "хизмат",
+    "ўзбек",
+    "ўзбекча",
+    "ўзбекистон",
+    "қидирув"
+  ]
+}

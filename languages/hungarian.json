@@ -1,0 +1,43 @@
+{
+  "name": "hungarian",
+  "codes": [
+    "hu",
+    "hun"
+  ],
+  "switch_labels": [
+    "hungarian",
+    "magyar",
+    "magyarul",
+    "угорська"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "csak",
+    "egy",
+    "elérhetőség",
+    "hogy",
+    "hírek",
+    "kapcsolat",
+    "kezdőlap",
+    "köszönjük",
+    "magyar",
+    "meg",
+    "minden",
+    "már",
+    "nem",
+    "rólunk",
+    "szolgáltatások",
+    "több",
+    "vagy",
+    "és"
+  ],
+  "exclusive_letters": {
+    "script": "latin",
+    "letters": "őű",
+    "min_hits": 3,
+    "min_share": 0.002
+  }
+}

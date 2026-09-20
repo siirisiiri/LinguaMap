@@ -1,0 +1,45 @@
+{
+  "name": "tetum",
+  "codes": [
+    "tet"
+  ],
+  "switch_labels": [
+    "tetum",
+    "tetun",
+    "tetun prasa",
+    "lia-tetun",
+    "tétoum",
+    "tétum"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "suppresses": [
+    "portuguese"
+  ],
+  "words": [
+    "foinsa'e",
+    "ha'u",
+    "hakarak",
+    "haree",
+    "hatene",
+    "imi",
+    "karik",
+    "koalia",
+    "kona-ba",
+    "labele",
+    "lae",
+    "liafuan",
+    "lorosae",
+    "maubere",
+    "ne'e",
+    "ne'ebé",
+    "neebe",
+    "obrigadu",
+    "rona",
+    "saida",
+    "tetun",
+    "wainhira"
+  ]
+}

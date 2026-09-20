@@ -3,8 +3,14 @@
 Lightweight multi-language homepage classifier for OSM websites.
 
 Fetches a small homepage prefix, then labels it from three signals: the
-writing system and script-exclusive letters, distinctive function-word hits,
-and language-switch markers (hreflang + nav links).
+writing system and script-exclusive letters, unique distinctive-word hits,
+and language-switch markers (hreflang + nav links). Language data lives in
+languages/*.json; adding a language should not require algorithm changes.
+
+To add a language, create languages/<id>.json with `name`, `codes`,
+`switch_labels`, `scripts`, and any of: `script_sufficient` (unique writing
+system), `exclusive_letters`, `words`. If the writing system is not yet in
+languages/_scripts.json, add its Unicode block there too.
 
 Script evidence does most of the work outside the Latin alphabet. Ukrainian
 and Russian share most of their short function words but never share і/ї/є/ґ
@@ -35,6 +41,8 @@ import sys
 import time
 from collections import Counter
 from collections.abc import Callable, Iterable
+from dataclasses import dataclass
+from pathlib import Path
 from urllib.parse import urlparse
 
 import aiohttp
@@ -72,343 +80,146 @@ USER_AGENT = (
 )
 RATE_LIMIT_BACKOFF_S = 1.0
 
-MIN_HITS = 2
-BILINGUAL_HITS = 3
+MIN_UNIQUE_HITS = 4
+MIN_HITS = MIN_UNIQUE_HITS  # alias used by diagnostic scripts
 BILINGUAL_RATIO = 0.35
+LANGUAGES_DIR = Path(__file__).resolve().parent / "languages"
+SCRIPTS_PATH = LANGUAGES_DIR / "_scripts.json"
 
-# ---------------------------------------------------------------------------
-# Language packs: distinctive words + switcher labels + ISO-ish codes.
-# Shared/ambiguous short tokens across packs are avoided where possible.
-# ---------------------------------------------------------------------------
 
-LANGUAGE_WORDS: dict[str, frozenset[str]] = {
-    "english": frozenset({
-        "the", "and", "of", "for", "that", "with", "this", "from", "have",
-        "has", "not", "but", "they", "you", "was", "are", "been", "were",
-        "their", "which", "would", "could", "should", "there", "what",
-        "when", "who", "how", "will", "more", "than", "also", "about",
-        "into", "your", "our", "his", "her", "its", "these", "those",
-        "them", "then", "some", "any", "each", "other", "only", "over",
-        "after", "before", "because", "while", "where", "here", "just",
-        "most", "such", "very", "please", "welcome", "home", "contact",
-        "services", "privacy", "cookies", "opening", "hours",
-    }),
-    "welsh": frozenset({
-        "yn", "yr", "mae", "yw", "oedd", "sydd", "wedi", "gyda", "neu",
-        "ond", "fel", "rhwng", "dros", "trwy", "wrth", "ein", "eich",
-        "nhw", "hwn", "hyn", "dyma", "dyna", "croeso", "diolch", "cymru",
-        "cymraeg", "arall", "hefyd", "yma", "yna", "bydd", "rhaid", "ddim",
-        "nid", "nad", "pam", "sut", "pwy", "faint", "iawn", "cyngor",
-        "llywodraeth", "cymdeithas", "cwmni", "gwasanaethau", "cysylltwch",
-        "hafan", "amdanom", "tudalen", "gwybodaeth", "newyddion", "cyswllt",
-        "chwilio", "dewiswch", "iaith", "saesneg", "gymraeg", "gyfer",
-        "pobl", "dydd", "noswaith", "prynhawn", "diwrnod", "wythnos",
-        "flwyddyn", "heddiw", "yfory", "dweud", "gwneud", "mynd", "cael",
-        "ydym", "ydych", "ydyn", "oes", "fy", "eglwys", "menter", "cynnwys",
-        "cwcis", "safle", "defnyddio", "rydych", "cytuno", "neidio", "prif",
-        "hanfodol", "ydynt", "gwella", "gwasanaeth", "tudalennau", "dewisiadau",
-    }),
-    "french": frozenset({
-        "les", "des", "une", "est", "dans", "pour", "qui", "que", "avec",
-        "nous", "vous", "sont", "cette", "tout", "plus", "mais", "comme",
-        "aussi", "bien", "être", "etre", "avoir", "faire", "merci",
-        "accueil", "contactez", "confidentialité", "confidentialite",
-        "français", "francais", "anglais", "politique", "propos", "notre",
-        "votre", "leurs", "elle", "elles", "ils", "était", "etait",
-        "étaient", "etaient", "après", "apres", "avant", "entre", "sous",
-        "chez", "donc", "alors", "où", "ou", "très", "tres", "encore",
-        "toujours", "maintenant", "aujourd", "service", "services",
-        "informations", "recherche", "connexion", "inscription",
-    }),
-    "spanish": frozenset({
-        "los", "las", "una", "del", "que", "con", "por", "para", "como",
-        "más", "mas", "pero", "todo", "esta", "estos", "estas",
-        "hay", "son", "está", "esta", "también", "tambien", "gracias",
-        "inicio", "contacto", "español", "espanol", "inglés", "ingles",
-        "privacidad", "nosotros", "nuestro", "nuestra", "sobre", "desde",
-        "hasta", "entre", "cuando", "donde", "dónde", "porque", "según",
-        "segun", "muy", "más", "solo", "sólo", "todos", "todas", "aquí",
-        "aqui", "ahora", "después", "despues", "antes", "bienvenida",
-        "bienvenido", "acerca", "política", "politica", "cookies",
-    }),
-    "german": frozenset({
-        "der", "die", "das", "und", "ist", "nicht", "mit", "von", "den",
-        "dem", "auf", "für", "fur", "eine", "einer", "einem", "einen",
-        "werden", "wurde", "haben", "wird", "auch", "nach", "bei", "über",
-        "uber", "sowie", "bitte", "willkommen", "kontakt", "deutsch",
-        "impressum", "datenschutz", "startseite", "mehr", "oder", "noch",
-        "nur", "sich", "wir", "sie", "ihr", "ihre", "ihnen", "kann",
-        "können", "konnen", "durch", "zwischen", "unter", "wenn", "weil",
-        "aber", "schon", "wieder", "hier", "dort", "diese", "dieser",
-        "dieses", "alle", "vom", "zur", "zum",
-    }),
-    # Canadian Indigenous languages: sparse web function-word evidence, so
-    # packs emphasize endonyms + common portal vocabulary; switcher/hreflang
-    # detection carries most of the weight.
-    "inuktitut": frozenset({
-        "inuktitut", "inuit", "nunavut", "inuk", "inuktitutitut",
-        "ᐃᓄᒃᑎᑐᑦ", "ᐃᓄᐃᑦ", "ᓄᓇᕗᑦ",
-    }),
-    "cree": frozenset({
-        "nêhiyawêwin", "nehiyawewin", "nêhiyaw", "nehiyaw", "nehiyawak",
-        "cree", "iyiniw", "ᓀᐦᐃᔭᐍᐏᐣ",
-    }),
-    "ojibwe": frozenset({
-        "anishinaabemowin", "anishinaabe", "anishinaabeg", "ojibwe",
-        "ojibwa", "ojibway", "anishinabe",
-    }),
-    "mikmaq": frozenset({
-        "mi'kmaq", "mikmaq", "mi'kmaw", "mikmaw", "lnu", "lnuismk",
-        "miꞌkmaq", "miꞌkmaw",
-    }),
-    "mohawk": frozenset({
-        "kanien'kéha", "kanienkeha", "kanien'keha", "kanienkehaka",
-        "mohawk", "kanyen'kéha", "kanyenkeha",
-    }),
-    "innu": frozenset({
-        "innu-aimun", "innu", "aimun", "ilnu", "innush",
-    }),
-    "dene": frozenset({
-        "denesuline", "dëne", "dene", "chipewyan", "denésuliné",
-        "denesuliné", "sahtú", "sahtu", "tlicho", "tłı̨chǫ",
-    }),
-    "blackfoot": frozenset({
-        "niitsitapi", "blackfoot", "siksika", "kainai", "piikani",
-        "niitsi'powahsin",
-    }),
-    # Languages of Ukraine. Packs stay disjoint because score_languages gives
-    # a shared token to whichever pack is declared first; for these, letter
-    # evidence in SCRIPT_MARKERS is the stronger signal anyway.
-    "ukrainian": frozenset({
-        "що", "але", "від", "або", "дуже", "ласка", "головна", "послуги",
-        "детальніше", "також", "щоб", "який", "немає", "українська",
-        "українською", "вартість", "замовити", "розклад", "сторінка",
-        "зателефонуйте", "наші", "ваші", "адреса", "більше",
-    }),
-    "russian": frozenset({
-        "что", "это", "очень", "пожалуйста", "главная", "подробнее",
-        "новости", "если", "чтобы", "можно", "была", "были", "заказать",
-        "стоимость", "русский", "сейчас", "здесь", "наши", "ваши",
-    }),
-    "belarusian": frozenset({
-        "беларуская", "беларусь", "што", "кантакты", "галоўная", "навіны",
-        "паслугі", "таксама", "падрабязней", "старонка", "нашы",
-    }),
-    "bulgarian": frozenset({
-        "български", "съм", "това", "които", "към", "ще", "също", "моля",
-        "начало", "повече", "всички", "каквото", "защото", "дошли",
-    }),
-    "rusyn": frozenset({
-        "русинськый", "русиньскый", "русины", "руснак", "русинська",
-    }),
-    "crimean tatar": frozenset({
-        "qırım", "qırımtatar", "qırımtatarca", "qırımtatarlar",
-        "къырым", "къырымтатар", "къырымтатарджа",
-    }),
-    "romanian": frozenset({
-        "și", "este", "pentru", "această", "acest", "despre", "servicii",
-        "acasă", "sunt", "către", "română", "românește", "mulțumim",
-        "contactați", "informații", "pagina",
-    }),
-    "hungarian": frozenset({
-        "és", "nem", "hogy", "egy", "vagy", "meg", "kapcsolat",
-        "kezdőlap", "szolgáltatások", "magyar", "több", "minden", "csak",
-        "már", "köszönjük", "elérhetőség", "rólunk", "hírek",
-    }),
-    "polish": frozenset({
-        "się", "nie", "jest", "oraz", "przez", "strona", "główna",
-        "usługi", "więcej", "wszystkie", "polski", "dziękujemy",
-        "zapraszamy", "można", "naszej", "oferta", "aktualności",
-    }),
-    "slovak": frozenset({
-        "ktoré", "viac", "domov", "služby", "slovenčina", "ďakujeme",
-        "všetky", "môže", "stránka", "ponuka", "informácie",
-    }),
-    "gagauz": frozenset({
-        "gagauzca", "gagauz", "gagauziya", "gagauzlar",
-    }),
-    "greek": frozenset({
-        "ελληνικά", "και", "για", "στην", "είναι", "των", "αρχική",
-        "επικοινωνία", "υπηρεσίες", "περισσότερα", "μας",
-    }),
-    "yiddish": frozenset({
-        "ייִדיש", "אונדזער", "מיר", "זענען", "פֿון", "אויף",
-    }),
-    "armenian": frozenset({
-        "հայերեն", "մեր", "ենք", "կապ", "ծառայություններ", "մասին",
-        "գլխավոր", "նորություններ",
-    }),
+@dataclass(frozen=True)
+class ExclusiveLetters:
+    script: str
+    letters: str
+    min_hits: int
+    min_share: float
+
+
+@dataclass(frozen=True)
+class CyrillicSign:
+    mode: str
+    letter: str
+    min_share: float = 0.0
+    leaders: str = ""
+    min_hits: int = 0
+    blocked_by: frozenset[str] = frozenset()
+
+
+@dataclass(frozen=True)
+class LanguagePack:
+    name: str
+    codes: tuple[str, ...]
+    switch_labels: tuple[str, ...]
+    scripts: frozenset[str]
+    script_sufficient: bool
+    words: frozenset[str]
+    exclusive_letters: ExclusiveLetters | None = None
+    suppresses: frozenset[str] = frozenset()
+    cyrillic_sign: CyrillicSign | None = None
+
+
+def _parse_language_file(path: Path) -> LanguagePack:
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    name = str(raw["name"]).strip().lower()
+    exclusive = None
+    if raw.get("exclusive_letters"):
+        el = raw["exclusive_letters"]
+        exclusive = ExclusiveLetters(
+            script=str(el["script"]).lower(),
+            letters=str(el["letters"]).lower(),
+            min_hits=int(el.get("min_hits", 3)),
+            min_share=float(el.get("min_share", 0.0)),
+        )
+    sign = None
+    if raw.get("cyrillic_sign"):
+        cs = raw["cyrillic_sign"]
+        sign = CyrillicSign(
+            mode=str(cs["mode"]).lower(),
+            letter=str(cs.get("letter", "ъ")).lower(),
+            min_share=float(cs.get("min_share", 0.0)),
+            leaders=str(cs.get("leaders", "")).lower(),
+            min_hits=int(cs.get("min_hits", 0)),
+            blocked_by=frozenset(str(x).lower() for x in cs.get("blocked_by", [])),
+        )
+    return LanguagePack(
+        name=name,
+        codes=tuple(c.strip().lower() for c in raw.get("codes", []) if c),
+        switch_labels=tuple(s.strip().lower() for s in raw.get("switch_labels", []) if s),
+        scripts=frozenset(s.strip().lower() for s in raw.get("scripts", []) if s),
+        script_sufficient=bool(raw.get("script_sufficient", False)),
+        words=frozenset(str(w).lower() for w in raw.get("words", [])),
+        exclusive_letters=exclusive,
+        suppresses=frozenset(str(x).lower() for x in raw.get("suppresses", [])),
+        cyrillic_sign=sign,
+    )
+
+
+def load_script_config(path: Path | None = None) -> dict:
+    path = path or SCRIPTS_PATH
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load_language_packs(directory: Path | None = None) -> dict[str, LanguagePack]:
+    directory = directory or LANGUAGES_DIR
+    packs: dict[str, LanguagePack] = {}
+    for lang_path in sorted(directory.glob("*.json")):
+        if lang_path.name.startswith("_"):
+            continue
+        pack = _parse_language_file(lang_path)
+        if pack.name in packs:
+            raise ValueError(f"Duplicate language name {pack.name!r} in {lang_path}")
+        packs[pack.name] = pack
+    if not packs:
+        raise FileNotFoundError(f"No language files in {directory}")
+    return packs
+
+
+def _index_codes(packs: dict[str, LanguagePack]) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for pack in packs.values():
+        for code in pack.codes:
+            out[code] = pack.name
+    return out
+
+
+def _index_switch_labels(packs: dict[str, LanguagePack]) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for pack in packs.values():
+        for label in pack.switch_labels:
+            out[label] = pack.name
+    return out
+
+
+def _script_blocks(config: dict) -> tuple[tuple[str, int, int], ...]:
+    return tuple(
+        (str(block["script"]).lower(), int(block["start"]), int(block["end"]))
+        for block in config["blocks"]
+    )
+
+
+def _build_word_re(blocks: tuple[tuple[str, int, int], ...], extra: str) -> re.Pattern[str]:
+    ranges = "".join(f"{chr(low)}-{chr(high)}" for _, low, high in blocks)
+    return re.compile(rf"[{ranges}{re.escape(extra)}]{{2,}}")
+
+
+SCRIPT_CONFIG = load_script_config()
+LANGUAGE_PACKS = load_language_packs()
+LANGUAGE_WORDS: dict[str, frozenset[str]] = {name: pack.words for name, pack in LANGUAGE_PACKS.items()}
+SUPPORTED_LANGUAGES = tuple(LANGUAGE_PACKS)
+CODE_TO_LANGUAGE: dict[str, str] = _index_codes(LANGUAGE_PACKS)
+SWITCH_LABEL_TO_LANGUAGE: dict[str, str] = _index_switch_labels(LANGUAGE_PACKS)
+SCRIPT_BLOCKS = _script_blocks(SCRIPT_CONFIG)
+AMBIGUOUS_PATH_CODES = frozenset(
+    str(code).lower() for code in SCRIPT_CONFIG.get("ambiguous_path_codes", [])
+)
+MIN_SCRIPT_CHARS = int(SCRIPT_CONFIG.get("min_script_chars", 40))
+WORD_RE = _build_word_re(SCRIPT_BLOCKS, SCRIPT_CONFIG.get("word_extra_chars", "'"))
+# Compatibility alias for wayback_history: exclusive-letter rules from JSON packs.
+SCRIPT_MARKERS: dict[str, tuple[str, str, int, float]] = {
+    pack.name: (el.script, el.letters, el.min_hits, el.min_share)
+    for pack in LANGUAGE_PACKS.values()
+    if (el := pack.exclusive_letters)
 }
-
-# ISO / BCP47 style codes -> language name
-CODE_TO_LANGUAGE: dict[str, str] = {
-    "en": "english",
-    "eng": "english",
-    "cy": "welsh",
-    "cym": "welsh",
-    "fr": "french",
-    "fra": "french",
-    "fre": "french",
-    "es": "spanish",
-    "spa": "spanish",
-    "de": "german",
-    "deu": "german",
-    "ger": "german",
-    "iu": "inuktitut",
-    "iku": "inuktitut",
-    "ike": "inuktitut",
-    "ikt": "inuktitut",
-    "cr": "cree",
-    "cre": "cree",
-    "cwd": "cree",
-    "csw": "cree",
-    "crk": "cree",
-    "oj": "ojibwe",
-    "oji": "ojibwe",
-    "ojg": "ojibwe",
-    "ciw": "ojibwe",
-    "mic": "mikmaq",
-    "moh": "mohawk",
-    "moe": "innu",
-    "chp": "dene",
-    "den": "dene",
-    "scs": "dene",
-    "bla": "blackfoot",
-    "uk": "ukrainian",
-    "ukr": "ukrainian",
-    "ru": "russian",
-    "rus": "russian",
-    "be": "belarusian",
-    "bel": "belarusian",
-    "bg": "bulgarian",
-    "bul": "bulgarian",
-    "rue": "rusyn",
-    "crh": "crimean tatar",
-    "ro": "romanian",
-    "ron": "romanian",
-    "rum": "romanian",
-    "mo": "romanian",
-    "mol": "romanian",
-    "hu": "hungarian",
-    "hun": "hungarian",
-    "pl": "polish",
-    "pol": "polish",
-    "sk": "slovak",
-    "slk": "slovak",
-    "slo": "slovak",
-    "gag": "gagauz",
-    "el": "greek",
-    "ell": "greek",
-    "gre": "greek",
-    "yi": "yiddish",
-    "yid": "yiddish",
-    "hy": "armenian",
-    "hye": "armenian",
-    "arm": "armenian",
-}
-
-# Codes that routinely appear in URL paths as something other than a language
-# ("/uk/" for United Kingdom, "/be/" for Belgium). hreflang and switcher text
-# for these are still trusted; only the path guess is not.
-AMBIGUOUS_PATH_CODES = frozenset({"uk", "be", "el", "ro", "sk", "mo", "no", "is"})
-
-# Nav / switcher link labels (lowercased exact-ish matches via SWITCH_LABEL_RE)
-SWITCH_LABEL_TO_LANGUAGE: dict[str, str] = {
-    "english": "english",
-    "anglais": "english",
-    "saesneg": "english",
-    "inglés": "english",
-    "ingles": "english",
-    "englisch": "english",
-    "welsh": "welsh",
-    "cymraeg": "welsh",
-    "gymraeg": "welsh",
-    "french": "french",
-    "français": "french",
-    "francais": "french",
-    "française": "french",
-    "francaise": "french",
-    "spanish": "spanish",
-    "español": "spanish",
-    "espanol": "spanish",
-    "castellano": "spanish",
-    "german": "german",
-    "deutsch": "german",
-    "inuktitut": "inuktitut",
-    "ᐃᓄᒃᑎᑐᑦ": "inuktitut",
-    "cree": "cree",
-    "nêhiyawêwin": "cree",
-    "nehiyawewin": "cree",
-    "ojibwe": "ojibwe",
-    "ojibwa": "ojibwe",
-    "ojibway": "ojibwe",
-    "anishinaabemowin": "ojibwe",
-    "mi'kmaq": "mikmaq",
-    "mikmaq": "mikmaq",
-    "mi'kmaw": "mikmaq",
-    "mohawk": "mohawk",
-    "kanien'kéha": "mohawk",
-    "kanienkeha": "mohawk",
-    "innu": "innu",
-    "innu-aimun": "innu",
-    "dene": "dene",
-    "denesuline": "dene",
-    "chipewyan": "dene",
-    "blackfoot": "blackfoot",
-    "niitsitapi": "blackfoot",
-    "siksika": "blackfoot",
-    "ukrainian": "ukrainian",
-    "українська": "ukrainian",
-    "українською": "ukrainian",
-    "укр": "ukrainian",
-    "ua": "ukrainian",
-    "russian": "russian",
-    "русский": "russian",
-    "російська": "russian",
-    "рус": "russian",
-    "ru": "russian",
-    "belarusian": "belarusian",
-    "беларуская": "belarusian",
-    "білоруська": "belarusian",
-    "bulgarian": "bulgarian",
-    "български": "bulgarian",
-    "болгарська": "bulgarian",
-    "rusyn": "rusyn",
-    "русинськый": "rusyn",
-    "crimean tatar": "crimean tatar",
-    "qırımtatarca": "crimean tatar",
-    "kırımtatarca": "crimean tatar",
-    "къырымтатарджа": "crimean tatar",
-    "кримськотатарська": "crimean tatar",
-    "romanian": "romanian",
-    "română": "romanian",
-    "romana": "romanian",
-    "moldovenească": "romanian",
-    "румунська": "romanian",
-    "hungarian": "hungarian",
-    "magyar": "hungarian",
-    "magyarul": "hungarian",
-    "угорська": "hungarian",
-    "polish": "polish",
-    "polski": "polish",
-    "польська": "polish",
-    "slovak": "slovak",
-    "slovenčina": "slovak",
-    "slovensky": "slovak",
-    "gagauz": "gagauz",
-    "gagauzca": "gagauz",
-    "greek": "greek",
-    "ελληνικά": "greek",
-    "грецька": "greek",
-    "yiddish": "yiddish",
-    "ייִדיש": "yiddish",
-    "їдиш": "yiddish",
-    "armenian": "armenian",
-    "հայերեն": "armenian",
-    "вірменська": "armenian",
-}
-
-SUPPORTED_LANGUAGES = tuple(LANGUAGE_WORDS.keys())
 
 LEGACY_LABEL_TO_LIST: dict[str, list[str]] = {
     "english": ["english"],
@@ -425,12 +236,6 @@ BLOCK_RE = re.compile(
 )
 TAG_RE = re.compile(r"<[^>]+>")
 ENTITY_RE = re.compile(r"&(?:[a-z]+|#\d+|#x[0-9a-f]+);", re.I)
-# Latin (incl. accents and the extended blocks Polish/Romanian/Slovak need),
-# Greek, Cyrillic, Armenian, Hebrew, Canadian Aboriginal Syllabics
-WORD_RE = re.compile(
-    r"[a-zA-ZÀ-ÖØ-öø-ÿ\u0100-\u024f\u0370-\u03ff\u0400-\u052f\u0530-\u058f"
-    r"\u0590-\u05ff\u1400-\u167f\u1e00-\u1eff\u1f00-\u1fff']{2,}"
-)
 BODY_RE = re.compile(r"(?is)<body[^>]*>")
 HTML_LANG_RE = re.compile(r"(?is)<html[^>]*\slang=[\"']([^\"']+)[\"']")
 
@@ -453,55 +258,7 @@ SWITCH_LABEL_RE = re.compile(
     rf")\s*$"
 )
 
-VOWELS = set("aeiouwyâêîôûŵŷäëïöüáéíóúẃỳàèù")
-
-# ---------------------------------------------------------------------------
-# Script signals.
-#
-# Outside the Latin alphabet the writing system alone narrows a page to a
-# handful of candidates, and inside a script a few exclusive letters separate
-# them. This beats function words for Cyrillic in particular: Ukrainian and
-# Russian share most short words, but і/ї/є/ґ and ы/э/ё never co-occur in
-# monolingual text.
-# ---------------------------------------------------------------------------
-
-MIN_SCRIPT_CHARS = 40
-
-SCRIPT_BLOCKS: tuple[tuple[str, int, int], ...] = (
-    ("greek", 0x0370, 0x03FF),
-    ("greek", 0x1F00, 0x1FFF),
-    ("cyrillic", 0x0400, 0x052F),
-    ("armenian", 0x0530, 0x058F),
-    ("hebrew", 0x0590, 0x05FF),
-    ("syllabics", 0x1400, 0x167F),
-)
-
-# language -> (script, letters only this language uses, min hits, min share
-# of that script's letters). Shares sit well below natural frequency so a
-# short homepage still trips them.
-SCRIPT_MARKERS: dict[str, tuple[str, str, int, float]] = {
-    # ї/є/ґ never appear in Russian. The everyday Ukrainian vowel і is
-    # handled separately: Belarusian and Rusyn also use it.
-    "ukrainian": ("cyrillic", "їєґ", 2, 0.003),
-    "russian": ("cyrillic", "ыэё", 2, 0.006),
-    "belarusian": ("cyrillic", "ў", 1, 0.002),
-    "polish": ("latin", "ąćęłńśźż", 4, 0.004),
-    "hungarian": ("latin", "őű", 3, 0.002),
-    "romanian": ("latin", "ășțşţ", 4, 0.003),
-    "slovak": ("latin", "ľĺŕďťň", 4, 0.003),
-    # Dotless i marks Latin Crimean Tatar; ñ alone would collide with Spanish.
-    "crimean tatar": ("latin", "ı", 4, 0.002),
-}
-
-YIDDISH_LETTERS = "װױײ"
-# Ukrainian і (U+0456) is the regular /i/ vowel, ~4–5% of letters. Russian
-# writes и instead. Belarusian also uses і, but ў already claims those pages.
-UKRAINIAN_I_MIN_HITS = 4
-UKRAINIAN_I_MIN_SHARE = 0.02
-# Bulgarian uses ъ as a plain vowel (~1.5% of letters); Russian barely uses it.
-BULGARIAN_HARD_SIGN_SHARE = 0.006
-# Cyrillic Crimean Tatar writes ъ only inside the къ/гъ/нъ digraphs.
-CRIMEAN_DIGRAPH_LEADERS = "кгн"
+VOWELS = set("aeiouwyâêîôûŵŷäëïöüáéíóúẃỳàèùåæøœõāēīūůěėįųąęőűýò")
 
 
 def _script_of(ch: str) -> str | None:
@@ -509,7 +266,7 @@ def _script_of(ch: str) -> str | None:
     for name, low, high in SCRIPT_BLOCKS:
         if low <= code <= high:
             return name
-    if ch.isalpha() and (code < 0x0250 or 0x1E00 <= code <= 0x1EFF):
+    if ch.isalpha():
         return "latin"
     return None
 
@@ -520,10 +277,7 @@ def normalize_url(url: str) -> str | None:
         return None
     if not url.startswith(("http://", "https://")):
         url = "http://" + url
-    try:
-        parsed = urlparse(url)
-    except ValueError:
-        return None
+    parsed = urlparse(url)
     if not parsed.netloc:
         return None
     path = parsed.path.lower()
@@ -650,13 +404,38 @@ def languages_from_switchers(html: str) -> set[str]:
 
 
 def score_languages(words: list[str]) -> dict[str, int]:
-    scores = {name: 0 for name in LANGUAGE_WORDS}
-    for w in words:
-        for name, vocab in LANGUAGE_WORDS.items():
-            if w in vocab:
-                scores[name] += 1
-                break  # first matching pack wins; packs are mostly disjoint
+    """Count unique sampled words that appear in each language's list."""
+    unique_words = set(words)
+    present_scripts = {
+        script
+        for word in unique_words
+        for ch in word
+        if (script := _script_of(ch))
+    }
+    scores: dict[str, int] = {}
+    for name, pack in LANGUAGE_PACKS.items():
+        if pack.scripts and present_scripts and pack.scripts.isdisjoint(present_scripts):
+            scores[name] = 0
+            continue
+        scores[name] = len(unique_words & pack.words)
     return scores
+
+
+def languages_from_words(words: list[str]) -> set[str]:
+    if not words:
+        return set()
+    scores = score_languages(words)
+    hits = {name: n for name, n in scores.items() if n >= MIN_UNIQUE_HITS}
+    if not hits:
+        return set()
+    # Keep languages with solid unique-word support; if several fire, require
+    # weaker ones to be reasonably close to the strongest signal.
+    strongest = max(hits.values())
+    return {
+        name
+        for name, n in hits.items()
+        if n / strongest >= BILINGUAL_RATIO
+    }
 
 
 def languages_from_script(words: list[str]) -> set[str]:
@@ -671,92 +450,90 @@ def languages_from_script(words: list[str]) -> set[str]:
             letters[ch.lower()] += 1
 
     found: set[str] = set()
-    for name, (script, marks, min_hits, min_share) in SCRIPT_MARKERS.items():
-        total = script_totals[script]
-        if total < MIN_SCRIPT_CHARS:
-            continue
-        hits = sum(letters[mark] for mark in marks)
-        if hits >= min_hits and hits / total >= min_share:
-            found.add(name)
+    for pack in LANGUAGE_PACKS.values():
+        if pack.exclusive_letters:
+            el = pack.exclusive_letters
+            total = script_totals[el.script]
+            if total < MIN_SCRIPT_CHARS:
+                continue
+            hits = sum(letters[mark] for mark in el.letters)
+            if hits >= el.min_hits and hits / total >= el.min_share:
+                found.add(pack.name)
+        elif pack.script_sufficient:
+            if any(script_totals[script] >= MIN_SCRIPT_CHARS for script in pack.scripts):
+                found.add(pack.name)
+
+    for pack in LANGUAGE_PACKS.values():
+        if pack.name in found and pack.suppresses:
+            found.difference_update(pack.suppresses)
 
     cyrillic = script_totals["cyrillic"]
     if cyrillic >= MIN_SCRIPT_CHARS:
-        ukrainian_i = letters["і"]  # U+0456, not ASCII i and not Cyrillic и
-        russian_excl = sum(letters[ch] for ch in "ыэё")
-        if (
-            "ukrainian" not in found
-            and "belarusian" not in found
-            and ukrainian_i >= UKRAINIAN_I_MIN_HITS
-            and ukrainian_i / cyrillic >= UKRAINIAN_I_MIN_SHARE
-            and russian_excl < 2
-        ):
-            found.add("ukrainian")
-
-    if "belarusian" in found:
-        # Belarusian shares ы/э with Russian; only ў is exclusive to it.
-        found.discard("russian")
-
-    # Scripts with a single candidate language in this set.
-    if script_totals["armenian"] >= MIN_SCRIPT_CHARS:
-        found.add("armenian")
-    if script_totals["greek"] >= MIN_SCRIPT_CHARS:
-        found.add("greek")
-    if script_totals["hebrew"] >= MIN_SCRIPT_CHARS and any(
-        letters[ch] for ch in YIDDISH_LETTERS
-    ):
-        found.add("yiddish")
-
-    if cyrillic >= MIN_SCRIPT_CHARS and letters["ъ"]:
-        digraphs = sum(
-            1
-            for i, ch in enumerate(text)
-            if ch.lower() == "ъ" and i and text[i - 1].lower() in CRIMEAN_DIGRAPH_LEADERS
-        )
-        if digraphs >= 3:
-            found.add("crimean tatar")
-        elif (letters["ъ"] - digraphs) / cyrillic >= BULGARIAN_HARD_SIGN_SHARE and not (
-            found & {"ukrainian", "russian", "belarusian"}
-        ):
-            found.add("bulgarian")
+        digraph_used: Counter = Counter()
+        for pack in LANGUAGE_PACKS.values():
+            rule = pack.cyrillic_sign
+            if not rule or rule.mode != "digraph" or not letters[rule.letter]:
+                continue
+            n = sum(
+                1
+                for i, ch in enumerate(text)
+                if ch.lower() == rule.letter
+                and i
+                and text[i - 1].lower() in rule.leaders
+            )
+            if n >= rule.min_hits:
+                found.add(pack.name)
+                digraph_used[rule.letter] += n
+        for pack in LANGUAGE_PACKS.values():
+            rule = pack.cyrillic_sign
+            if not rule or rule.mode != "vowel_share" or not letters[rule.letter]:
+                continue
+            if found & rule.blocked_by:
+                continue
+            remaining = letters[rule.letter] - digraph_used[rule.letter]
+            if remaining / cyrillic >= rule.min_share:
+                found.add(pack.name)
     return found
 
 
-def languages_from_words(words: list[str]) -> set[str]:
-    if not words:
-        return set()
-    scores = score_languages(words)
-    hits = {name: n for name, n in scores.items() if n >= MIN_HITS}
-    if not hits:
-        return set()
-    # Keep languages with solid support; if several fire, require weaker ones
-    # to be reasonably close to the strongest signal.
-    strongest = max(hits.values())
-    out: set[str] = set()
-    for name, n in hits.items():
-        if n >= BILINGUAL_HITS and n / strongest >= BILINGUAL_RATIO:
-            out.add(name)
-        elif n >= MIN_HITS and (len(hits) == 1 or n / strongest >= BILINGUAL_RATIO):
-            out.add(name)
-    return out
-
-
 def languages_from_content(words: list[str]) -> set[str]:
-    """Script letters decide Ukrainian/Russian and other non-Latin pages.
+    found = languages_from_script(words) | languages_from_words(words)
+    for pack in LANGUAGE_PACKS.values():
+        if pack.name in found and pack.suppresses:
+            found.difference_update(pack.suppresses)
+    return found
 
-    Function-word hits still add Latin languages (and fill gaps when a
-    page has too few distinctive letters).
+
+def classify_unknown_with_llm(html: str, words: list[str], url: str | None = None) -> list[str]:
+    """Stub for LLM language classification and word-list expansion.
+
+    Later this should identify the page language(s), generate a distinctive
+    word list for any unknown language, and persist it under languages/ so
+    future pages classify locally.
     """
-    return languages_from_script(words) | languages_from_words(words)
+    where = f" for {url}" if url else ""
+    print(
+        f"LLM backup needed{where}: no language reached {MIN_UNIQUE_HITS} unique "
+        f"word hits ({len(words)} sampled words). Would ask an LLM to classify "
+        f"and add a language file under {LANGUAGES_DIR.name}/.",
+        flush=True,
+    )
+    return []
 
 
 def classify_words(words: list[str]) -> list[str]:
     return sorted(languages_from_content(words))
 
 
-def classify_html(html: str) -> list[str]:
+def classify_html(html: str, url: str | None = None) -> list[str]:
     switch = languages_from_switchers(html)
     words = visible_words(html, N_WORDS)
-    return sorted(switch | languages_from_content(words))
+    langs = sorted(switch | languages_from_content(words))
+    if langs:
+        return langs
+    if words:
+        return classify_unknown_with_llm(html, words, url=url)
+    return []
 
 
 def confident_label_from_prefix(html: str) -> list[str] | None:
@@ -818,7 +595,7 @@ async def fetch_and_classify(session: aiohttp.ClientSession, url: str) -> list[s
                 text = buf.decode("utf-8", errors="ignore")
                 if not text.strip():
                     return []
-                return classify_html(text)
+                return classify_html(text, url=url)
         except Exception:
             return []
     return []
@@ -828,7 +605,25 @@ async def classify_url(
     session: aiohttp.ClientSession, url: str, sem: asyncio.Semaphore
 ) -> list[str]:
     async with sem:
-        return await fetch_and_classify(session, url)
+        try:
+            return await fetch_and_classify(session, url)
+        except asyncio.CancelledError:
+            return []
+        except Exception:
+            return []
+
+
+def _loop_exception_handler(loop: asyncio.AbstractEventLoop, context: dict) -> None:
+    """Keep uvloop/aiohttp callback failures from aborting the crawl.
+
+    Python 3.13 + uvloop can raise
+    `RuntimeError: File descriptor N is used by transport` inside
+    `asyncio.Timeout._on_timeout` when a socket is cancelled. That runs in a
+    loop callback, so `except` in fetch_and_classify never sees it.
+    """
+    exc = context.get("exception")
+    msg = context.get("message", "Unhandled event-loop exception")
+    print(f"event-loop: {msg}: {exc!r}", flush=True)
 
 
 async def crawl(
@@ -838,6 +633,8 @@ async def crawl(
     batch_size: int = DEFAULT_BATCH_SIZE,
     on_batch: Callable[[list[str], list[list[str]], int, int], None] | None = None,
 ) -> list[list[str]]:
+    loop = asyncio.get_running_loop()
+    loop.set_exception_handler(_loop_exception_handler)
     timeout = aiohttp.ClientTimeout(
         total=TOTAL_TIMEOUT,
         sock_connect=CONNECT_TIMEOUT,
@@ -854,7 +651,7 @@ async def crawl(
     headers = {
         "User-Agent": USER_AGENT,
         "Accept": "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "uk,ru;q=0.9,en;q=0.8,fr;q=0.7",
+        "Accept-Language": "en-GB,en;q=0.9,fr;q=0.8,cy;q=0.7",
         "Accept-Encoding": "gzip, deflate",
         "Connection": "keep-alive",
     }
@@ -871,9 +668,17 @@ async def crawl(
         total = len(urls)
         for start in range(0, total, batch_size):
             batch = urls[start : start + batch_size]
-            batch_labels = await asyncio.gather(
-                *(classify_url(session, u, sem) for u in batch)
+            raw = await asyncio.gather(
+                *(classify_url(session, u, sem) for u in batch),
+                return_exceptions=True,
             )
+            batch_labels: list[list[str]] = []
+            for item in raw:
+                if isinstance(item, BaseException):
+                    print(f"  url failed: {item!r}", flush=True)
+                    batch_labels.append([])
+                else:
+                    batch_labels.append(item)
             labels.extend(batch_labels)
             done = len(labels)
             print(
@@ -882,7 +687,10 @@ async def crawl(
                 flush=True,
             )
             if on_batch:
-                on_batch(batch, list(batch_labels), done, total)
+                try:
+                    on_batch(batch, list(batch_labels), done, total)
+                except Exception as e:
+                    print(f"  checkpoint failed ({done}/{total}): {e!r}", flush=True)
     return labels
 
 
@@ -1072,21 +880,27 @@ def main() -> None:
                 kept_urls += 1
             url_to_lang[url] = merged
         if args.checkpoint and args.limit is None:
-            annotate_records(records, url_to_lang, prev_url_to_lang)
-            write_records(out_path, records)
-            print(f"  checkpoint wrote {out_path} ({done}/{total})", flush=True)
+            try:
+                annotate_records(records, url_to_lang, prev_url_to_lang)
+                write_records(out_path, records)
+                print(f"  checkpoint wrote {out_path} ({done}/{total})", flush=True)
+            except Exception as e:
+                print(f"  checkpoint write failed ({done}/{total}): {e!r}", flush=True)
 
     started = time.perf_counter()
     if urls:
-        asyncio.run(
-            crawl(
-                urls,
-                workers=args.workers,
-                per_host=args.per_host,
-                batch_size=args.batch_size,
-                on_batch=on_batch,
+        try:
+            asyncio.run(
+                crawl(
+                    urls,
+                    workers=args.workers,
+                    per_host=args.per_host,
+                    batch_size=args.batch_size,
+                    on_batch=on_batch,
+                )
             )
-        )
+        except Exception as e:
+            print(f"Crawl aborted with {e!r}; writing whatever was checkpointed.", flush=True)
     elapsed = time.perf_counter() - started
 
     if args.limit is None:

@@ -1,0 +1,52 @@
+{
+  "name": "tunisian arabic",
+  "codes": [
+    "aeb"
+  ],
+  "switch_labels": [
+    "tunisian arabic",
+    "tunisian",
+    "tounsi",
+    "derja",
+    "تونسي",
+    "التونسية",
+    "الدارجة التونسية",
+    "تونسية",
+    "tunisien"
+  ],
+  "scripts": [
+    "arabic",
+    "latin"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "barcha",
+    "behi",
+    "labes",
+    "tawwa",
+    "tounsi",
+    "yasser",
+    "برشا",
+    "برشة",
+    "باهي",
+    "باهية",
+    "توا",
+    "تونسي",
+    "تونسية",
+    "تحب",
+    "عيشك",
+    "فما",
+    "فماش",
+    "لاباس",
+    "موش",
+    "ماكش",
+    "نحب",
+    "نحبوا",
+    "هكا",
+    "هكة",
+    "ياسر",
+    "يعطيك",
+    "شنوة",
+    "شنية"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "name": "greenlandic",
+  "codes": [
+    "kl",
+    "kal"
+  ],
+  "switch_labels": [
+    "greenlandic",
+    "kalaallisut",
+    "kalaallit",
+    "grønlandsk",
+    "groenlandais",
+    "grönländisch",
+    "ґренландська"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "suppresses": [
+    "danish"
+  ],
+  "words": [
+    "aqagu",
+    "attaveqarfik",
+    "innuttaasut",
+    "ippassaq",
+    "iserfigiuk",
+    "kalaallit",
+    "kalaallisut",
+    "kommunimi",
+    "maanna",
+    "nittartagaq",
+    "nunaat",
+    "nunatsinni",
+    "nunatta",
+    "oqaatsit",
+    "pillugu",
+    "qallunaatut",
+    "qanoq",
+    "qujanaq",
+    "soorlu",
+    "suleqatigiinneq",
+    "sumi",
+    "tikilluarit"
+  ]
+}

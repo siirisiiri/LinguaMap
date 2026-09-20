@@ -1,0 +1,60 @@
+{
+  "name": "danish",
+  "codes": [
+    "da",
+    "dan"
+  ],
+  "switch_labels": [
+    "danish",
+    "dansk",
+    "danske",
+    "danmark",
+    "danois",
+    "dänisch",
+    "danisch",
+    "данська"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "adgangskode",
+    "altid",
+    "bestil",
+    "butik",
+    "cookiepolitik",
+    "danmark",
+    "danmarks",
+    "dansk",
+    "gennem",
+    "hej",
+    "hjemmeside",
+    "hvad",
+    "indkøb",
+    "indkøbskurv",
+    "indstillinger",
+    "klik",
+    "køb",
+    "logind",
+    "lukket",
+    "læs",
+    "meget",
+    "mellem",
+    "mere",
+    "måske",
+    "nogen",
+    "nyheder",
+    "næste",
+    "persondata",
+    "persondatapolitik",
+    "søg",
+    "uden",
+    "vilkår",
+    "virksomhed",
+    "åbent",
+    "åbningstid",
+    "åbningstider",
+    "åbningstiderne"
+  ]
+}

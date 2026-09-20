@@ -1,0 +1,27 @@
+{
+  "name": "armenian",
+  "codes": [
+    "hy",
+    "hye",
+    "arm"
+  ],
+  "switch_labels": [
+    "armenian",
+    "հայերեն",
+    "вірменська"
+  ],
+  "scripts": [
+    "armenian"
+  ],
+  "script_sufficient": true,
+  "words": [
+    "գլխավոր",
+    "ենք",
+    "ծառայություններ",
+    "կապ",
+    "հայերեն",
+    "մասին",
+    "մեր",
+    "նորություններ"
+  ]
+}

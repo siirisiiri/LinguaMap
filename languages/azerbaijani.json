@@ -1,0 +1,67 @@
+{
+  "name": "azerbaijani",
+  "codes": [
+    "az",
+    "aze"
+  ],
+  "switch_labels": [
+    "azerbaijani",
+    "azeri",
+    "azərbaycan",
+    "azərbaycanca",
+    "azərbaycan dili",
+    "azerbaycan",
+    "azerbaïdjanais",
+    "aserbaidschanisch",
+    "азербайджанська"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "exclusive_letters": {
+    "script": "latin",
+    "letters": "ə",
+    "min_hits": 3,
+    "min_share": 0.004
+  },
+  "suppresses": [
+    "turkish",
+    "crimean tatar",
+    "albanian"
+  ],
+  "words": [
+    "axtarış",
+    "azərbaycan",
+    "azərbaycanca",
+    "bakı",
+    "bəli",
+    "daxil",
+    "əlaqə",
+    "əlavə",
+    "ətraflı",
+    "göndər",
+    "haqqında",
+    "haqqımızda",
+    "istifadə",
+    "istifadəçi",
+    "məhsul",
+    "məhsullar",
+    "məxfilik",
+    "parametrlər",
+    "qeydiyyat",
+    "qiymət",
+    "səbət",
+    "səhifə",
+    "şərtlər",
+    "şifrə",
+    "təşəkkür",
+    "üçün",
+    "xəbər",
+    "xəbərlər",
+    "xidmət",
+    "xidmətlər",
+    "xoş",
+    "zəhmət"
+  ]
+}

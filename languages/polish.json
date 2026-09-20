@@ -1,0 +1,41 @@
+{
+  "name": "polish",
+  "codes": [
+    "pl",
+    "pol"
+  ],
+  "switch_labels": [
+    "polish",
+    "polski",
+    "польська"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "aktualności",
+    "dziękujemy",
+    "główna",
+    "jest",
+    "można",
+    "naszej",
+    "nie",
+    "oferta",
+    "oraz",
+    "polski",
+    "przez",
+    "się",
+    "strona",
+    "usługi",
+    "więcej",
+    "wszystkie",
+    "zapraszamy"
+  ],
+  "exclusive_letters": {
+    "script": "latin",
+    "letters": "łńśźż",
+    "min_hits": 4,
+    "min_share": 0.004
+  }
+}

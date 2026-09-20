@@ -1,0 +1,40 @@
+{
+  "name": "assyrian",
+  "codes": [
+    "aii",
+    "syr",
+    "cld"
+  ],
+  "switch_labels": [
+    "assyrian",
+    "syriac",
+    "sureth",
+    "suret",
+    "chaldean",
+    "ܣܘܪܝܬ",
+    "ܣܘܪܝܝܐ",
+    "ܐܬܘܪܝܐ",
+    "assyrien",
+    "syriaque",
+    "syrisch",
+    "ассирійська"
+  ],
+  "scripts": [
+    "syriac"
+  ],
+  "script_sufficient": true,
+  "words": [
+    "ܐܬܘܪ",
+    "ܐܬܘܪܝܐ",
+    "ܒܝܬܐ",
+    "ܠܫܢܐ",
+    "ܡܘܕܝ",
+    "ܣܘܪܝܬ",
+    "ܣܘܪܝܝܐ",
+    "ܥܡܐ",
+    "ܦܐܬܐ",
+    "ܩܪܝ",
+    "ܫܠܡܐ",
+    "ܬܢܝ"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "yiddish",
+  "codes": [
+    "yi",
+    "yid"
+  ],
+  "switch_labels": [
+    "yiddish",
+    "ייִדיש",
+    "їдиш"
+  ],
+  "scripts": [
+    "hebrew"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "אויף",
+    "אונדזער",
+    "זענען",
+    "ייִדיש",
+    "מיר",
+    "פֿון"
+  ],
+  "exclusive_letters": {
+    "script": "hebrew",
+    "letters": "װױײ",
+    "min_hits": 1,
+    "min_share": 0.0
+  }
+}

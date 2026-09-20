@@ -1,0 +1,24 @@
+{
+  "name": "mohawk",
+  "codes": [
+    "moh"
+  ],
+  "switch_labels": [
+    "mohawk",
+    "kanien'kéha",
+    "kanienkeha"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "kanien'keha",
+    "kanien'kéha",
+    "kanienkeha",
+    "kanienkehaka",
+    "kanyen'kéha",
+    "kanyenkeha",
+    "mohawk"
+  ]
+}
