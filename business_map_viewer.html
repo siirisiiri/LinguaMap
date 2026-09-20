@@ -83,6 +83,10 @@
         font-size: 13px;
         color: var(--muted);
         flex-shrink: 0;
+        position: relative;
+      }
+      .search-wrap {
+        position: relative;
       }
       .area-jump input,
       .area-jump button {
@@ -94,10 +98,58 @@
         padding: 5px 9px;
       }
       .area-jump input {
-        width: 130px;
+        width: 240px;
       }
       .area-jump button {
         cursor: pointer;
+      }
+      .search-results {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        width: min(360px, 70vw);
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(28, 31, 38, 0.12);
+        z-index: 30;
+        max-height: 320px;
+        overflow-y: auto;
+        padding: 4px;
+      }
+      .search-results[hidden] {
+        display: none;
+      }
+      .search-hit {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        width: 100%;
+        text-align: left;
+        border: none;
+        background: transparent;
+        border-radius: 6px;
+        padding: 7px 9px;
+        cursor: pointer;
+        font: inherit;
+        color: var(--ink);
+      }
+      .search-hit:hover,
+      .search-hit.active {
+        background: #eef4ef;
+      }
+      .search-hit .name {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .search-hit .meta {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .search-empty {
+        padding: 10px 9px;
+        font-size: 12px;
+        color: var(--muted);
       }
       #breadcrumb {
         display: none;
@@ -141,6 +193,49 @@
       }
       #mapMessage.visible {
         display: block;
+      }
+      #mapMessage.info {
+        color: #3d5346;
+        background: #e7efe8;
+        border-color: #c5d6c8;
+      }
+      .area-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        max-height: 280px;
+        overflow-y: auto;
+        margin: 0 -4px 4px;
+      }
+      .area-list button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        border: none;
+        background: transparent;
+        text-align: left;
+        font: inherit;
+        color: var(--ink);
+        padding: 5px 6px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .area-list button:hover {
+        background: #ece7dc;
+      }
+      .area-list .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        background: #c8c2b6;
+      }
+      .area-list .count {
+        margin-left: auto;
+        color: #8a8375;
+        font-variant-numeric: tabular-nums;
+        font-size: 12px;
       }
       #main {
         flex: 1;
@@ -196,11 +291,7 @@
         height: 12px;
         border-radius: 50%;
         flex-shrink: 0;
-      }
-      .swatch.ramp {
-        width: 26px;
-        border-radius: 3px;
-        border: 1px solid var(--line);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18);
       }
       .swatch.missing {
         border-radius: 3px;
@@ -267,6 +358,85 @@
         color: #6b6558;
         margin-top: 3px;
       }
+      #timeline {
+        border-top: 1px solid var(--line);
+        background: var(--paper);
+        padding: 10px 20px 12px;
+        display: flex;
+        align-items: stretch;
+        gap: 16px;
+        flex-shrink: 0;
+      }
+      #timeline.hidden {
+        display: none;
+      }
+      .time-controls {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        width: 150px;
+        flex-shrink: 0;
+      }
+      .time-controls .row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      #playBtn {
+        font: inherit;
+        width: 30px;
+        height: 30px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: #fff;
+        color: var(--ink);
+        cursor: pointer;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+      #playBtn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      #timeLabel {
+        font-size: 15px;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+      #timeSummary {
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.35;
+      }
+      .time-track {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      #timeChart {
+        width: 100%;
+        height: 62px;
+        display: block;
+        cursor: ew-resize;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: #fff;
+      }
+      #timeSlider {
+        width: 100%;
+        margin: 0;
+        accent-color: var(--accent);
+      }
+      .time-axis {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #8a8375;
+        font-variant-numeric: tabular-nums;
+      }
       #overlay {
         position: absolute;
         inset: 0;
@@ -303,10 +473,18 @@
           <button type="button" id="modeAreas" class="active">Areas</button>
           <button type="button" id="modePoints">Points</button>
         </div>
-        <form class="area-jump" id="areaJump">
-          <label for="areaName">Jump to</label>
-          <input id="areaName" type="text" placeholder="e.g. Wales" autocomplete="off" />
-          <button type="submit">Go</button>
+        <form class="area-jump" id="areaJump" autocomplete="off">
+          <label for="areaName">Search</label>
+          <div class="search-wrap">
+            <input
+              id="areaName"
+              type="search"
+              placeholder="Country or subdivision"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <div id="searchResults" class="search-results" hidden></div>
+          </div>
         </form>
         <div id="stats"></div>
         <nav id="breadcrumb" aria-label="Area hierarchy"></nav>
@@ -319,36 +497,68 @@
         </div>
         <div id="sidebar"></div>
       </div>
+      <div id="timeline" class="hidden">
+        <div class="time-controls">
+          <div class="row">
+            <button type="button" id="playBtn" title="Play through time">▶</button>
+            <span id="timeLabel"></span>
+          </div>
+          <div id="timeSummary"></div>
+        </div>
+        <div class="time-track">
+          <canvas id="timeChart"></canvas>
+          <input type="range" id="timeSlider" min="0" max="0" value="0" step="1"
+                 aria-label="Time" />
+          <div class="time-axis"><span id="timeStart"></span><span id="timeEnd"></span></div>
+        </div>
+      </div>
     </div>
 
     <script>
       // ---------------------------------------------------------------- config
 
       const LANGUAGE_COLORS = {
-        english: "#2c6ea8",
-        french: "#d1495b",
-        welsh: "#2c8a4b",
-        spanish: "#e0a01e",
-        german: "#6a4c93",
-        inuktitut: "#2ba7a0",
-        cree: "#b5456e",
-        ojibwe: "#7a8a3a",
-        mikmaq: "#a05a2c",
-        mohawk: "#4d7c8a",
-        innu: "#9c5fb5",
-        dene: "#5c4d99",
-        blackfoot: "#3a8a5c",
+        // Majors sit on well-spaced hues so neighbouring areas stay distinct.
+        english: "#1a66bc",
+        french: "#ca2159",
+        welsh: "#23953f",
+        spanish: "#e47311",
+        german: "#472768",
+        ukrainian: "#d5a915",
+        russian: "#da281b",
+        polish: "#da2fb8",
+        romanian: "#129185",
+        hungarian: "#8b3b18",
+        belarusian: "#719130",
+        slovak: "#2091b6",
+        bulgarian: "#765842",
+        greek: "#273268",
+        armenian: "#762519",
+        yiddish: "#814096",
+        "crimean tatar": "#22775b",
+        rusyn: "#88633a",
+        gagauz: "#584ab5",
+        inuktitut: "#278391",
+        cree: "#742f3b",
+        ojibwe: "#476d2c",
+        mikmaq: "#6f4020",
+        mohawk: "#4c6876",
+        innu: "#753861",
+        dene: "#3f485a",
+        blackfoot: "#216340",
       };
       const LANGUAGE_PALETTE = [
-        "#c9622a",
-        "#2c6e49",
-        "#3a5ba0",
-        "#c94277",
-        "#d4a72c",
-        "#4d7c8a",
-        "#7a8a3a",
-        "#5c4d99",
+        "#c45c26",
+        "#5c7a0a",
+        "#8a4a6b",
+        "#2f5d7c",
+        "#a67c32",
+        "#4b3d73",
+        "#1f7a5c",
+        "#7a3b2e",
       ];
+      const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const MISSING_FILL = "#c8c2b6";
       const UNCLASSIFIED_COLOR = "#9a948a";
       // Floor on fill intensity so the leading language's hue stays legible even
@@ -490,6 +700,50 @@
         return [minX, minY, maxX, maxY];
       }
 
+      function bboxWidth(bbox) {
+        return bbox[2] - bbox[0];
+      }
+
+      function bboxContains(bbox, lon, lat) {
+        if (bboxWidth(bbox) > 180) return false;
+        return lon >= bbox[0] && lon <= bbox[2] && lat >= bbox[1] && lat <= bbox[3];
+      }
+
+      function polygonBBox(poly) {
+        let minX = 180,
+          minY = 90,
+          maxX = -180,
+          maxY = -90;
+        const ring = poly[0] || [];
+        for (const pt of ring) {
+          minX = Math.min(minX, pt[0]);
+          maxX = Math.max(maxX, pt[0]);
+          minY = Math.min(minY, pt[1]);
+          maxY = Math.max(maxY, pt[1]);
+        }
+        return [minX, minY, maxX, maxY];
+      }
+
+      function eachPartBBox(geom, fn) {
+        const polys =
+          geom.type === "Polygon" ? [geom.coordinates] : geom.type === "MultiPolygon" ? geom.coordinates : [];
+        for (const poly of polys) {
+          const bbox = polygonBBox(poly);
+          // A dateline-spanning ring's AABB covers most of the world (Alaska).
+          if (bboxWidth(bbox) > 180) continue;
+          fn(poly, bbox);
+        }
+      }
+
+      function simplifyRing(ring, maxPts) {
+        if (ring.length <= maxPts) return ring;
+        const stride = (ring.length - 1) / (maxPts - 1);
+        const out = [];
+        for (let i = 0; i < maxPts - 1; i++) out.push(ring[Math.floor(i * stride)]);
+        out.push(ring[0]);
+        return out;
+      }
+
       function relationToGeometry(el) {
         const outers = [];
         const inners = [];
@@ -505,7 +759,7 @@
         const polygons = outerRings.map((outer) => {
           const holes = leftover.filter((h) => pointInRing(h[0][0], h[0][1], outer));
           holes.forEach((h) => leftover.splice(leftover.indexOf(h), 1));
-          return [outer, ...holes];
+          return [simplifyRing(outer, 80), ...holes.map((h) => simplifyRing(h, 24))];
         });
         return polygons.length === 1
           ? { type: "Polygon", coordinates: polygons[0] }
@@ -563,6 +817,7 @@
       let activeLanguages = [];
       let activeLanguageSet = new Set();
       let scopedCategories = [];
+      let languageTotals = new Map();
 
       let authorityFeatures = [];
       let choroplethLayer = null;
@@ -572,8 +827,45 @@
       // In-flight boundary fetches, so a background warm-up and a click on the
       // same area share one request instead of racing each other.
       const childrenRequests = new Map();
-      let admin1Index = null;
+      let adminIndexPromise = null;
       let drillBusy = false;
+      let pendingDrill = null;
+      let searchHits = [];
+      let searchActive = -1;
+      let searchTimer = null;
+      let searchAbort = null;
+
+      const KIND_LABEL = {
+        country: "Country",
+        subdivision_1: "Subdivision 1",
+        subdivision_2: "Subdivision 2",
+      };
+
+      function kindFromLevel(adminLevel) {
+        const level = parseInt(adminLevel || "99", 10);
+        if (level <= 2) return "country";
+        if (level <= 4) return "subdivision_1";
+        return "subdivision_2";
+      }
+
+      function viewingKind() {
+        if (hierarchy.length <= 1) return "country";
+        if (hierarchy.length === 2) return "subdivision_1";
+        return "subdivision_2";
+      }
+
+      function childKindOf(kind) {
+        return kind === "country" ? "subdivision_1" : "subdivision_2";
+      }
+
+      // Timeline. Months are ints (year * 12 + month - 1) so the slider, the
+      // chart and the interval lookups all share one coordinate.
+      let timeEnabled = false;
+      let timeLo = 0;
+      let timeHi = 0;
+      let currentMonth = 0;
+      let playTimer = null;
+      let seriesCache = null;
 
       // ------------------------------------------------------------ data loading
 
@@ -625,6 +917,8 @@
               category: topLevelCategory(b.category),
               rawCategory: b.category || "",
               langs: normalizeLanguages(b.language),
+              staticLangs: normalizeLanguages(b.language),
+              hist: parseHistory(b.lang_history),
               dataset: set.name,
               authorityId: null,
               primaryLang: null,
@@ -636,21 +930,248 @@
         });
         datasets.sort((a, b) => b.count - a.count);
         assignPrimaryLanguages();
+        initTimeline();
+      }
+
+      // ------------------------------------------------------------- timeline
+
+      function monthOf(dateStr) {
+        const m = /^(\d{4})-(\d{2})/.exec(String(dateStr || ""));
+        return m ? Number(m[1]) * 12 + (Number(m[2]) - 1) : null;
+      }
+
+      function monthLabel(idx) {
+        const y = Math.floor(idx / 12);
+        return `${MONTH_NAMES[idx - y * 12]} ${y}`;
+      }
+
+      /** wayback_history.py intervals -> month-indexed, ascending. */
+      function parseHistory(raw) {
+        if (!Array.isArray(raw) || !raw.length) return null;
+        const out = [];
+        raw.forEach((iv) => {
+          const from = monthOf(iv.from);
+          if (from === null) return;
+          out.push({
+            from,
+            to: monthOf(iv.to) ?? from,
+            primary: typeof iv.primary === "string" ? iv.primary.toLowerCase() : null,
+            available: normalizeLanguages(iv.available),
+            landingPath: iv.landing_path || "",
+          });
+        });
+        out.sort((a, b) => a.from - b.from);
+        return out.length ? out : null;
       }
 
       /**
-       * A bilingual site is plotted in its rarest language, so minority-language
-       * presence is visible instead of being buried under the majority colour.
+       * State of a site in a given month, carrying the last observation forward
+       * across gaps. Before its first snapshot a site returns null rather than a
+       * guess, so "not observed yet" stays distinct from "no language detected".
+       */
+      function stateAt(p, month) {
+        const h = p.hist;
+        if (!h || month < h[0].from) return null;
+        let found = h[0];
+        for (let i = 1; i < h.length && h[i].from <= month; i++) found = h[i];
+        return found;
+      }
+
+      /** Push the selected month into the fields the rest of the app reads. */
+      function applyTime() {
+        if (!timeEnabled) return;
+        points.forEach((p) => {
+          if (!p.hist) return; // datasets without history stay as loaded
+          const st = stateAt(p, currentMonth);
+          p.langs = st ? st.available : [];
+          p.primaryLang = st ? st.primary : null;
+          if (p.marker) {
+            const color = p.primaryLang ? colorForLanguage(p.primaryLang) : UNCLASSIFIED_COLOR;
+            p.marker.setStyle({ color, fillColor: color });
+          }
+        });
+      }
+
+      function initTimeline() {
+        const withHistory = points.filter((p) => p.hist);
+        timeEnabled = withHistory.length > 0;
+        document.getElementById("timeline").classList.toggle("hidden", !timeEnabled);
+        if (!timeEnabled) return;
+
+        let lo = Infinity;
+        let hi = -Infinity;
+        withHistory.forEach((p) => {
+          lo = Math.min(lo, p.hist[0].from);
+          hi = Math.max(hi, p.hist[p.hist.length - 1].to);
+        });
+        timeLo = lo;
+        timeHi = Math.max(hi, lo);
+        currentMonth = timeHi;
+
+        const slider = document.getElementById("timeSlider");
+        slider.min = "0";
+        slider.max = String(timeHi - timeLo);
+        slider.value = String(currentMonth - timeLo);
+        document.getElementById("timeStart").textContent = monthLabel(timeLo);
+        document.getElementById("timeEnd").textContent = monthLabel(timeHi);
+        applyTime();
+      }
+
+      function seek(month) {
+        const next = Math.max(timeLo, Math.min(timeHi, month));
+        if (next === currentMonth) return;
+        currentMonth = next;
+        document.getElementById("timeSlider").value = String(currentMonth - timeLo);
+        applyTime();
+        render();
+      }
+
+      /**
+       * Share of each primary language per month, over the points currently in
+       * scope. Built by walking each site's intervals rather than probing every
+       * month, and cached until a filter changes.
+       */
+      function timeSeries() {
+        if (seriesCache) return seriesCache;
+        const span = timeHi - timeLo + 1;
+        const counts = Array.from({ length: span }, () => new Map());
+        const totals = new Array(span).fill(0);
+        const overall = new Map();
+
+        points.forEach((p) => {
+          if (!p.hist || !datasetEnabled(p) || disabledCategories.has(p.category)) return;
+          if (viewMode === "areas" && authorityFeatures.length && p.authorityId === null) return;
+          for (let i = 0; i < p.hist.length; i++) {
+            const lang = p.hist[i].primary;
+            if (!lang) continue;
+            const from = Math.max(timeLo, p.hist[i].from);
+            const until = i + 1 < p.hist.length ? p.hist[i + 1].from - 1 : timeHi;
+            for (let m = from; m <= Math.min(timeHi, until); m++) {
+              const slot = counts[m - timeLo];
+              slot.set(lang, (slot.get(lang) || 0) + 1);
+              totals[m - timeLo] += 1;
+              overall.set(lang, (overall.get(lang) || 0) + 1);
+            }
+          }
+        });
+
+        const order = [...overall.entries()]
+          .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+          .map(([lang]) => lang);
+        seriesCache = { counts, totals, order, span };
+        return seriesCache;
+      }
+
+      function drawTimeChart() {
+        if (!timeEnabled) return;
+        const canvas = document.getElementById("timeChart");
+        const ratio = window.devicePixelRatio || 1;
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        if (!w || !h) return;
+        canvas.width = w * ratio;
+        canvas.height = h * ratio;
+        const ctx = canvas.getContext("2d");
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+
+        const { counts, totals, order, span } = timeSeries();
+        const colWidth = w / span;
+
+        // Stacked shares, drawn as columns: one bar per month is both simpler
+        // and more honest than a smoothed area when coverage is patchy.
+        for (let i = 0; i < span; i++) {
+          const total = totals[i];
+          const x = i * colWidth;
+          if (!total) {
+            ctx.fillStyle = "#f0ede6";
+            ctx.fillRect(x, 0, Math.ceil(colWidth), h);
+            continue;
+          }
+          let y = 0;
+          order.forEach((lang) => {
+            const c = counts[i].get(lang) || 0;
+            if (!c) return;
+            const seg = (c / total) * h;
+            ctx.fillStyle = colorForLanguage(lang);
+            ctx.fillRect(x, y, Math.ceil(colWidth), Math.ceil(seg));
+            y += seg;
+          });
+        }
+
+        const cursorX = (currentMonth - timeLo + 0.5) * colWidth;
+        ctx.strokeStyle = "#1c1f26";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(cursorX, 0);
+        ctx.lineTo(cursorX, h);
+        ctx.stroke();
+
+        updateTimeSummary();
+      }
+
+      function updateTimeSummary() {
+        const { counts, totals, order } = timeSeries();
+        const i = currentMonth - timeLo;
+        const total = totals[i] || 0;
+        document.getElementById("timeLabel").textContent = monthLabel(currentMonth);
+        if (!total) {
+          document.getElementById("timeSummary").textContent = "No sites observed yet";
+          return;
+        }
+        const top = order
+          .map((lang) => [lang, counts[i].get(lang) || 0])
+          .filter(([, c]) => c)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 2)
+          .map(([lang, c]) => `${titleCase(lang)} ${pct(c / total)}`)
+          .join(" · ");
+        document.getElementById("timeSummary").textContent = `${num(total)} observed — ${top}`;
+      }
+
+      function setPlaying(on) {
+        if (playTimer) {
+          clearInterval(playTimer);
+          playTimer = null;
+        }
+        document.getElementById("playBtn").textContent = on ? "❚❚" : "▶";
+        if (!on) return;
+        playTimer = setInterval(() => {
+          seek(currentMonth >= timeHi ? timeLo : currentMonth + 1);
+        }, 260);
+      }
+
+      /**
+       * A bilingual site is plotted in its rarest *selected* language, so
+       * minority presence stays visible when that language is on, but turning
+       * Welsh off does not leave Welsh-coloured dots on an English-only map.
        */
       function assignPrimaryLanguages() {
-        const totals = new Map();
-        points.forEach((p) => p.langs.forEach((l) => totals.set(l, (totals.get(l) || 0) + 1)));
+        languageTotals = new Map();
+        points.forEach((p) => p.langs.forEach((l) => languageTotals.set(l, (languageTotals.get(l) || 0) + 1)));
         points.forEach((p) => {
           p.primaryLang = p.langs.reduce(
-            (rarest, l) => (rarest === null || totals.get(l) < totals.get(rarest) ? l : rarest),
+            (rarest, l) =>
+              rarest === null || languageTotals.get(l) < languageTotals.get(rarest) ? l : rarest,
             null,
           );
         });
+      }
+
+      /** Rarest language on this site that is currently selected. */
+      function displayLang(p) {
+        let best = null;
+        for (const l of p.langs) {
+          if (!activeLanguageSet.has(l)) continue;
+          if (
+            best === null ||
+            (languageTotals.get(l) || 0) < (languageTotals.get(best) || 0) ||
+            ((languageTotals.get(l) || 0) === (languageTotals.get(best) || 0) && l < best)
+          ) {
+            best = l;
+          }
+        }
+        return best;
       }
 
       // ------------------------------------------------------- filtering & scope
@@ -670,7 +1191,7 @@
       function isPointVisible(p) {
         if (!datasetEnabled(p) || disabledCategories.has(p.category)) return false;
         if (!p.langs.length) return showUnclassified;
-        return p.langs.some((l) => activeLanguageSet.has(l));
+        return displayLang(p) !== null;
       }
 
       /**
@@ -688,6 +1209,7 @@
           p.langs.forEach((l) => langCounts.set(l, (langCounts.get(l) || 0) + 1));
         });
         const byCountThenName = (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]);
+        languageTotals = langCounts;
         scopedLanguages = [...langCounts.entries()].sort(byCountThenName);
         scopedCategories = [...catCounts.entries()].sort(byCountThenName);
         activeLanguages = scopedLanguages
@@ -699,29 +1221,67 @@
       // -------------------------------------------------------- area statistics
 
       function assignAuthorities() {
-        // Smallest-first so a point inside nested boundaries lands on the tightest.
-        const ranked = authorityFeatures
-          .map((f) => {
-            const bbox = geomBBox(f.geometry);
-            return {
-              f,
-              bbox,
-              area: Math.max(0, bbox[2] - bbox[0]) * Math.max(0, bbox[3] - bbox[1]),
-            };
-          })
-          .sort((a, b) => a.area - b.area);
         points.forEach((p) => {
           p.authorityId = null;
-          for (const { f, bbox } of ranked) {
-            if (p.lon < bbox[0] || p.lon > bbox[2] || p.lat < bbox[1] || p.lat > bbox[3]) {
-              continue;
-            }
-            if (pointInGeometry(p.lon, p.lat, f.geometry)) {
-              p.authorityId = featureId(f);
-              break;
-            }
-          }
         });
+        if (!authorityFeatures.length) {
+          invalidateTimeSeries();
+          return;
+        }
+        let west = 180,
+          south = 90,
+          east = -180,
+          north = -90;
+        const ranked = authorityFeatures.map((f) => {
+          const bbox = geomBBox(f.geometry);
+          const wraps = bboxWidth(bbox) > 180;
+          if (!wraps) {
+            west = Math.min(west, bbox[0]);
+            south = Math.min(south, bbox[1]);
+            east = Math.max(east, bbox[2]);
+            north = Math.max(north, bbox[3]);
+          }
+          return {
+            f,
+            bbox,
+            wraps,
+            id: featureId(f),
+            area: wraps ? 0 : Math.max(0, bbox[2] - bbox[0]) * Math.max(0, bbox[3] - bbox[1]),
+          };
+        });
+        ranked.sort((a, b) => b.area - a.area);
+        const world = west > east;
+        const CELL = 0.5;
+        const grid = new Map();
+        const cellKey = (lon, lat) => `${Math.floor(lon / CELL)},${Math.floor(lat / CELL)}`;
+        const candidates = [];
+        points.forEach((p) => {
+          if (!world && (p.lon < west || p.lon > east || p.lat < south || p.lat > north)) return;
+          candidates.push(p);
+          const k = cellKey(p.lon, p.lat);
+          const bucket = grid.get(k);
+          if (bucket) bucket.push(p);
+          else grid.set(k, [p]);
+        });
+        for (const { f, id } of ranked) {
+          eachPartBBox(f.geometry, (poly, bbox) => {
+            const minI = Math.floor(bbox[0] / CELL);
+            const maxI = Math.floor(bbox[2] / CELL);
+            const minJ = Math.floor(bbox[1] / CELL);
+            const maxJ = Math.floor(bbox[3] / CELL);
+            for (let i = minI; i <= maxI; i++) {
+              for (let j = minJ; j <= maxJ; j++) {
+                const bucket = grid.get(`${i},${j}`);
+                if (!bucket) continue;
+                for (const p of bucket) {
+                  if (!bboxContains(bbox, p.lon, p.lat)) continue;
+                  if (pointInPolygonCoords(p.lon, p.lat, poly)) p.authorityId = id;
+                }
+              }
+            }
+          });
+        }
+        invalidateTimeSeries();
       }
 
       /**
@@ -845,8 +1405,12 @@
       }
 
       function markerFor(p) {
-        if (p.marker) return p.marker;
-        const color = p.primaryLang ? colorForLanguage(p.primaryLang) : UNCLASSIFIED_COLOR;
+        const lang = p.plotLang != null ? p.plotLang : displayLang(p) || p.primaryLang;
+        const color = lang ? colorForLanguage(lang) : UNCLASSIFIED_COLOR;
+        if (p.marker) {
+          p.marker.setStyle({ color, fillColor: color });
+          return p.marker;
+        }
         const marker = L.circleMarker([p.lat, p.lon], {
           radius: 5,
           color,
@@ -854,32 +1418,116 @@
           fillColor: color,
           fillOpacity: 0.75,
         });
-        const langLine = p.langs.length
-          ? p.langs.map((l) => escapeHtml(titleCase(l))).join(" + ")
-          : "No language detected";
         const href = /^https?:\/\//i.test(p.website) ? p.website : "";
-        marker.bindPopup(
-          `<b>${escapeHtml(p.name)}</b>${langLine}<br>${escapeHtml(p.rawCategory)}<br>` +
-            (href
-              ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(href)}</a>`
-              : escapeHtml(p.website) || "no website"),
-        );
+        const link = href
+          ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(href)}</a>`
+          : escapeHtml(p.website) || "no website";
+        // Bound as a function so the popup reflects the month currently selected
+        // rather than whenever the marker happened to be created.
+        marker.bindPopup(() => {
+          const langLine = p.langs.length
+            ? p.langs.map((l) => escapeHtml(titleCase(l))).join(" + ")
+            : "No language detected";
+          const history = p.hist
+            ? "<br>" +
+              p.hist
+                .map(
+                  (iv) =>
+                    `<span style="color:${colorForLanguage(iv.primary)}">■</span> ` +
+                    `${monthLabel(iv.from)}–${monthLabel(iv.to)}: ` +
+                    `${escapeHtml(titleCase(iv.primary || "unknown"))}` +
+                    (iv.landingPath ? ` <span style="color:#8a8375">${escapeHtml(iv.landingPath)}</span>` : ""),
+                )
+                .join("<br>")
+            : "";
+          return (
+            `<b>${escapeHtml(p.name)}</b>${langLine}${history}<br>` +
+            `${escapeHtml(p.rawCategory)}<br>${link}`
+          );
+        });
         p.marker = marker;
         return marker;
+      }
+
+      /**
+       * Thin a bucket down to `take` points with an even stride, so what is
+       * dropped is spread across the whole bucket instead of chopping off its
+       * tail — which, with datasets concatenated in load order, would mean
+       * dropping one region entirely.
+       */
+      function strideSample(bucket, take, out) {
+        if (take >= bucket.length) {
+          for (const p of bucket) out.push(p);
+          return;
+        }
+        const stride = bucket.length / take;
+        for (let i = 0; i < take; i++) out.push(bucket[Math.floor(i * stride)]);
+      }
+
+      /**
+       * Fit the matching sites into MAX_MARKERS without letting one language
+       * crowd out another. Smallest first: a rare language takes its full
+       * bucket (it always fits in the even share), leftover slots are split
+       * between the majority colours. Walking `points` in load order and
+       * stopping at the cap used to drop Wales entirely once Quebec French
+       * filled the budget.
+       */
+      function budgetMarkers(candidates) {
+        if (candidates.length <= MAX_MARKERS) return candidates;
+        const buckets = new Map();
+        for (const p of candidates) {
+          const key = p.plotLang || displayLang(p) || "";
+          const bucket = buckets.get(key);
+          if (bucket) bucket.push(p);
+          else buckets.set(key, [p]);
+        }
+        const ordered = [...buckets.values()].sort((a, b) => a.length - b.length);
+        const out = [];
+        let left = MAX_MARKERS;
+        let remaining = ordered.length;
+        for (const bucket of ordered) {
+          // max(1, …) so a pile of tiny languages cannot round the share to 0
+          // and vanish. Last bucket always receives whatever is left.
+          const share = remaining === 1 ? left : Math.max(1, Math.floor(left / remaining));
+          const take = Math.min(bucket.length, share, left);
+          strideSample(bucket, take, out);
+          left -= take;
+          remaining -= 1;
+        }
+        return out;
+      }
+
+      /** Majority first so minority dots paint on top instead of vanishing under them. */
+      function sortMarkersMajorityUnderneath(markers) {
+        const counts = new Map();
+        for (const p of markers) {
+          const key = p.plotLang || "";
+          counts.set(key, (counts.get(key) || 0) + 1);
+        }
+        markers.sort((a, b) => {
+          const ka = a.plotLang || "";
+          const kb = b.plotLang || "";
+          const d = (counts.get(kb) || 0) - (counts.get(ka) || 0);
+          return d || ka.localeCompare(kb);
+        });
       }
 
       function renderPoints() {
         markerLayer.clearLayers();
         const bounds = map.getBounds();
-        let shown = 0;
+        const candidates = [];
         for (const p of points) {
-          if (shown >= MAX_MARKERS) break;
-          if (!isPointVisible(p)) continue;
+          if (!datasetEnabled(p) || disabledCategories.has(p.category)) continue;
+          const lang = p.langs.length ? displayLang(p) : showUnclassified ? "" : null;
+          if (lang === null) continue;
           if (!bounds.contains([p.lat, p.lon])) continue;
-          markerLayer.addLayer(markerFor(p));
-          shown += 1;
+          p.plotLang = lang;
+          candidates.push(p);
         }
-        return shown;
+        const drawn = budgetMarkers(candidates);
+        sortMarkersMajorityUnderneath(drawn);
+        for (const p of drawn) markerLayer.addLayer(markerFor(p));
+        return drawn.length;
       }
 
       function renderChoropleth() {
@@ -912,10 +1560,15 @@
                 sticky: true,
               });
               layer.on("click", () => {
+                if (viewingKind() === "subdivision_2") {
+                  focusFeature(feature);
+                  return;
+                }
                 drillInto(feature).catch((err) =>
                   showMapMessage(err.message || `Could not open ${feature.properties.name}.`),
                 );
               });
+              layer.on("mouseover", () => prefetchChildren(feature));
             },
           },
         ).addTo(map);
@@ -935,6 +1588,12 @@
         renderSidebar();
         renderBreadcrumb();
         updateStats();
+        drawTimeChart();
+      }
+
+      /** Scope changed, so the per-month mix has to be recounted. */
+      function invalidateTimeSeries() {
+        seriesCache = null;
       }
 
       function updateStats() {
@@ -947,7 +1606,7 @@
           const withData = [...authorityStats().values()].filter((r) => r.classified).length;
           const level = hierarchy[hierarchy.length - 1];
           const where = level ? level.name : "world";
-          el.textContent = `${num(authorityFeatures.length)} areas in ${where} · ${num(withData)} with language data`;
+          el.textContent = `${num(authorityFeatures.length)} ${KIND_LABEL[viewingKind()].toLowerCase()} areas in ${where} · ${num(withData)} with language data`;
           return;
         }
         const visible = points.filter(isPointVisible).length;
@@ -968,10 +1627,11 @@
         el.classList.remove("hidden");
       }
 
-      function showMapMessage(text) {
+      function showMapMessage(text, tone) {
         const el = document.getElementById("mapMessage");
         el.textContent = text || "";
         el.classList.toggle("visible", Boolean(text));
+        el.classList.toggle("info", tone === "info");
       }
 
       function setProgress(text) {
@@ -1014,10 +1674,7 @@
         scopedLanguages.forEach(([lang, count]) => {
           const color = colorForLanguage(lang);
           const on = !disabledLanguages.has(lang);
-          const swatch =
-            viewMode === "areas"
-              ? `<span class="swatch ramp" style="background:linear-gradient(to right, ${mixToWhite(color, 0)}, ${color})"></span>`
-              : `<span class="swatch" style="background:${color}"></span>`;
+          const swatch = `<span class="swatch" style="background:${color}"></span>`;
           el.appendChild(
             legendRow({
               swatch,
@@ -1092,17 +1749,76 @@
         return el;
       }
 
+      function renderAreaNav() {
+        const wrap = document.createElement("div");
+        wrap.className = "legend-section";
+        const kind = viewingKind();
+        const title = currentParent
+          ? `${KIND_LABEL[kind]} · ${currentParent.name}`
+          : "Countries";
+        wrap.innerHTML = `<h2>${escapeHtml(title)}</h2>`;
+        const intro = document.createElement("p");
+        intro.className = "legend-note";
+        if (kind === "country") {
+          intro.textContent = "Click a country to open its subdivision 1 areas.";
+        } else if (kind === "subdivision_1") {
+          intro.textContent = `Click a subdivision 1 area to open subdivision 2.`;
+        } else {
+          intro.textContent = "Subdivision 2 is as far as the map drills.";
+        }
+        wrap.appendChild(intro);
+        const stats = authorityStats();
+        const rows = [...stats.values()].sort(
+          (a, b) => b.classified - a.classified || a.feature.properties.name.localeCompare(b.feature.properties.name),
+        );
+        const withData = rows.filter((rec) => rec.classified);
+        const empty = rows.filter((rec) => !rec.classified);
+        const list = document.createElement("div");
+        list.className = "area-list";
+        const addRow = (rec) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          const fill = areaFill(rec);
+          const color = fill ? mixToWhite(fill.color, fill.intensity) : "#c8c2b6";
+          btn.innerHTML =
+            `<span class="dot" style="background:${color}"></span>` +
+            `<span class="legend-label">${escapeHtml(rec.feature.properties.name)}</span>` +
+            `<span class="count">${num(rec.classified)}</span>`;
+          btn.addEventListener("click", () => {
+            if (kind === "subdivision_2") {
+              focusFeature(rec.feature);
+              return;
+            }
+            drillInto(rec.feature).catch((err) =>
+              showMapMessage(err.message || `Could not open ${rec.feature.properties.name}.`),
+            );
+          });
+          list.appendChild(btn);
+        };
+        withData.forEach(addRow);
+        if (empty.length && withData.length) {
+          const more = document.createElement("button");
+          more.type = "button";
+          more.style.color = "var(--muted)";
+          more.textContent = `${empty.length} more without language data`;
+          more.addEventListener("click", () => {
+            more.remove();
+            empty.forEach(addRow);
+          });
+          list.appendChild(more);
+        } else {
+          empty.forEach(addRow);
+        }
+        wrap.appendChild(list);
+        return wrap;
+      }
+
       function renderSidebar() {
         const sidebar = document.getElementById("sidebar");
         sidebar.innerHTML = "";
 
         if (viewMode === "areas") {
-          const intro = document.createElement("p");
-          intro.className = "legend-note";
-          intro.textContent = currentParent
-            ? `Showing OSM subdivisions of ${currentParent.name}. Click one to drill in.`
-            : "Showing every OSM country. Click one with data to drill in.";
-          sidebar.appendChild(intro);
+          sidebar.appendChild(renderAreaNav());
         }
 
         sidebar.appendChild(renderLanguageSection());
@@ -1119,6 +1835,7 @@
               onClick: () => {
                 if (on) disabledCategories.add(category);
                 else disabledCategories.delete(category);
+                invalidateTimeSeries();
                 render();
               },
             }),
@@ -1139,6 +1856,7 @@
                 onClick: () => {
                   if (on) disabledDatasets.add(name);
                   else disabledDatasets.delete(name);
+                  invalidateTimeSeries();
                   render();
                 },
               }),
@@ -1175,8 +1893,15 @@
       }
 
       function fitToAreas() {
-        if (choroplethLayer && choroplethLayer.getBounds().isValid()) {
-          map.fitBounds(choroplethLayer.getBounds(), { padding: [20, 20] });
+        const stats = areaStatsCache;
+        const preferred = stats
+          ? authorityFeatures.filter((f) => (stats.get(featureId(f)) || {}).classified)
+          : [];
+        const source = preferred.length ? preferred : authorityFeatures;
+        if (!source.length) return;
+        const layer = L.geoJSON({ type: "FeatureCollection", features: source });
+        if (layer.getBounds().isValid()) {
+          map.fitBounds(layer.getBounds(), { padding: [24, 24], maxZoom: 7 });
         }
       }
 
@@ -1237,6 +1962,15 @@
       }
 
       async function findParentRelation(name) {
+        try {
+          const resp = await fetch("api/search?q=" + encodeURIComponent(name.trim()));
+          if (resp.ok) {
+            const hits = await resp.json();
+            if (hits && hits.length) return hits[0];
+          }
+        } catch (err) {
+          console.warn("Local area search failed", err);
+        }
         const q = escapeOverpass(name.trim());
         const data = await postOverpass(`
           [out:json][timeout:30];
@@ -1260,96 +1994,89 @@
         };
       }
 
-      async function fetchChildRelationIds(parentId) {
-        const data = await postOverpass(`
-          [out:json][timeout:30];
-          rel(${parentId});
-          rel(r)["boundary"="administrative"]["name"];
-          out tags;
-        `);
-        return ((data && data.elements) || [])
-          .filter((el) => el.type === "relation" && el.id !== parentId)
-          .map((el) => el.id);
-      }
-
-      /**
-       * Overpass grants a client two query slots, so two chunks in flight is
-       * the most that helps; the queue wait dominates, which is why chunks are
-       * large.
-       */
-      const GEOM_CHUNK = 100;
-      const GEOM_CONCURRENCY = 2;
-
-      async function fetchRelationsGeom(ids, label, report) {
-        const queue = [];
-        for (let i = 0; i < ids.length; i += GEOM_CHUNK) {
-          queue.push(ids.slice(i, i + GEOM_CHUNK));
-        }
-        const parts = queue.length;
-        const features = [];
-        let done = 0;
-        const worker = async () => {
-          while (queue.length) {
-            const chunk = queue.shift();
-            report(`Downloading boundaries for ${label} (part ${done + 1} of ${parts})…`);
-            const data = await postOverpass(`
-              [out:json][timeout:240];
-              rel(id:${chunk.join(",")});
-              out geom;
-            `);
-            if (data) features.push(...osmToGeoJSON(data).features);
-            done += 1;
-          }
+      function bboxToPolygon(bbox) {
+        if (!bbox || bbox.length < 4) return null;
+        const [west, south, east, north] = bbox;
+        return {
+          type: "Polygon",
+          coordinates: [[
+            [west, south],
+            [east, south],
+            [east, north],
+            [west, north],
+            [west, south],
+          ]],
         };
-        await Promise.all(
-          Array.from({ length: Math.min(GEOM_CONCURRENCY, parts) }, worker),
+      }
+
+      function bboxFeature(hit) {
+        const geometry = bboxToPolygon(hit.bbox);
+        if (!geometry) return null;
+        return {
+          type: "Feature",
+          properties: {
+            osm_type: "relation",
+            osm_id: hit.osm_id,
+            name: hit.name,
+            admin_level: hit.admin_level,
+            kind: hit.kind || kindFromLevel(hit.admin_level),
+          },
+          geometry,
+        };
+      }
+
+      function focusFeature(feature) {
+        if (!feature || !feature.geometry) return;
+        const bbox = geomBBox(feature.geometry);
+        map.fitBounds(
+          [
+            [bbox[1], bbox[0]],
+            [bbox[3], bbox[2]],
+          ],
+          { padding: [28, 28], maxZoom: 10 },
         );
-        return features;
       }
 
-      async function fetchChildrenByArea(parentId, adminLevel, label, report) {
-        report(`Looking for level-${adminLevel} areas inside ${label}…`);
-        const data = await postOverpass(`
-          [out:json][timeout:180];
-          rel(${parentId});
-          map_to_area -> .parent;
-          rel(area.parent)["type"="boundary"]["boundary"="administrative"]["admin_level"="${adminLevel}"]["name"];
-          out geom;
-        `);
-        return data ? osmToGeoJSON(data).features : [];
-      }
-
-      async function fetchChildrenOfRelation(parent, { quiet = false } = {}) {
+      async function fetchChildrenOfRelation(parent, { quiet = false, onPartial = null } = {}) {
         const cacheKey = "children:" + parent.osm_id;
-        if (authorityCache.has(cacheKey)) return authorityCache.get(cacheKey);
+        const cachedHit = authorityCache.get(cacheKey);
+        if (cachedHit && cachedHit.length) return cachedHit;
         if (childrenRequests.has(cacheKey)) return childrenRequests.get(cacheKey);
-        const report = quiet ? () => {} : setProgress;
+        const report = quiet ? () => {} : (msg) => showMapMessage(msg, "info");
         const job = (async () => {
-          report(`Listing subdivisions of ${parent.name}…`);
-          const childIds = await fetchChildRelationIds(parent.osm_id);
-          let features = childIds.length
-            ? await fetchRelationsGeom(childIds, parent.name, report)
-            : [];
-          if (features.length < 2) {
-            const parentLevel = parseInt(parent.admin_level || "4", 10);
-            const guess = parentLevel <= 2 ? "4" : parentLevel <= 4 ? "6" : "8";
-            const byArea = await fetchChildrenByArea(
-              parent.osm_id,
-              guess,
-              parent.name,
-              report,
-            );
-            if (byArea.length >= 2) features = byArea;
-            else {
-              const deeper = await fetchChildrenByArea(
-                parent.osm_id,
-                String(Math.min(10, parseInt(guess, 10) + 2)),
-                parent.name,
-                report,
-              );
-              if (deeper.length) features = deeper;
-            }
+          const childKind = childKindOf(parent.kind || kindFromLevel(parent.admin_level));
+          report(`Listing ${KIND_LABEL[childKind].toLowerCase()} areas of ${parent.name}…`);
+          const resp = await fetch("api/subdivisions?id=" + parent.osm_id);
+          if (!resp.ok) throw new Error(`Could not list subdivisions of ${parent.name}.`);
+          const payload = await resp.json();
+          const members = payload.members || [];
+          const features = (payload.features || []).slice();
+          const have = new Set(features.map((f) => f.properties && f.properties.osm_id));
+          const missing = members.filter((m) => !have.has(m.osm_id));
+          if (onPartial && features.length) await onPartial(features.slice());
+          if (!members.length) return features;
+          const batchSize = 8;
+          const batches = [];
+          for (let i = 0; i < missing.length; i += batchSize) {
+            batches.push(missing.slice(i, i + batchSize));
           }
+          let loaded = features.length;
+          const workers = Math.min(2, batches.length);
+          await Promise.all(
+            Array.from({ length: workers }, async (_, worker) => {
+              for (let b = worker; b < batches.length; b += workers) {
+                const chunk = batches[b];
+                report(
+                  `Drawing ${KIND_LABEL[childKind].toLowerCase()} of ${parent.name} (${Math.min(loaded + chunk.length, members.length)} of ${members.length})…`,
+                );
+                const geoResp = await fetch("api/geojson?ids=" + chunk.map((m) => m.osm_id).join(","));
+                const part = geoResp.ok ? (await geoResp.json()).features || [] : [];
+                features.push(...part);
+                loaded += part.length;
+                if (onPartial && features.length) await onPartial(features.slice());
+              }
+            }),
+          );
           if (features.length) authorityCache.set(cacheKey, features);
           return features;
         })();
@@ -1361,62 +2088,95 @@
         }
       }
 
+      function prefetchChildren(feature) {
+        if (viewMode !== "areas" || !feature || viewingKind() === "subdivision_2") return;
+        const props = feature.properties || {};
+        if (!props.osm_id) return;
+        const cacheKey = "children:" + props.osm_id;
+        if (authorityCache.get(cacheKey)?.length || childrenRequests.has(cacheKey)) return;
+        if (authorityCache.has("prebuilt:" + props.osm_id)) return;
+        loadPrebuiltChildren(props.osm_id).catch((err) =>
+          console.warn("Prefetch failed for", props.name, err),
+        );
+      }
+
       async function loadWorldCountries() {
         if (authorityCache.has("world")) return authorityCache.get("world");
         const resp = await fetch("data/countries.geojson");
         if (!resp.ok) throw new Error("Could not load country outlines.");
         const features = (await resp.json()).features || [];
         if (!features.length) throw new Error("Country outline file is empty.");
+        features.forEach((f) => {
+          f.properties.kind = "country";
+        });
         authorityCache.set("world", features);
         return features;
       }
 
-      // ------------------------------------------------- prebuilt first level
-
-      /**
-       * fetch_admin1.py bakes every country's states/provinces into
-       * data/admin1/, one file per country, with the OSM relation ids needed to
-       * keep drilling. Anything covered there loads from disk in milliseconds
-       * instead of costing a live Overpass geometry query.
-       */
-      async function loadAdmin1Index() {
-        if (admin1Index) return admin1Index;
-        admin1Index = {};
-        try {
-          const resp = await fetch("data/admin1/index.json");
-          if (resp.ok) admin1Index = await resp.json();
-          else console.warn("No prebuilt admin1 index; run fetch_admin1.py.");
-        } catch (err) {
-          console.warn("Could not read prebuilt admin1 index", err);
+      async function loadBoundaryIndex() {
+        if (!adminIndexPromise) {
+          adminIndexPromise = (async () => {
+            const merged = {};
+            for (const url of ["data/admin1/index.json", "data/admin2/index.json"]) {
+              try {
+                const resp = await fetch(url);
+                if (resp.ok) Object.assign(merged, await resp.json());
+                else if (url.includes("admin1")) {
+                  console.warn("No prebuilt subdivision 1 index; run fetch_admin1.py.");
+                }
+              } catch (err) {
+                console.warn("Could not read prebuilt index", url, err);
+              }
+            }
+            return merged;
+          })();
         }
-        return admin1Index;
+        return adminIndexPromise;
       }
 
-      /** Prebuilt subdivisions of a country, or null if it is not covered. */
       async function loadPrebuiltChildren(parentOsmId) {
         if (!parentOsmId) return null;
         const cacheKey = "prebuilt:" + parentOsmId;
-        if (authorityCache.has(cacheKey)) return authorityCache.get(cacheKey);
-        const entry = (await loadAdmin1Index())[String(parentOsmId)];
-        if (!entry) return null;
+        if (authorityCache.has(cacheKey)) {
+          const cached = authorityCache.get(cacheKey);
+          return cached && cached.length >= 2 ? cached : null;
+        }
+        const entry = (await loadBoundaryIndex())[String(parentOsmId)];
+        if (!entry) {
+          authorityCache.set(cacheKey, []);
+          return null;
+        }
         try {
           const resp = await fetch(entry.url);
-          if (!resp.ok) return null;
+          if (!resp.ok) {
+            authorityCache.set(cacheKey, []);
+            return null;
+          }
           const features = (await resp.json()).features || [];
-          if (features.length < 2) return null;
+          const isAdmin1 = (entry.url || "").includes("admin1");
+          const deeper = features.filter(
+            (f) => parseInt((f.properties || {}).admin_level || "4", 10) > 4,
+          ).length;
+          // Natural Earth "admin1" for some countries is really local
+          // authorities (UK counties). Skip those so OSM children become
+          // subdivision 1 instead (Wales, Scotland, England).
+          if (features.length < 2 || (isAdmin1 && deeper > features.length / 2)) {
+            authorityCache.set(cacheKey, []);
+            return null;
+          }
+          const kind = entry.kind || (isAdmin1 ? "subdivision_1" : "subdivision_2");
+          features.forEach((f) => {
+            f.properties.kind = kind;
+          });
           authorityCache.set(cacheKey, features);
           return features;
         } catch (err) {
           console.warn("Could not read prebuilt boundaries", entry.url, err);
+          authorityCache.set(cacheKey, []);
           return null;
         }
       }
 
-      /**
-       * Prebuilt areas keep their OSM id so the next level still works, but a
-       * few hundred worldwide have no id to match; those fall back to a name
-       * lookup at the moment they are drilled.
-       */
       async function resolveParent(feature) {
         const name = feature.properties.name;
         if (feature.properties.osm_id) {
@@ -1424,127 +2184,147 @@
             osm_id: feature.properties.osm_id,
             name,
             admin_level: feature.properties.admin_level,
+            kind: feature.properties.kind || kindFromLevel(feature.properties.admin_level),
           };
         }
-        setProgress(`Finding “${name}” in OpenStreetMap…`);
+        showMapMessage(`Finding “${name}”…`, "info");
         return findParentRelation(name);
       }
 
-      async function drillInto(feature) {
-        if (drillBusy) return;
+      async function fetchSelfFeature(hit) {
+        try {
+          const resp = await fetch("api/geojson?id=" + hit.osm_id);
+          if (resp.ok) {
+            const features = ((await resp.json()).features || []).filter(Boolean);
+            if (features[0]) return features[0];
+          }
+        } catch (err) {
+          console.warn("Could not load outline for", hit.name, err);
+        }
+        return bboxFeature(hit);
+      }
+
+      function yieldPaint() {
+        return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+      }
+
+      function showAreaLevel({ name, osmId, features, fit = true }) {
+        hierarchy.push({ name, osm_id: osmId, features });
+        currentParent = osmId ? { name, osm_id: osmId } : null;
+        authorityFeatures = features;
+        assignAuthorities();
         showMapMessage("");
-        const name = feature.properties.name;
-        const rec = authorityStats().get(featureId(feature));
-        if (!rec || !rec.classified) {
-          showMapMessage(`${name} has no classified language data in the loaded datasets.`);
+        render();
+        if (fit) fitToAreas();
+      }
+
+      async function drillInto(feature) {
+        if (viewingKind() === "subdivision_2") {
+          focusFeature(feature);
           return;
         }
+        if (drillBusy) {
+          pendingDrill = feature;
+          showMapMessage(`Still opening the previous area. “${feature.properties.name}” is next.`, "info");
+          return;
+        }
+        showMapMessage("");
+        const name = feature.properties.name;
         drillBusy = true;
+        showMapMessage(`Opening ${name}…`, "info");
+        await yieldPaint();
+        let pushed = false;
+        const parentIdStart = feature.properties.osm_id;
+        const paintPartial = async (partial) => {
+          if (!partial.length) return;
+          if (!pushed) {
+            showAreaLevel({ name, osmId: parentIdStart, features: partial });
+            pushed = true;
+          } else {
+            hierarchy[hierarchy.length - 1].features = partial;
+            authorityFeatures = partial;
+            assignAuthorities();
+            render();
+          }
+          await yieldPaint();
+        };
         try {
           let children = await loadPrebuiltChildren(feature.properties.osm_id);
           let parentId = feature.properties.osm_id;
           if (!children) {
-            showMapMessage(
-              `Fetching ${name}'s boundaries from OpenStreetMap. This takes a minute or two the first time, then it is cached.`,
-            );
+            const cached =
+              (parentId && authorityCache.get("children:" + parentId)) ||
+              (parentId && authorityCache.get("prebuilt:" + parentId));
+            if (cached && cached.length) children = cached;
+          }
+          if (!children) {
             const parent = await resolveParent(feature);
             if (!parent) {
-              showMapMessage(`No OSM administrative area matches ${name}.`);
+              showMapMessage(`No administrative area matches ${name}.`);
               updateStats();
               return;
             }
             parentId = parent.osm_id;
-            children = await fetchChildrenOfRelation(parent);
+            children = await fetchChildrenOfRelation(parent, { onPartial: paintPartial });
+            if (pushed && hierarchy[hierarchy.length - 1]) {
+              hierarchy[hierarchy.length - 1].osm_id = parentId;
+              currentParent = { name, osm_id: parentId };
+            }
           }
           if (!children.length) {
-            showMapMessage(`${name} has no OSM administrative subdivisions.`);
+            showMapMessage(`${name} has no subdivision areas to show.`);
             updateStats();
             return;
           }
-          hierarchy.push({ name, osm_id: parentId, features: children });
-          currentParent = { name, osm_id: parentId };
-          authorityFeatures = children;
-          assignAuthorities();
           showMapMessage("");
-          render();
-          fitToAreas();
+          if (!pushed) {
+            showAreaLevel({ name, osmId: parentId, features: children });
+          } else {
+            hierarchy[hierarchy.length - 1].features = children;
+            authorityFeatures = children;
+            assignAuthorities();
+            render();
+            fitToAreas();
+          }
         } finally {
           drillBusy = false;
+          const next = pendingDrill;
+          pendingDrill = null;
+          if (next && next !== feature) {
+            drillInto(next).catch((err) =>
+              showMapMessage(err.message || `Could not open ${next.properties.name}.`),
+            );
+          }
         }
         warmNextLevel();
       }
 
-      // ---------------------------------------------------- background warm-up
-
-      /**
-       * The areas most likely to be clicked next are the ones holding the most
-       * data, so their children are fetched before anyone asks. Prebuilt levels
-       * cost a local file read; below that we speculate on one live query at a
-       * time, and serve.py caches it on disk so the guess also pays off after a
-       * reload.
-       */
-      const WARM_AREAS = 3;
-      const WARM_LIVE_QUERIES = 1;
-      const warmQueue = [];
-      let warming = false;
-
       function warmNextLevel() {
-        if (viewMode !== "areas") return;
-        warmQueue.length = 0;
-        warmQueue.push(
-          ...[...authorityStats().values()]
-            .filter((rec) => rec.classified)
-            .sort((a, b) => b.classified - a.classified)
-            .slice(0, WARM_AREAS)
-            .map((rec) => rec.feature),
-        );
-        drainWarmQueue();
-      }
-
-      async function drainWarmQueue() {
-        if (warming) return;
-        warming = true;
-        let liveBudget = WARM_LIVE_QUERIES;
-        try {
-          while (warmQueue.length) {
-            const feature = warmQueue.shift();
-            const props = feature.properties;
-            if (drillBusy) {
-              // A real drill is running; don't compete for Overpass slots.
-              warmQueue.unshift(feature);
-              await new Promise((resolve) => setTimeout(resolve, 1500));
-              continue;
-            }
-            try {
-              if (await loadPrebuiltChildren(props.osm_id)) continue;
-              if (!props.osm_id || liveBudget <= 0) continue;
-              liveBudget -= 1;
-              await fetchChildrenOfRelation(
-                { osm_id: props.osm_id, name: props.name, admin_level: props.admin_level },
-                { quiet: true },
-              );
-            } catch (err) {
-              console.warn("Boundary warm-up failed for", props.name, err);
-            }
-          }
-        } finally {
-          warming = false;
-        }
+        if (viewMode !== "areas" || viewingKind() === "subdivision_2") return;
+        [...authorityStats().values()]
+          .filter((rec) => rec.classified && rec.feature && rec.feature.properties.osm_id)
+          .sort((a, b) => b.classified - a.classified)
+          .slice(0, 3)
+          .forEach((rec) => {
+            loadPrebuiltChildren(rec.feature.properties.osm_id).catch(() => {});
+          });
       }
 
       async function enterAreaMode() {
         if (!hierarchy.length) {
-          setProgress("Loading country outlines…");
+          showMapMessage("Loading countries…", "info");
           const world = await loadWorldCountries();
           hierarchy = [{ name: "World", osm_id: null, features: world }];
           currentParent = null;
           authorityFeatures = world;
           assignAuthorities();
+          showMapMessage("");
         }
       }
 
       async function setViewMode(mode) {
         viewMode = mode;
+        invalidateTimeSeries();
         document.getElementById("modeAreas").classList.toggle("active", mode === "areas");
         document.getElementById("modePoints").classList.toggle("active", mode === "points");
         showMapMessage("");
@@ -1559,49 +2339,296 @@
         if (mode === "areas") warmNextLevel();
       }
 
-      // ------------------------------------------------------------------ events
+      function hideSearchResults() {
+        document.getElementById("searchResults").hidden = true;
+        searchActive = -1;
+      }
+
+      function renderSearchResults(hits, query) {
+        const box = document.getElementById("searchResults");
+        searchHits = hits;
+        searchActive = hits.length ? 0 : -1;
+        box.innerHTML = "";
+        if (!hits.length) {
+          const empty = document.createElement("div");
+          empty.className = "search-empty";
+          empty.textContent = query ? `No places match “${query}”.` : "Type a country or subdivision.";
+          box.appendChild(empty);
+          box.hidden = false;
+          return;
+        }
+        hits.forEach((hit, i) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "search-hit" + (i === searchActive ? " active" : "");
+          const parent = hit.parent_name ? ` · ${hit.parent_name}` : "";
+          btn.innerHTML =
+            `<span class="name">${escapeHtml(hit.name)}</span>` +
+            `<span class="meta">${escapeHtml(hit.kind_label || KIND_LABEL[hit.kind] || "Place")}${escapeHtml(parent)}</span>`;
+          btn.addEventListener("mousedown", (e) => e.preventDefault());
+          btn.addEventListener("click", () => openSearchHit(hit));
+          box.appendChild(btn);
+        });
+        box.hidden = false;
+      }
+
+      function highlightSearch(index) {
+        const buttons = document.querySelectorAll("#searchResults .search-hit");
+        buttons.forEach((btn) => btn.classList.remove("active"));
+        if (index < 0 || index >= buttons.length) return;
+        searchActive = index;
+        buttons[index].classList.add("active");
+        buttons[index].scrollIntoView({ block: "nearest" });
+      }
+
+      async function runSearch(query) {
+        if (searchAbort) searchAbort.abort();
+        searchAbort = new AbortController();
+        try {
+          const resp = await fetch("api/search?q=" + encodeURIComponent(query), {
+            signal: searchAbort.signal,
+          });
+          if (!resp.ok) return;
+          const hits = await resp.json();
+          if (document.getElementById("areaName").value.trim() !== query) return;
+          renderSearchResults(Array.isArray(hits) ? hits : [], query);
+        } catch (err) {
+          if (err.name !== "AbortError") console.warn("Search failed", err);
+        }
+      }
+
+      async function applySearchHit(hit) {
+        viewMode = "areas";
+        document.getElementById("modeAreas").classList.add("active");
+        document.getElementById("modePoints").classList.remove("active");
+        const world = await loadWorldCountries();
+        const kind = hit.kind || kindFromLevel(hit.admin_level);
+        hierarchy = [{ name: "World", osm_id: null, features: world }];
+        currentParent = null;
+        authorityFeatures = world;
+
+        const paintInto = async (name, osmId, partial) => {
+          if (!partial.length) return;
+          if (hierarchy[hierarchy.length - 1].osm_id === osmId) {
+            hierarchy[hierarchy.length - 1].features = partial;
+          } else {
+            hierarchy.push({ name, osm_id: osmId, features: partial });
+          }
+          currentParent = { name, osm_id: osmId };
+          authorityFeatures = partial;
+          assignAuthorities();
+          render();
+          fitToAreas();
+          await yieldPaint();
+        };
+
+        if (kind === "country") {
+          let children = await loadPrebuiltChildren(hit.osm_id);
+          if (!children) {
+            children = await fetchChildrenOfRelation(hit, {
+              onPartial: (partial) => paintInto(hit.name, hit.osm_id, partial),
+            });
+          }
+          if (!children.length) throw new Error(`${hit.name} has no subdivision 1 areas.`);
+          hierarchy = [
+            { name: "World", osm_id: null, features: world },
+            { name: hit.name, osm_id: hit.osm_id, features: children },
+          ];
+          currentParent = { name: hit.name, osm_id: hit.osm_id };
+          authorityFeatures = children;
+        } else if (kind === "subdivision_1") {
+          let parentId = hit.parent_osm_id;
+          let parentName = hit.parent_name;
+          if (!parentId && parentName) {
+            const country = world.find(
+              (f) => (f.properties.name || "").toLowerCase() === parentName.toLowerCase(),
+            );
+            if (country) {
+              parentId = country.properties.osm_id;
+              parentName = country.properties.name;
+            }
+          }
+          if (parentId) {
+            let countryFeatures = await loadPrebuiltChildren(parentId);
+            if (!countryFeatures) {
+              countryFeatures = await fetchChildrenOfRelation(
+                {
+                  osm_id: parentId,
+                  name: parentName || "Country",
+                  admin_level: "2",
+                  kind: "country",
+                },
+                { quiet: true },
+              );
+            }
+            if (countryFeatures && countryFeatures.length) {
+              hierarchy.push({
+                name: parentName || "Country",
+                osm_id: parentId,
+                features: countryFeatures,
+              });
+            }
+          }
+          let children = await loadPrebuiltChildren(hit.osm_id);
+          if (!children) {
+            children = await fetchChildrenOfRelation(hit, {
+              onPartial: (partial) => paintInto(hit.name, hit.osm_id, partial),
+            });
+          }
+          if (!children.length) {
+            const self = await fetchSelfFeature(hit);
+            children = self ? [self] : [];
+          }
+          if (!children.length) throw new Error(`${hit.name} has no subdivision 2 areas.`);
+          if (hierarchy[hierarchy.length - 1].osm_id === hit.osm_id) {
+            hierarchy[hierarchy.length - 1].features = children;
+          } else {
+            hierarchy.push({ name: hit.name, osm_id: hit.osm_id, features: children });
+          }
+          currentParent = { name: hit.name, osm_id: hit.osm_id };
+          authorityFeatures = children;
+        } else {
+          if (hit.parent_osm_id) {
+            const siblings = await fetchChildrenOfRelation(
+              {
+                osm_id: hit.parent_osm_id,
+                name: hit.parent_name || hit.name,
+                admin_level: "4",
+                kind: "subdivision_1",
+              },
+              { quiet: true },
+            );
+            if (siblings.length) {
+              hierarchy.push({
+                name: hit.parent_name || "Subdivision 1",
+                osm_id: hit.parent_osm_id,
+                features: siblings,
+              });
+              currentParent = { name: hit.parent_name || "Subdivision 1", osm_id: hit.parent_osm_id };
+              authorityFeatures = siblings;
+              assignAuthorities();
+              render();
+              const match = siblings.find((f) => f.properties.osm_id === hit.osm_id);
+              if (match) focusFeature(match);
+              showMapMessage("");
+              warmNextLevel();
+              return;
+            }
+          }
+          const self = await fetchSelfFeature(hit);
+          if (!self) throw new Error(`Could not open ${hit.name}.`);
+          hierarchy.push({ name: hit.name, osm_id: hit.osm_id, features: [self] });
+          currentParent = { name: hit.name, osm_id: hit.osm_id };
+          authorityFeatures = [self];
+        }
+
+        assignAuthorities();
+        showMapMessage("");
+        render();
+        fitToAreas();
+        warmNextLevel();
+      }
+
+      async function openSearchHit(hit) {
+        hideSearchResults();
+        document.getElementById("areaName").value = hit.name;
+        showMapMessage(`Opening ${hit.name}…`, "info");
+        try {
+          await applySearchHit(hit);
+        } catch (err) {
+          showMapMessage(err.message || String(err));
+          updateStats();
+        }
+      }
 
       document.getElementById("modeAreas").addEventListener("click", () => setViewMode("areas"));
       document.getElementById("modePoints").addEventListener("click", () => setViewMode("points"));
 
+      const searchInput = document.getElementById("areaName");
+      searchInput.addEventListener("input", () => {
+        const query = searchInput.value.trim();
+        clearTimeout(searchTimer);
+        if (query.length < 2) {
+          hideSearchResults();
+          return;
+        }
+        searchTimer = setTimeout(() => runSearch(query), 120);
+      });
+      searchInput.addEventListener("focus", () => {
+        if (searchHits.length) renderSearchResults(searchHits, searchInput.value.trim());
+      });
+      searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (!searchHits.length) return;
+          highlightSearch(Math.min(searchHits.length - 1, searchActive + 1));
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          highlightSearch(Math.max(0, searchActive - 1));
+        } else if (e.key === "Escape") {
+          hideSearchResults();
+        }
+      });
+      document.addEventListener("click", (e) => {
+        if (!document.getElementById("areaJump").contains(e.target)) hideSearchResults();
+      });
+
       document.getElementById("areaJump").addEventListener("submit", async (e) => {
         e.preventDefault();
-        const name = document.getElementById("areaName").value.trim();
-        if (!name) return;
-        setProgress(`Finding “${name}”…`);
+        const query = searchInput.value.trim();
+        if (!query) return;
+        if (searchHits[searchActive]) {
+          openSearchHit(searchHits[searchActive]);
+          return;
+        }
+        showMapMessage(`Finding “${query}”…`, "info");
         try {
-          const parent = await findParentRelation(name);
-          if (!parent) throw new Error(`No OSM administrative area named “${name}”.`);
-          let children = await loadPrebuiltChildren(parent.osm_id);
-          if (!children) {
-            showMapMessage(
-              `Fetching boundaries for “${parent.name}” from OpenStreetMap. This takes a minute or two the first time, then it is cached.`,
-            );
-            children = await fetchChildrenOfRelation(parent);
-          }
-          if (!children.length) {
-            throw new Error(`OSM has no administrative subdivisions for ${parent.name}.`);
-          }
-          const world = await loadWorldCountries();
-          hierarchy = [
-            { name: "World", osm_id: null, features: world },
-            { name: parent.name, osm_id: parent.osm_id, features: children },
-          ];
-          currentParent = parent;
-          authorityFeatures = children;
-          assignAuthorities();
-          viewMode = "areas";
-          document.getElementById("modeAreas").classList.add("active");
-          document.getElementById("modePoints").classList.remove("active");
-          showMapMessage("");
-          render();
-          fitToAreas();
-          warmNextLevel();
+          const resp = await fetch("api/search?q=" + encodeURIComponent(query));
+          const hits = resp.ok ? await resp.json() : [];
+          if (!hits.length) throw new Error(`No place named “${query}”.`);
+          await openSearchHit(hits[0]);
         } catch (err) {
           showMapMessage(err.message || String(err));
           updateStats();
         }
       });
+
+      document.getElementById("playBtn").addEventListener("click", () => {
+        setPlaying(!playTimer);
+      });
+
+      document.getElementById("timeSlider").addEventListener("input", (e) => {
+        setPlaying(false);
+        seek(timeLo + Number(e.target.value));
+      });
+
+      // Dragging anywhere on the chart scrubs, which is the gesture people try
+      // first once they see a timeline.
+      (() => {
+        const canvas = document.getElementById("timeChart");
+        let scrubbing = false;
+        const monthAt = (event) => {
+          const rect = canvas.getBoundingClientRect();
+          const frac = (event.clientX - rect.left) / rect.width;
+          return timeLo + Math.round(frac * (timeHi - timeLo));
+        };
+        canvas.addEventListener("pointerdown", (e) => {
+          if (!timeEnabled) return;
+          scrubbing = true;
+          canvas.setPointerCapture(e.pointerId);
+          setPlaying(false);
+          seek(monthAt(e));
+        });
+        canvas.addEventListener("pointermove", (e) => {
+          if (scrubbing) seek(monthAt(e));
+        });
+        const stop = (e) => {
+          scrubbing = false;
+          if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
+        };
+        canvas.addEventListener("pointerup", stop);
+        canvas.addEventListener("pointercancel", stop);
+      })();
 
       map.on("moveend", () => {
         if (viewMode === "points") {
@@ -1609,12 +2636,15 @@
           updateStats();
         }
       });
-      window.addEventListener("resize", () => map.invalidateSize());
+      window.addEventListener("resize", () => {
+        map.invalidateSize();
+        drawTimeChart();
+      });
 
       // -------------------------------------------------------------------- boot
 
       (async () => {
-        loadAdmin1Index(); // in flight before the first click needs it
+        loadBoundaryIndex(); // in flight before the first click needs it
         await loadDatasets();
         if (!points.length) return;
         setOverlay("");

@@ -361,10 +361,12 @@ SWITCH_LABEL_TO_LANGUAGE: dict[str, str] = {
     "українська": "ukrainian",
     "українською": "ukrainian",
     "укр": "ukrainian",
+    "ua": "ukrainian",
     "russian": "russian",
     "русский": "russian",
     "російська": "russian",
     "рус": "russian",
+    "ru": "russian",
     "belarusian": "belarusian",
     "беларуская": "belarusian",
     "білоруська": "belarusian",
@@ -475,23 +477,27 @@ SCRIPT_BLOCKS: tuple[tuple[str, int, int], ...] = (
 )
 
 # language -> (script, letters only this language uses, min hits, min share
-# of that script's letters). Shares are set an order of magnitude below the
-# natural frequency of the letters so a short page still trips them.
+# of that script's letters). Shares sit well below natural frequency so a
+# short homepage still trips them.
 SCRIPT_MARKERS: dict[str, tuple[str, str, int, float]] = {
-    # Ukrainian also uses і, but so do Belarusian and Rusyn; ї/є/ґ are its own.
-    "ukrainian": ("cyrillic", "їєґ", 3, 0.004),
-    "russian": ("cyrillic", "ыэё", 3, 0.008),
-    "belarusian": ("cyrillic", "ў", 3, 0.003),
+    # ї/є/ґ never appear in Russian. The everyday Ukrainian vowel і is
+    # handled separately: Belarusian and Rusyn also use it.
+    "ukrainian": ("cyrillic", "їєґ", 2, 0.003),
+    "russian": ("cyrillic", "ыэё", 2, 0.006),
+    "belarusian": ("cyrillic", "ў", 1, 0.002),
     "polish": ("latin", "ąćęłńśźż", 4, 0.004),
     "hungarian": ("latin", "őű", 3, 0.002),
     "romanian": ("latin", "ășțşţ", 4, 0.003),
     "slovak": ("latin", "ľĺŕďťň", 4, 0.003),
-    # Dotless i marks the Latin Crimean Tatar orthography; ñ alone would
-    # collide with Spanish.
+    # Dotless i marks Latin Crimean Tatar; ñ alone would collide with Spanish.
     "crimean tatar": ("latin", "ı", 4, 0.002),
 }
 
 YIDDISH_LETTERS = "װױײ"
+# Ukrainian і (U+0456) is the regular /i/ vowel, ~4–5% of letters. Russian
+# writes и instead. Belarusian also uses і, but ў already claims those pages.
+UKRAINIAN_I_MIN_HITS = 4
+UKRAINIAN_I_MIN_SHARE = 0.02
 # Bulgarian uses ъ as a plain vowel (~1.5% of letters); Russian barely uses it.
 BULGARIAN_HARD_SIGN_SHARE = 0.006
 # Cyrillic Crimean Tatar writes ъ only inside the къ/гъ/нъ digraphs.
@@ -514,7 +520,10 @@ def normalize_url(url: str) -> str | None:
         return None
     if not url.startswith(("http://", "https://")):
         url = "http://" + url
-    parsed = urlparse(url)
+    try:
+        parsed = urlparse(url)
+    except ValueError:
+        return None
     if not parsed.netloc:
         return None
     path = parsed.path.lower()
@@ -670,6 +679,19 @@ def languages_from_script(words: list[str]) -> set[str]:
         if hits >= min_hits and hits / total >= min_share:
             found.add(name)
 
+    cyrillic = script_totals["cyrillic"]
+    if cyrillic >= MIN_SCRIPT_CHARS:
+        ukrainian_i = letters["і"]  # U+0456, not ASCII i and not Cyrillic и
+        russian_excl = sum(letters[ch] for ch in "ыэё")
+        if (
+            "ukrainian" not in found
+            and "belarusian" not in found
+            and ukrainian_i >= UKRAINIAN_I_MIN_HITS
+            and ukrainian_i / cyrillic >= UKRAINIAN_I_MIN_SHARE
+            and russian_excl < 2
+        ):
+            found.add("ukrainian")
+
     if "belarusian" in found:
         # Belarusian shares ы/э with Russian; only ў is exclusive to it.
         found.discard("russian")
@@ -684,7 +706,6 @@ def languages_from_script(words: list[str]) -> set[str]:
     ):
         found.add("yiddish")
 
-    cyrillic = script_totals["cyrillic"]
     if cyrillic >= MIN_SCRIPT_CHARS and letters["ъ"]:
         digraphs = sum(
             1
@@ -720,6 +741,11 @@ def languages_from_words(words: list[str]) -> set[str]:
 
 
 def languages_from_content(words: list[str]) -> set[str]:
+    """Script letters decide Ukrainian/Russian and other non-Latin pages.
+
+    Function-word hits still add Latin languages (and fill gaps when a
+    page has too few distinctive letters).
+    """
     return languages_from_script(words) | languages_from_words(words)
 
 
@@ -828,7 +854,7 @@ async def crawl(
     headers = {
         "User-Agent": USER_AGENT,
         "Accept": "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "en-GB,en;q=0.9,fr;q=0.8,cy;q=0.7",
+        "Accept-Language": "uk,ru;q=0.9,en;q=0.8,fr;q=0.7",
         "Accept-Encoding": "gzip, deflate",
         "Connection": "keep-alive",
     }

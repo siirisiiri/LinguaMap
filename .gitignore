@@ -219,3 +219,7 @@ __marimo__/
 
 # Overpass tile cache for --by-area runs
 .osm_tile_cache/
+
+# Geofabrik / OSM PBF extracts
+.geofabrik/
+*.osm.pbf

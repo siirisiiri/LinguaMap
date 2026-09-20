@@ -66,11 +66,13 @@ try:
 except ImportError:
     pass
 
+_MISSING = object()
+
 REPLAY = "https://web.archive.org/web/{ts}id_/{url}"
 TS_RE = re.compile(r"/web/(\d{4,14})(?:id_|im_|if_|cs_|js_)?/")
 ORIGINAL_RE = re.compile(r"/web/\d{4,14}(?:id_|im_|if_|cs_|js_)?/(.+)$")
 
-MAX_BYTES = 96_000
+MAX_BYTES = 48_000
 READ_CHUNK = 8_192
 RESOLVE_TIMEOUT = 30.0
 FETCH_TIMEOUT = 60.0
@@ -89,7 +91,7 @@ MAX_ATTEMPTS = 5
 # for a cooldown rather than digging the hole deeper.
 BREAKER_WINDOW = 60
 BREAKER_ERROR_RATE = 0.5
-BREAKER_COOLDOWN_S = 180.0
+BREAKER_COOLDOWN_S = 45.0
 
 # A snapshot this far from the requested month is evidence of a coverage gap,
 # not an answer to the question we asked.
@@ -427,34 +429,43 @@ class HistorySearch:
         self.by_month: dict[int, str | None] = {}
         self.by_snapshot: dict[str, Label | None] = {}
         self.records: dict[str, dict] = {}
+        self._snap_locks: dict[str, asyncio.Lock] = {}
 
-    async def label_at(self, month: int) -> tuple[str | None, Label | None]:
-        """Label for the snapshot nearest `month`, fetching each capture once."""
-        if month in self.by_month:
-            ts = self.by_month[month]
-        else:
+    async def label_at(self, month: int, *, peek: bool = False) -> tuple[str | None, Label | None]:
+        """Label for the snapshot nearest `month`, fetching each capture once.
+
+        `peek` only does the 302 lookup: used while bisecting so we can stop
+        when the midpoint is a capture we already classified, without paying
+        for another body.
+        """
+        ts = self.by_month.get(month, _MISSING)
+        if ts is _MISSING:
             ts = await self.client.resolve(self.url, month)
             if ts and abs(timestamp_to_month(ts) - month) > MAX_SNAPSHOT_DRIFT_MONTHS:
-                ts = None  # nearest capture is too far away to speak for this date
+                ts = None
             self.by_month[month] = ts
         if ts is None:
             return None, None
-        if ts in self.by_snapshot:
-            return ts, self.by_snapshot[ts]
+        if ts in self.by_snapshot or peek:
+            return ts, self.by_snapshot.get(ts)
 
-        label, final_url, status = await self.client.fetch(self.url, ts)
-        self.by_snapshot[ts] = label
-        self.records[ts] = {
-            "url": self.url,
-            "snapshot": ts,
-            "date": timestamp_to_date(ts),
-            "final_url": original_url(final_url),
-            "http_status": status,
-            "primary": label.primary if label else None,
-            "available": label.available if label else [],
-            "words": label.words if label else 0,
-        }
-        return ts, label
+        lock = self._snap_locks.setdefault(ts, asyncio.Lock())
+        async with lock:
+            if ts in self.by_snapshot:
+                return ts, self.by_snapshot[ts]
+            label, final_url, status = await self.client.fetch(self.url, ts)
+            self.by_snapshot[ts] = label
+            self.records[ts] = {
+                "url": self.url,
+                "snapshot": ts,
+                "date": timestamp_to_date(ts),
+                "final_url": original_url(final_url),
+                "http_status": status,
+                "primary": label.primary if label else None,
+                "available": label.available if label else [],
+                "words": label.words if label else 0,
+            }
+            return ts, label
 
     async def _bisect(self, lo: int, hi: int, lo_state, hi_state, depth: int = 0) -> None:
         # Stop once the bracket is a single month, or once both ends land on the
@@ -464,27 +475,34 @@ class HistorySearch:
         if self.by_month.get(lo) and self.by_month.get(lo) == self.by_month.get(hi):
             return
         mid = (lo + hi) // 2
-        _, mid_label = await self.label_at(mid)
+        ts, mid_label = await self.label_at(mid, peek=True)
+        if ts and ts not in self.by_snapshot:
+            _, mid_label = await self.label_at(mid)
         if mid_label is None or not mid_label.usable():
             # No usable capture at the midpoint: try each half once, then give up.
             if depth < 3:
-                await self._bisect(lo, mid, lo_state, hi_state, depth + 1)
-                await self._bisect(mid, hi, lo_state, hi_state, depth + 1)
+                await asyncio.gather(
+                    self._bisect(lo, mid, lo_state, hi_state, depth + 1),
+                    self._bisect(mid, hi, lo_state, hi_state, depth + 1),
+                )
             return
         mid_state = mid_label.state(self.track)
+        branches = []
         if mid_state != lo_state:
-            await self._bisect(lo, mid, lo_state, mid_state, depth + 1)
+            branches.append(self._bisect(lo, mid, lo_state, mid_state, depth + 1))
         if mid_state != hi_state:
-            await self._bisect(mid, hi, mid_state, hi_state, depth + 1)
+            branches.append(self._bisect(mid, hi, mid_state, hi_state, depth + 1))
+        if branches:
+            await asyncio.gather(*branches)
 
     async def run(self) -> SiteResult:
         grid = list(range(self.lo, self.hi + 1, self.coarse))
         if grid[-1] != self.hi:
             grid.append(self.hi)
 
+        labelled = await asyncio.gather(*(self.label_at(month) for month in grid))
         coarse_states: list[tuple[int, tuple | None]] = []
-        for month in grid:
-            _, label = await self.label_at(month)
+        for month, (_, label) in zip(grid, labelled):
             coarse_states.append(
                 (month, label.state(self.track) if label and label.usable() else None))
 
@@ -677,7 +695,7 @@ async def run_all(urls: list[str], args, log: LogWriter) -> None:
                     )
 
         # One task per maximum slot; the limiter, not the task count, sets the rate.
-        await asyncio.gather(*(worker() for _ in range(args.max_concurrency * 2)))
+        await asyncio.gather(*(worker() for _ in range(max(2, args.max_concurrency))))
 
     elapsed = time.perf_counter() - started
     print(
@@ -706,9 +724,10 @@ def main() -> None:
                    help="Write records annotated with lang_history here")
     p.add_argument("--start", default="2019-01", help="Window start YYYY-MM")
     p.add_argument("--end", default="2025-12", help="Window end YYYY-MM")
-    p.add_argument("--coarse-months", type=int, default=24,
-                   help="Initial grid spacing in months; intervals whose endpoints "
-                        "differ are then bisected to month resolution (default: 24)")
+    p.add_argument("--coarse-months", type=int, default=84,
+                   help="Initial grid spacing in months. Default 84 is just the "
+                        "window endpoints (2019 and 2025); only sites that actually "
+                        "changed get extra Wayback hits.")
     p.add_argument("--track", choices=("primary", "state"), default="primary",
                    help="What counts as a change: the landing language alone, or "
                         "the landing language plus the available set (default: primary)")
