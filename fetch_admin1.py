@@ -133,12 +133,36 @@ def iso_code(value):
     return code if re.fullmatch(r"[A-Z]{2}-[A-Z0-9]{1,3}", code) else ""
 
 
+# Drawn as part of the sovereign country on the 110m world map, but Natural
+# Earth 10m files them under their own ISO prefix. Without this they are
+# skipped (no GF country outline) and vanish when you click France.
+OVERSEAS_PARENT = {
+    "GF": "FR",  # French Guiana
+}
+
+OSM_OVERSEAS = {
+    "frenchguiana": {
+        "osm_id": 1260551,
+        "name": "French Guiana",
+        "admin_level": "4",
+        "rank": 0,
+    },
+    "guyane": {
+        "osm_id": 1260551,
+        "name": "French Guiana",
+        "admin_level": "4",
+        "rank": 0,
+    },
+}
+
+
 def feature_codes(props):
     """(ISO3166-2 code, country iso2) for a Natural Earth admin-1 row."""
     code = iso_code(props.get("iso_3166_2"))
     # NE codes dependencies against their own ISO prefix but sometimes carries
     # the sovereign state in iso_a2, so the prefix wins when both disagree.
     country = code[:2] if code else (props.get("iso_a2") or "").upper()
+    country = OVERSEAS_PARENT.get(country, country)
     return code, country if len(country) == 2 else ""
 
 
@@ -236,7 +260,9 @@ def main():
             continue
 
         name = props.get("name_en") or props.get("name") or code or "(unnamed)"
-        rec = by_iso.get(code) if code else None
+        rec = OSM_OVERSEAS.get(normalize_name(name))
+        if not rec:
+            rec = by_iso.get(code) if code else None
         if rec:
             matched_iso += 1
         else:

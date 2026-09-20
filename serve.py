@@ -1161,34 +1161,15 @@ def subdivisions_payload(osm_id: int, with_geom: bool = False) -> dict:
     prebuilt = prebuilt_admin2(osm_id)
     if prebuilt:
         return prebuilt
-    parent, members = choose_child_records(osm_id)
-    features: list[dict] = []
-    missing: list[int] = []
-    if members:
-        for member in members:
-            path = GEOJSON_CACHE_DIR / f"{member['osm_id']}.json"
-            if path.exists():
-                try:
-                    features.append(json.loads(path.read_bytes()))
-                    continue
-                except json.JSONDecodeError:
-                    path.unlink(missing_ok=True)
-            missing.append(member["osm_id"])
-        if with_geom and missing:
-            fetched = {
-                int(f["properties"]["osm_id"]): f for f in relation_features(missing) if f.get("properties")
-            }
-            features.extend(fetched[i] for i in missing if i in fetched)
-        by_id = {int(f["properties"]["osm_id"]): f for f in features if f.get("properties")}
-        features = [by_id[m["osm_id"]] for m in members if m["osm_id"] in by_id]
-        if parent.get("child_kind") == "subdivision_2":
-            save_admin2(osm_id, parent, members, features)
+    # No live OSM/Overpass for subdivision 2. Country → subdivision 1 is
+    # served from data/admin1 by the viewer; anything else without a baked
+    # file is a leaf.
     return {
-        "parent": parent,
-        "kind": parent.get("child_kind") or "subdivision_2",
-        "kind_label": KIND_LABELS[parent.get("child_kind") or "subdivision_2"],
-        "members": members,
-        "features": features,
+        "parent": {"osm_id": osm_id, "kind": "subdivision_1", "child_kind": "subdivision_2"},
+        "kind": "subdivision_2",
+        "kind_label": KIND_LABELS["subdivision_2"],
+        "members": [],
+        "features": [],
     }
 
 

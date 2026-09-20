@@ -1,1 +1,8696 @@
-{}
+{
+ "101117947": {
+  "count": 13,
+  "iso": "KZ-SEV",
+  "kind": "subdivision_2",
+  "name": "North Kazakhstan",
+  "url": "data/admin2/101117947.geojson"
+ },
+ "1015996": {
+  "count": 32,
+  "iso": "IR-30",
+  "kind": "subdivision_2",
+  "name": "Alborz Province",
+  "url": "data/admin2/1015996.geojson"
+ },
+ "101746": {
+  "count": 22,
+  "iso": "UA-12",
+  "kind": "subdivision_2",
+  "name": "Dnipropetrovsk Oblast",
+  "url": "data/admin2/101746.geojson"
+ },
+ "101859": {
+  "count": 22,
+  "iso": "UA-35",
+  "kind": "subdivision_2",
+  "name": "Kirovohrad Oblast",
+  "url": "data/admin2/101859.geojson"
+ },
+ "102269": {
+  "count": 67,
+  "iso": "RU-MOW",
+  "kind": "subdivision_2",
+  "name": "Moscow",
+  "url": "data/admin2/102269.geojson"
+ },
+ "102303": {
+  "count": 18,
+  "iso": "AT-4",
+  "kind": "subdivision_2",
+  "name": "Upper Austria",
+  "url": "data/admin2/102303.geojson"
+ },
+ "102740": {
+  "count": 3,
+  "iso": "FR-BRE",
+  "kind": "subdivision_2",
+  "name": "Brittany",
+  "url": "data/admin2/102740.geojson"
+ },
+ "103906": {
+  "count": 22,
+  "iso": "RU-KGD",
+  "kind": "subdivision_2",
+  "name": "Kaliningrad",
+  "url": "data/admin2/103906.geojson"
+ },
+ "104401": {
+  "count": 21,
+  "iso": "PL-ZP",
+  "kind": "subdivision_2",
+  "name": "West Pomeranian Voivodeship",
+  "url": "data/admin2/104401.geojson"
+ },
+ "104433929": {
+  "count": 14,
+  "iso": "KZ-YUZ",
+  "kind": "subdivision_2",
+  "name": "Turkistan",
+  "url": "data/admin2/104433929.geojson"
+ },
+ "108081": {
+  "count": 34,
+  "iso": "RU-STA",
+  "kind": "subdivision_2",
+  "name": "Stavropol Krai",
+  "url": "data/admin2/108081.geojson"
+ },
+ "108082": {
+  "count": 44,
+  "iso": "RU-KDA",
+  "kind": "subdivision_2",
+  "name": "Krasnodar Krai",
+  "url": "data/admin2/108082.geojson"
+ },
+ "108083": {
+  "count": 14,
+  "iso": "RU-KL",
+  "kind": "subdivision_2",
+  "name": "Republic of Kalmykia",
+  "url": "data/admin2/108083.geojson"
+ },
+ "109876": {
+  "count": 51,
+  "iso": "RU-DA",
+  "kind": "subdivision_2",
+  "name": "Dagestan",
+  "url": "data/admin2/109876.geojson"
+ },
+ "109877": {
+  "count": 18,
+  "iso": "RU-CE",
+  "kind": "subdivision_2",
+  "name": "Chechnya",
+  "url": "data/admin2/109877.geojson"
+ },
+ "109878": {
+  "count": 12,
+  "iso": "RU-KC",
+  "kind": "subdivision_2",
+  "name": "Karachay-Cherkessia",
+  "url": "data/admin2/109878.geojson"
+ },
+ "109879": {
+  "count": 12,
+  "iso": "RU-KB",
+  "kind": "subdivision_2",
+  "name": "Kabardino-Balkaria",
+  "url": "data/admin2/109879.geojson"
+ },
+ "110032": {
+  "count": 10,
+  "iso": "RU-SE",
+  "kind": "subdivision_2",
+  "name": "Republic of North Ossetia \u2013 Alania",
+  "url": "data/admin2/110032.geojson"
+ },
+ "1116270": {
+  "count": 24,
+  "iso": "US-AK",
+  "kind": "subdivision_2",
+  "name": "Alaska",
+  "url": "data/admin2/1116270.geojson"
+ },
+ "111847634": {
+  "count": 17,
+  "iso": "KZ-KUS",
+  "kind": "subdivision_2",
+  "name": "Kostanay",
+  "url": "data/admin2/111847634.geojson"
+ },
+ "11251493": {
+  "count": 2,
+  "iso": "IN-GA",
+  "kind": "subdivision_2",
+  "name": "Goa",
+  "url": "data/admin2/11251493.geojson"
+ },
+ "112819": {
+  "count": 13,
+  "iso": "RU-AST",
+  "kind": "subdivision_2",
+  "name": "Astrakhan Oblast",
+  "url": "data/admin2/112819.geojson"
+ },
+ "114690": {
+  "count": 251,
+  "iso": "US-TX",
+  "kind": "subdivision_2",
+  "name": "Texas",
+  "url": "data/admin2/114690.geojson"
+ },
+ "115100": {
+  "count": 45,
+  "iso": "RU-KIR",
+  "kind": "subdivision_2",
+  "name": "Kirov Oblast",
+  "url": "data/admin2/115100.geojson"
+ },
+ "115106": {
+  "count": 28,
+  "iso": "RU-VLG",
+  "kind": "subdivision_2",
+  "name": "Vologda Oblast",
+  "url": "data/admin2/115106.geojson"
+ },
+ "115114": {
+  "count": 17,
+  "iso": "RU-ME",
+  "kind": "subdivision_2",
+  "name": "Mari El Republic",
+  "url": "data/admin2/115114.geojson"
+ },
+ "115134": {
+  "count": 31,
+  "iso": "RU-UD",
+  "kind": "subdivision_2",
+  "name": "Udmurtia",
+  "url": "data/admin2/115134.geojson"
+ },
+ "115135": {
+  "count": 49,
+  "iso": "RU-PER",
+  "kind": "subdivision_2",
+  "name": "Perm Krai",
+  "url": "data/admin2/115135.geojson"
+ },
+ "115136": {
+  "count": 20,
+  "iso": "RU-KO",
+  "kind": "subdivision_2",
+  "name": "Komi Republic",
+  "url": "data/admin2/115136.geojson"
+ },
+ "122586": {
+  "count": 99,
+  "iso": "US-IL",
+  "kind": "subdivision_2",
+  "name": "Illinois",
+  "url": "data/admin2/122586.geojson"
+ },
+ "124482885": {
+  "count": 6,
+  "iso": "VN-63",
+  "kind": "subdivision_2",
+  "name": "H\u00e0 Nam",
+  "url": "data/admin2/124482885.geojson"
+ },
+ "1251450": {
+  "count": 6,
+  "iso": "TR-75",
+  "kind": "subdivision_2",
+  "name": "Ardahan",
+  "url": "data/admin2/1251450.geojson"
+ },
+ "1260551": {
+  "count": 2,
+  "iso": "FR-GF",
+  "kind": "subdivision_2",
+  "name": "French Guiana",
+  "url": "data/admin2/1260551.geojson"
+ },
+ "1278415": {
+  "count": 16,
+  "iso": "PT-08",
+  "kind": "subdivision_2",
+  "name": "Faro",
+  "url": "data/admin2/1278415.geojson"
+ },
+ "1283608": {
+  "count": 2,
+  "iso": "DZ-35",
+  "kind": "subdivision_2",
+  "name": "Boumerdes",
+  "url": "data/admin2/1283608.geojson"
+ },
+ "1303962": {
+  "count": 11,
+  "iso": "CO-AMA",
+  "kind": "subdivision_2",
+  "name": "Amazonas",
+  "url": "data/admin2/1303962.geojson"
+ },
+ "1305166": {
+  "count": 29,
+  "iso": "CO-MET",
+  "kind": "subdivision_2",
+  "name": "Meta",
+  "url": "data/admin2/1305166.geojson"
+ },
+ "1305533": {
+  "count": 117,
+  "iso": "CO-CUN",
+  "kind": "subdivision_2",
+  "name": "Cundinamarca",
+  "url": "data/admin2/1305533.geojson"
+ },
+ "130919": {
+  "count": 24,
+  "iso": "PL-LU",
+  "kind": "subdivision_2",
+  "name": "Lublin Voivodeship",
+  "url": "data/admin2/130919.geojson"
+ },
+ "130935": {
+  "count": 42,
+  "iso": "PL-MZ",
+  "kind": "subdivision_2",
+  "name": "Masovian Voivodeship",
+  "url": "data/admin2/130935.geojson"
+ },
+ "1309495": {
+  "count": 47,
+  "iso": "CO-TOL",
+  "kind": "subdivision_2",
+  "name": "Tolima",
+  "url": "data/admin2/1309495.geojson"
+ },
+ "130969": {
+  "count": 14,
+  "iso": "PL-LB",
+  "kind": "subdivision_2",
+  "name": "Lubusz Voivodeship",
+  "url": "data/admin2/130969.geojson"
+ },
+ "130971": {
+  "count": 35,
+  "iso": "PL-WP",
+  "kind": "subdivision_2",
+  "name": "Greater Poland Voivodeship",
+  "url": "data/admin2/130971.geojson"
+ },
+ "130975": {
+  "count": 20,
+  "iso": "PL-PM",
+  "kind": "subdivision_2",
+  "name": "Pomeranian Voivodeship",
+  "url": "data/admin2/130975.geojson"
+ },
+ "1315120": {
+  "count": 125,
+  "iso": "CO-ANT",
+  "kind": "subdivision_2",
+  "name": "Antioquia",
+  "url": "data/admin2/1315120.geojson"
+ },
+ "1315209": {
+  "count": 23,
+  "iso": "CO-ATL",
+  "kind": "subdivision_2",
+  "name": "Atl\u00e1ntico",
+  "url": "data/admin2/1315209.geojson"
+ },
+ "1316581": {
+  "count": 45,
+  "iso": "CO-BOL",
+  "kind": "subdivision_2",
+  "name": "Bol\u00edvar",
+  "url": "data/admin2/1316581.geojson"
+ },
+ "1317223": {
+  "count": 25,
+  "iso": "CO-CES",
+  "kind": "subdivision_2",
+  "name": "Cesar",
+  "url": "data/admin2/1317223.geojson"
+ },
+ "1319097": {
+  "count": 30,
+  "iso": "CO-MAG",
+  "kind": "subdivision_2",
+  "name": "Magdalena",
+  "url": "data/admin2/1319097.geojson"
+ },
+ "1320759": {
+  "count": 26,
+  "iso": "CO-SUC",
+  "kind": "subdivision_2",
+  "name": "Sucre",
+  "url": "data/admin2/1320759.geojson"
+ },
+ "1321032": {
+  "count": 30,
+  "iso": "CO-COR",
+  "kind": "subdivision_2",
+  "name": "C\u00f3rdoba",
+  "url": "data/admin2/1321032.geojson"
+ },
+ "1321379": {
+  "count": 15,
+  "iso": "CO-LAG",
+  "kind": "subdivision_2",
+  "name": "La Guajira",
+  "url": "data/admin2/1321379.geojson"
+ },
+ "1322131": {
+  "count": 29,
+  "iso": "CO-CHO",
+  "kind": "subdivision_2",
+  "name": "Choc\u00f3",
+  "url": "data/admin2/1322131.geojson"
+ },
+ "1322825": {
+  "count": 43,
+  "iso": "CO-VAC",
+  "kind": "subdivision_2",
+  "name": "Valle del Cauca",
+  "url": "data/admin2/1322825.geojson"
+ },
+ "1324192": {
+  "count": 40,
+  "iso": "CO-NSA",
+  "kind": "subdivision_2",
+  "name": "Norte de Santander",
+  "url": "data/admin2/1324192.geojson"
+ },
+ "1331230": {
+  "count": 12,
+  "iso": "CO-QUI",
+  "kind": "subdivision_2",
+  "name": "Quind\u00edo",
+  "url": "data/admin2/1331230.geojson"
+ },
+ "1357098": {
+  "count": 4,
+  "iso": "CO-VID",
+  "kind": "subdivision_2",
+  "name": "Vichada",
+  "url": "data/admin2/1357098.geojson"
+ },
+ "135840172": {
+  "count": 33,
+  "iso": "KE-200",
+  "kind": "subdivision_2",
+  "name": "Central",
+  "url": "data/admin2/135840172.geojson"
+ },
+ "1359366": {
+  "count": 6,
+  "iso": "CO-VAU",
+  "kind": "subdivision_2",
+  "name": "Vaup\u00e9s",
+  "url": "data/admin2/1359366.geojson"
+ },
+ "1372374": {
+  "count": 87,
+  "iso": "CO-SAN",
+  "kind": "subdivision_2",
+  "name": "Santander",
+  "url": "data/admin2/1372374.geojson"
+ },
+ "1374221": {
+  "count": 14,
+  "iso": "CO-RIS",
+  "kind": "subdivision_2",
+  "name": "Risaralda",
+  "url": "data/admin2/1374221.geojson"
+ },
+ "1375274": {
+  "count": 59,
+  "iso": "MX-TLA",
+  "kind": "subdivision_2",
+  "name": "Tlaxcala",
+  "url": "data/admin2/1375274.geojson"
+ },
+ "1375357": {
+  "count": 13,
+  "iso": "CO-PUT",
+  "kind": "subdivision_2",
+  "name": "Putumayo",
+  "url": "data/admin2/1375357.geojson"
+ },
+ "1375620": {
+  "count": 5,
+  "iso": "IL-Z",
+  "kind": "subdivision_2",
+  "name": "North District",
+  "url": "data/admin2/1375620.geojson"
+ },
+ "1376332": {
+  "count": 35,
+  "iso": "MX-MOR",
+  "kind": "subdivision_2",
+  "name": "Morelos",
+  "url": "data/admin2/1376332.geojson"
+ },
+ "1376489": {
+  "count": 125,
+  "iso": "MX-MEX",
+  "kind": "subdivision_2",
+  "name": "State of Mexico",
+  "url": "data/admin2/1376489.geojson"
+ },
+ "1376490": {
+  "count": 84,
+  "iso": "MX-HID",
+  "kind": "subdivision_2",
+  "name": "Hidalgo",
+  "url": "data/admin2/1376490.geojson"
+ },
+ "1376491": {
+  "count": 223,
+  "iso": "MX-PUE",
+  "kind": "subdivision_2",
+  "name": "Puebla",
+  "url": "data/admin2/1376491.geojson"
+ },
+ "1380130": {
+  "count": 63,
+  "iso": "CO-NAR",
+  "kind": "subdivision_2",
+  "name": "Nari\u00f1o",
+  "url": "data/admin2/1380130.geojson"
+ },
+ "1380540": {
+  "count": 4,
+  "iso": "CO-GUV",
+  "kind": "subdivision_2",
+  "name": "Guaviare",
+  "url": "data/admin2/1380540.geojson"
+ },
+ "1385038": {
+  "count": 8,
+  "iso": "CO-GUA",
+  "kind": "subdivision_2",
+  "name": "Guain\u00eda",
+  "url": "data/admin2/1385038.geojson"
+ },
+ "1388045": {
+  "count": 7,
+  "iso": "CO-ARA",
+  "kind": "subdivision_2",
+  "name": "Arauca",
+  "url": "data/admin2/1388045.geojson"
+ },
+ "1390144": {
+  "count": 123,
+  "iso": "CO-BOY",
+  "kind": "subdivision_2",
+  "name": "Boyac\u00e1",
+  "url": "data/admin2/1390144.geojson"
+ },
+ "1392025": {
+  "count": 19,
+  "iso": "CO-CAS",
+  "kind": "subdivision_2",
+  "name": "Casanare",
+  "url": "data/admin2/1392025.geojson"
+ },
+ "1392085": {
+  "count": 41,
+  "iso": "CO-CAU",
+  "kind": "subdivision_2",
+  "name": "Cauca",
+  "url": "data/admin2/1392085.geojson"
+ },
+ "1394843": {
+  "count": 17,
+  "iso": "CO-CAQ",
+  "kind": "subdivision_2",
+  "name": "Caquet\u00e1",
+  "url": "data/admin2/1394843.geojson"
+ },
+ "1396291": {
+  "count": 37,
+  "iso": "CO-HUI",
+  "kind": "subdivision_2",
+  "name": "Huila",
+  "url": "data/admin2/1396291.geojson"
+ },
+ "1400928": {
+  "count": 4,
+  "iso": "IL-M",
+  "kind": "subdivision_2",
+  "name": "Center District",
+  "url": "data/admin2/1400928.geojson"
+ },
+ "1400966": {
+  "count": 2,
+  "iso": "IL-HA",
+  "kind": "subdivision_2",
+  "name": "Haifa District",
+  "url": "data/admin2/1400966.geojson"
+ },
+ "140290": {
+  "count": 26,
+  "iso": "RU-KGN",
+  "kind": "subdivision_2",
+  "name": "Kurgan Oblast",
+  "url": "data/admin2/140290.geojson"
+ },
+ "140291": {
+  "count": 26,
+  "iso": "RU-TYU",
+  "kind": "subdivision_2",
+  "name": "Tyumen Oblast",
+  "url": "data/admin2/140291.geojson"
+ },
+ "140292": {
+  "count": 33,
+  "iso": "RU-OMS",
+  "kind": "subdivision_2",
+  "name": "Omsk Oblast",
+  "url": "data/admin2/140292.geojson"
+ },
+ "140294": {
+  "count": 35,
+  "iso": "RU-NVS",
+  "kind": "subdivision_2",
+  "name": "Novosibirsk Oblast",
+  "url": "data/admin2/140294.geojson"
+ },
+ "140295": {
+  "count": 20,
+  "iso": "RU-TOM",
+  "kind": "subdivision_2",
+  "name": "Tomsk Oblast",
+  "url": "data/admin2/140295.geojson"
+ },
+ "140296": {
+  "count": 22,
+  "iso": "RU-KHM",
+  "kind": "subdivision_2",
+  "name": "Khanty-Mansiysk Autonomous Okrug \u2013 Ugra",
+  "url": "data/admin2/140296.geojson"
+ },
+ "140337": {
+  "count": 23,
+  "iso": "RU-ARK",
+  "kind": "subdivision_2",
+  "name": "Arkhangelsk Oblast",
+  "url": "data/admin2/140337.geojson"
+ },
+ "140830160": {
+  "count": 9,
+  "iso": "VN-50",
+  "kind": "subdivision_2",
+  "name": "B\u1ebfn Tre",
+  "url": "data/admin2/140830160.geojson"
+ },
+ "14419962": {
+  "count": 11,
+  "iso": "IE-U",
+  "kind": "subdivision_2",
+  "name": "Ulster",
+  "url": "data/admin2/14419962.geojson"
+ },
+ "144763": {
+  "count": 34,
+  "iso": "RU-KEM",
+  "kind": "subdivision_2",
+  "name": "Kemerovo Oblast\u2013Kuzbass",
+  "url": "data/admin2/144763.geojson"
+ },
+ "144764": {
+  "count": 70,
+  "iso": "RU-ALT",
+  "kind": "subdivision_2",
+  "name": "Altai Krai",
+  "url": "data/admin2/144764.geojson"
+ },
+ "145194": {
+  "count": 10,
+  "iso": "RU-AL",
+  "kind": "subdivision_2",
+  "name": "Altai Republic",
+  "url": "data/admin2/145194.geojson"
+ },
+ "145195": {
+  "count": 19,
+  "iso": "RU-TY",
+  "kind": "subdivision_2",
+  "name": "Tuva Republic",
+  "url": "data/admin2/145195.geojson"
+ },
+ "145454": {
+  "count": 42,
+  "iso": "RU-IRK",
+  "kind": "subdivision_2",
+  "name": "Irkutsk Oblast",
+  "url": "data/admin2/145454.geojson"
+ },
+ "145553912": {
+  "count": 14,
+  "iso": "NO-10",
+  "kind": "subdivision_2",
+  "name": "Vest-Agder",
+  "url": "data/admin2/145553912.geojson"
+ },
+ "145729": {
+  "count": 23,
+  "iso": "RU-BU",
+  "kind": "subdivision_2",
+  "name": "Buryatia",
+  "url": "data/admin2/145729.geojson"
+ },
+ "145730": {
+  "count": 35,
+  "iso": "RU-ZAB",
+  "kind": "subdivision_2",
+  "name": "Zabaykalsky Krai",
+  "url": "data/admin2/145730.geojson"
+ },
+ "147166": {
+  "count": 29,
+  "iso": "RU-AMU",
+  "kind": "subdivision_2",
+  "name": "Amur Oblast",
+  "url": "data/admin2/147166.geojson"
+ },
+ "147167": {
+  "count": 5,
+  "iso": "RU-YEV",
+  "kind": "subdivision_2",
+  "name": "Jewish Autonomous Oblast",
+  "url": "data/admin2/147167.geojson"
+ },
+ "1473952": {
+  "count": 2,
+  "iso": "IL-D",
+  "kind": "subdivision_2",
+  "name": "South District",
+  "url": "data/admin2/1473952.geojson"
+ },
+ "1473990": {
+  "count": 3,
+  "iso": "FI-06",
+  "kind": "subdivision_2",
+  "name": "Kanta-H\u00e4me",
+  "url": "data/admin2/1473990.geojson"
+ },
+ "1507031": {
+  "count": 2,
+  "iso": "PH-SUN",
+  "kind": "subdivision_2",
+  "name": "Surigao del Norte",
+  "url": "data/admin2/1507031.geojson"
+ },
+ "1507313": {
+  "count": 2,
+  "iso": "PH-DAV",
+  "kind": "subdivision_2",
+  "name": "Davao del Norte",
+  "url": "data/admin2/1507313.geojson"
+ },
+ "151223": {
+  "count": 20,
+  "iso": "RU-KHA",
+  "kind": "subdivision_2",
+  "name": "Khabarovsk Krai",
+  "url": "data/admin2/151223.geojson"
+ },
+ "151225": {
+  "count": 31,
+  "iso": "RU-PRI",
+  "kind": "subdivision_2",
+  "name": "Primorsky Krai",
+  "url": "data/admin2/151225.geojson"
+ },
+ "151228": {
+  "count": 9,
+  "iso": "RU-MAG",
+  "kind": "subdivision_2",
+  "name": "Magadan Oblast",
+  "url": "data/admin2/151228.geojson"
+ },
+ "151231": {
+  "count": 5,
+  "iso": "RU-CHU",
+  "kind": "subdivision_2",
+  "name": "Chukotka Autonomous Okrug",
+  "url": "data/admin2/151231.geojson"
+ },
+ "151233": {
+  "count": 11,
+  "iso": "RU-KAM",
+  "kind": "subdivision_2",
+  "name": "Kamchatka Krai",
+  "url": "data/admin2/151233.geojson"
+ },
+ "151234": {
+  "count": 36,
+  "iso": "RU-SA",
+  "kind": "subdivision_2",
+  "name": "Sakha Republic",
+  "url": "data/admin2/151234.geojson"
+ },
+ "1513050": {
+  "count": 2,
+  "iso": "PH-DAS",
+  "kind": "subdivision_2",
+  "name": "Davao del Sur",
+  "url": "data/admin2/1513050.geojson"
+ },
+ "1513131": {
+  "count": 2,
+  "iso": "PH-SCO",
+  "kind": "subdivision_2",
+  "name": "South Cotabato",
+  "url": "data/admin2/1513131.geojson"
+ },
+ "1513151": {
+  "count": 2,
+  "iso": "PH-NCO",
+  "kind": "subdivision_2",
+  "name": "Cotabato",
+  "url": "data/admin2/1513151.geojson"
+ },
+ "1513227": {
+  "count": 2,
+  "iso": "PH-ZSI",
+  "kind": "subdivision_2",
+  "name": "Zamboanga Sibugay",
+  "url": "data/admin2/1513227.geojson"
+ },
+ "1513281": {
+  "count": 2,
+  "iso": "PH-BAS",
+  "kind": "subdivision_2",
+  "name": "Basilan",
+  "url": "data/admin2/1513281.geojson"
+ },
+ "153269": {
+  "count": 41,
+  "iso": "CN-QH",
+  "kind": "subdivision_2",
+  "name": "Qinghai",
+  "url": "data/admin2/153269.geojson"
+ },
+ "153292": {
+  "count": 76,
+  "iso": "CN-XZ",
+  "kind": "subdivision_2",
+  "name": "Xizang",
+  "url": "data/admin2/153292.geojson"
+ },
+ "153310": {
+  "count": 87,
+  "iso": "CN-XJ",
+  "kind": "subdivision_2",
+  "name": "Xinjiang",
+  "url": "data/admin2/153310.geojson"
+ },
+ "153314": {
+  "count": 83,
+  "iso": "CN-GS",
+  "kind": "subdivision_2",
+  "name": "Gansu",
+  "url": "data/admin2/153314.geojson"
+ },
+ "153536": {
+  "count": 17,
+  "iso": "AR-F",
+  "kind": "subdivision_2",
+  "name": "La Rioja",
+  "url": "data/admin2/153536.geojson"
+ },
+ "153538": {
+  "count": 10,
+  "iso": "AR-D",
+  "kind": "subdivision_2",
+  "name": "San Luis",
+  "url": "data/admin2/153538.geojson"
+ },
+ "153539": {
+  "count": 20,
+  "iso": "AR-J",
+  "kind": "subdivision_2",
+  "name": "San Juan",
+  "url": "data/admin2/153539.geojson"
+ },
+ "153540": {
+  "count": 17,
+  "iso": "AR-M",
+  "kind": "subdivision_2",
+  "name": "Mendoza",
+  "url": "data/admin2/153540.geojson"
+ },
+ "153541": {
+  "count": 22,
+  "iso": "AR-L",
+  "kind": "subdivision_2",
+  "name": "La Pampa",
+  "url": "data/admin2/153541.geojson"
+ },
+ "153543": {
+  "count": 18,
+  "iso": "AR-S",
+  "kind": "subdivision_2",
+  "name": "Santa Fe",
+  "url": "data/admin2/153543.geojson"
+ },
+ "153544": {
+  "count": 27,
+  "iso": "AR-G",
+  "kind": "subdivision_2",
+  "name": "Santiago del Estero",
+  "url": "data/admin2/153544.geojson"
+ },
+ "153545": {
+  "count": 16,
+  "iso": "AR-K",
+  "kind": "subdivision_2",
+  "name": "Catamarca",
+  "url": "data/admin2/153545.geojson"
+ },
+ "153547": {
+  "count": 12,
+  "iso": "AR-R",
+  "kind": "subdivision_2",
+  "name": "R\u00edo Negro",
+  "url": "data/admin2/153547.geojson"
+ },
+ "153548": {
+  "count": 12,
+  "iso": "AR-U",
+  "kind": "subdivision_2",
+  "name": "Chubut",
+  "url": "data/admin2/153548.geojson"
+ },
+ "153549": {
+  "count": 6,
+  "iso": "AR-Z",
+  "kind": "subdivision_2",
+  "name": "Santa Cruz",
+  "url": "data/admin2/153549.geojson"
+ },
+ "153551": {
+  "count": 17,
+  "iso": "AR-E",
+  "kind": "subdivision_2",
+  "name": "Entre R\u00edos Province",
+  "url": "data/admin2/153551.geojson"
+ },
+ "153552": {
+  "count": 24,
+  "iso": "AR-W",
+  "kind": "subdivision_2",
+  "name": "Corrientes",
+  "url": "data/admin2/153552.geojson"
+ },
+ "153553": {
+  "count": 16,
+  "iso": "AR-N",
+  "kind": "subdivision_2",
+  "name": "Misiones",
+  "url": "data/admin2/153553.geojson"
+ },
+ "153554": {
+  "count": 24,
+  "iso": "AR-H",
+  "kind": "subdivision_2",
+  "name": "Chaco",
+  "url": "data/admin2/153554.geojson"
+ },
+ "153556": {
+  "count": 16,
+  "iso": "AR-Y",
+  "kind": "subdivision_2",
+  "name": "Jujuy",
+  "url": "data/admin2/153556.geojson"
+ },
+ "153558": {
+  "count": 17,
+  "iso": "AR-T",
+  "kind": "subdivision_2",
+  "name": "Tucum\u00e1n",
+  "url": "data/admin2/153558.geojson"
+ },
+ "1543125": {
+  "count": 55,
+  "iso": "JP-13",
+  "kind": "subdivision_2",
+  "name": "Tokyo",
+  "url": "data/admin2/1543125.geojson"
+ },
+ "154449": {
+  "count": 7,
+  "iso": "TR-50",
+  "kind": "subdivision_2",
+  "name": "Nev\u015fehir",
+  "url": "data/admin2/154449.geojson"
+ },
+ "154450": {
+  "count": 14,
+  "iso": "TR-66",
+  "kind": "subdivision_2",
+  "name": "Yozgat",
+  "url": "data/admin2/154450.geojson"
+ },
+ "154451": {
+  "count": 17,
+  "iso": "TR-38",
+  "kind": "subdivision_2",
+  "name": "Kayseri",
+  "url": "data/admin2/154451.geojson"
+ },
+ "154452": {
+  "count": 7,
+  "iso": "TR-40",
+  "kind": "subdivision_2",
+  "name": "K\u0131r\u015fehir",
+  "url": "data/admin2/154452.geojson"
+ },
+ "154454": {
+  "count": 7,
+  "iso": "TR-68",
+  "kind": "subdivision_2",
+  "name": "Aksaray",
+  "url": "data/admin2/154454.geojson"
+ },
+ "154456": {
+  "count": 7,
+  "iso": "TR-51",
+  "kind": "subdivision_2",
+  "name": "Ni\u011fde",
+  "url": "data/admin2/154456.geojson"
+ },
+ "155262": {
+  "count": 26,
+  "iso": "RU-PSK",
+  "kind": "subdivision_2",
+  "name": "Pskov Oblast",
+  "url": "data/admin2/155262.geojson"
+ },
+ "1553735": {
+  "count": 60,
+  "iso": "JP-40",
+  "kind": "subdivision_2",
+  "name": "Fukuoka Prefecture",
+  "url": "data/admin2/1553735.geojson"
+ },
+ "1574364": {
+  "count": 10,
+  "iso": "",
+  "kind": "subdivision_2",
+  "name": "Sevastopol",
+  "url": "data/admin2/1574364.geojson"
+ },
+ "1592819": {
+  "count": 7,
+  "iso": "MA-01",
+  "kind": "subdivision_2",
+  "name": "Tangier-Tetouan-Al Hoceima",
+  "url": "data/admin2/1592819.geojson"
+ },
+ "1606727": {
+  "count": 16,
+  "iso": "AR-Q",
+  "kind": "subdivision_2",
+  "name": "Neuqu\u00e9n",
+  "url": "data/admin2/1606727.geojson"
+ },
+ "161349": {
+  "count": 88,
+  "iso": "CN-NM",
+  "kind": "subdivision_2",
+  "name": "Inner Mongolia",
+  "url": "data/admin2/161349.geojson"
+ },
+ "1615621": {
+  "count": 8,
+  "iso": "ID-BA",
+  "kind": "subdivision_2",
+  "name": "Bali",
+  "url": "data/admin2/1615621.geojson"
+ },
+ "1615622": {
+  "count": 9,
+  "iso": "ID-NB",
+  "kind": "subdivision_2",
+  "name": "West Nusa Tenggara",
+  "url": "data/admin2/1615622.geojson"
+ },
+ "161638": {
+  "count": 112,
+  "iso": "US-MO",
+  "kind": "subdivision_2",
+  "name": "Missouri",
+  "url": "data/admin2/161638.geojson"
+ },
+ "161644": {
+  "count": 105,
+  "iso": "US-KS",
+  "kind": "subdivision_2",
+  "name": "Kansas",
+  "url": "data/admin2/161644.geojson"
+ },
+ "161645": {
+  "count": 77,
+  "iso": "US-OK",
+  "kind": "subdivision_2",
+  "name": "Oklahoma",
+  "url": "data/admin2/161645.geojson"
+ },
+ "161646": {
+  "count": 74,
+  "iso": "US-AR",
+  "kind": "subdivision_2",
+  "name": "Arkansas",
+  "url": "data/admin2/161646.geojson"
+ },
+ "161648": {
+  "count": 93,
+  "iso": "US-NE",
+  "kind": "subdivision_2",
+  "name": "Nebraska",
+  "url": "data/admin2/161648.geojson"
+ },
+ "161650": {
+  "count": 101,
+  "iso": "US-IA",
+  "kind": "subdivision_2",
+  "name": "Iowa",
+  "url": "data/admin2/161650.geojson"
+ },
+ "161652": {
+  "count": 64,
+  "iso": "US-SD",
+  "kind": "subdivision_2",
+  "name": "South Dakota",
+  "url": "data/admin2/161652.geojson"
+ },
+ "161653": {
+  "count": 54,
+  "iso": "US-ND",
+  "kind": "subdivision_2",
+  "name": "North Dakota",
+  "url": "data/admin2/161653.geojson"
+ },
+ "161655": {
+  "count": 123,
+  "iso": "US-KY",
+  "kind": "subdivision_2",
+  "name": "Kentucky",
+  "url": "data/admin2/161655.geojson"
+ },
+ "161816": {
+  "count": 93,
+  "iso": "US-IN",
+  "kind": "subdivision_2",
+  "name": "Indiana",
+  "url": "data/admin2/161816.geojson"
+ },
+ "161838": {
+  "count": 97,
+  "iso": "US-TN",
+  "kind": "subdivision_2",
+  "name": "Tennessee",
+  "url": "data/admin2/161838.geojson"
+ },
+ "161943": {
+  "count": 80,
+  "iso": "US-MS",
+  "kind": "subdivision_2",
+  "name": "Mississippi",
+  "url": "data/admin2/161943.geojson"
+ },
+ "161950": {
+  "count": 67,
+  "iso": "US-AL",
+  "kind": "subdivision_2",
+  "name": "Alabama",
+  "url": "data/admin2/161950.geojson"
+ },
+ "161957": {
+  "count": 160,
+  "iso": "US-GA",
+  "kind": "subdivision_2",
+  "name": "Georgia",
+  "url": "data/admin2/161957.geojson"
+ },
+ "161961": {
+  "count": 64,
+  "iso": "US-CO",
+  "kind": "subdivision_2",
+  "name": "Colorado",
+  "url": "data/admin2/161961.geojson"
+ },
+ "161991": {
+  "count": 23,
+  "iso": "US-WY",
+  "kind": "subdivision_2",
+  "name": "Wyoming",
+  "url": "data/admin2/161991.geojson"
+ },
+ "161993": {
+  "count": 29,
+  "iso": "US-UT",
+  "kind": "subdivision_2",
+  "name": "Utah",
+  "url": "data/admin2/161993.geojson"
+ },
+ "162014": {
+  "count": 33,
+  "iso": "US-NM",
+  "kind": "subdivision_2",
+  "name": "New Mexico",
+  "url": "data/admin2/162014.geojson"
+ },
+ "162018": {
+  "count": 16,
+  "iso": "US-AZ",
+  "kind": "subdivision_2",
+  "name": "Arizona",
+  "url": "data/admin2/162018.geojson"
+ },
+ "162050": {
+  "count": 61,
+  "iso": "US-FL",
+  "kind": "subdivision_2",
+  "name": "Florida",
+  "url": "data/admin2/162050.geojson"
+ },
+ "162061": {
+  "count": 88,
+  "iso": "US-OH",
+  "kind": "subdivision_2",
+  "name": "Ohio",
+  "url": "data/admin2/162061.geojson"
+ },
+ "162068": {
+  "count": 54,
+  "iso": "US-WV",
+  "kind": "subdivision_2",
+  "name": "West Virginia",
+  "url": "data/admin2/162068.geojson"
+ },
+ "162109": {
+  "count": 67,
+  "iso": "US-PA",
+  "kind": "subdivision_2",
+  "name": "Pennsylvania",
+  "url": "data/admin2/162109.geojson"
+ },
+ "162110": {
+  "count": 2,
+  "iso": "US-DE",
+  "kind": "subdivision_2",
+  "name": "Delaware",
+  "url": "data/admin2/162110.geojson"
+ },
+ "162112": {
+  "count": 22,
+  "iso": "US-MD",
+  "kind": "subdivision_2",
+  "name": "Maryland",
+  "url": "data/admin2/162112.geojson"
+ },
+ "162115": {
+  "count": 57,
+  "iso": "US-MT",
+  "kind": "subdivision_2",
+  "name": "Montana",
+  "url": "data/admin2/162115.geojson"
+ },
+ "162116": {
+  "count": 43,
+  "iso": "US-ID",
+  "kind": "subdivision_2",
+  "name": "Idaho",
+  "url": "data/admin2/162116.geojson"
+ },
+ "1629145": {
+  "count": 11,
+  "iso": "PT-30",
+  "kind": "subdivision_2",
+  "name": "Madeira",
+  "url": "data/admin2/1629145.geojson"
+ },
+ "1629146": {
+  "count": 19,
+  "iso": "PT-20",
+  "kind": "subdivision_2",
+  "name": "Azores",
+  "url": "data/admin2/1629146.geojson"
+ },
+ "1632167": {
+  "count": 132,
+  "iso": "AR-B",
+  "kind": "subdivision_2",
+  "name": "Buenos Aires",
+  "url": "data/admin2/1632167.geojson"
+ },
+ "1638991": {
+  "count": 8,
+  "iso": "NZ-WGN",
+  "kind": "subdivision_2",
+  "name": "Wellington",
+  "url": "data/admin2/1638991.geojson"
+ },
+ "1638992": {
+  "count": 7,
+  "iso": "NZ-MWT",
+  "kind": "subdivision_2",
+  "name": "Manawat\u016b-Whanganui",
+  "url": "data/admin2/1638992.geojson"
+ },
+ "1640136": {
+  "count": 3,
+  "iso": "NZ-WTC",
+  "kind": "subdivision_2",
+  "name": "West Coast",
+  "url": "data/admin2/1640136.geojson"
+ },
+ "1640137": {
+  "count": 10,
+  "iso": "NZ-CAN",
+  "kind": "subdivision_2",
+  "name": "Canterbury",
+  "url": "data/admin2/1640137.geojson"
+ },
+ "1640138": {
+  "count": 4,
+  "iso": "NZ-OTA",
+  "kind": "subdivision_2",
+  "name": "Otago",
+  "url": "data/admin2/1640138.geojson"
+ },
+ "1640159": {
+  "count": 3,
+  "iso": "NZ-STL",
+  "kind": "subdivision_2",
+  "name": "Southland",
+  "url": "data/admin2/1640159.geojson"
+ },
+ "1643811": {
+  "count": 4,
+  "iso": "NZ-HKB",
+  "kind": "subdivision_2",
+  "name": "Hawke's Bay",
+  "url": "data/admin2/1643811.geojson"
+ },
+ "1643812": {
+  "count": 3,
+  "iso": "NZ-TKI",
+  "kind": "subdivision_2",
+  "name": "Taranaki",
+  "url": "data/admin2/1643812.geojson"
+ },
+ "165466": {
+  "count": 71,
+  "iso": "US-WI",
+  "kind": "subdivision_2",
+  "name": "Wisconsin",
+  "url": "data/admin2/165466.geojson"
+ },
+ "165471": {
+  "count": 87,
+  "iso": "US-MN",
+  "kind": "subdivision_2",
+  "name": "Minnesota",
+  "url": "data/admin2/165471.geojson"
+ },
+ "165473": {
+  "count": 16,
+  "iso": "US-NV",
+  "kind": "subdivision_2",
+  "name": "Nevada",
+  "url": "data/admin2/165473.geojson"
+ },
+ "165475": {
+  "count": 56,
+  "iso": "US-CA",
+  "kind": "subdivision_2",
+  "name": "California",
+  "url": "data/admin2/165475.geojson"
+ },
+ "165476": {
+  "count": 36,
+  "iso": "US-OR",
+  "kind": "subdivision_2",
+  "name": "Oregon",
+  "url": "data/admin2/165476.geojson"
+ },
+ "165479": {
+  "count": 34,
+  "iso": "US-WA",
+  "kind": "subdivision_2",
+  "name": "Washington",
+  "url": "data/admin2/165479.geojson"
+ },
+ "165789": {
+  "count": 83,
+  "iso": "US-MI",
+  "kind": "subdivision_2",
+  "name": "Michigan",
+  "url": "data/admin2/165789.geojson"
+ },
+ "165794": {
+  "count": 8,
+  "iso": "US-CT",
+  "kind": "subdivision_2",
+  "name": "Connecticut",
+  "url": "data/admin2/165794.geojson"
+ },
+ "1661523": {
+  "count": 51,
+  "iso": "MX-NLE",
+  "kind": "subdivision_2",
+  "name": "Nuevo Le\u00f3n",
+  "url": "data/admin2/1661523.geojson"
+ },
+ "1661524": {
+  "count": 38,
+  "iso": "MX-COA",
+  "kind": "subdivision_2",
+  "name": "Coahuila",
+  "url": "data/admin2/1661524.geojson"
+ },
+ "166563": {
+  "count": 5,
+  "iso": "US-HI",
+  "kind": "subdivision_2",
+  "name": "Hawaii",
+  "url": "data/admin2/166563.geojson"
+ },
+ "167216": {
+  "count": 14,
+  "iso": "TR-01",
+  "kind": "subdivision_2",
+  "name": "Adana",
+  "url": "data/admin2/167216.geojson"
+ },
+ "167232": {
+  "count": 7,
+  "iso": "TR-80",
+  "kind": "subdivision_2",
+  "name": "Osmaniye",
+  "url": "data/admin2/167232.geojson"
+ },
+ "1673425": {
+  "count": 67,
+  "iso": "MX-CHH",
+  "kind": "subdivision_2",
+  "name": "Chihuahua",
+  "url": "data/admin2/1673425.geojson"
+ },
+ "1673426": {
+  "count": 71,
+  "iso": "MX-SON",
+  "kind": "subdivision_2",
+  "name": "Sonora",
+  "url": "data/admin2/1673426.geojson"
+ },
+ "1685677": {
+  "count": 5,
+  "iso": "CH-LU",
+  "kind": "subdivision_2",
+  "name": "Lucerne",
+  "url": "data/admin2/1685677.geojson"
+ },
+ "1686344": {
+  "count": 26,
+  "iso": "CH-BE",
+  "kind": "subdivision_2",
+  "name": "Bern",
+  "url": "data/admin2/1686344.geojson"
+ },
+ "1686359": {
+  "count": 11,
+  "iso": "CH-AG",
+  "kind": "subdivision_2",
+  "name": "Aargau",
+  "url": "data/admin2/1686359.geojson"
+ },
+ "1686366": {
+  "count": 7,
+  "iso": "CH-BL",
+  "kind": "subdivision_2",
+  "name": "Basel-Landschaft",
+  "url": "data/admin2/1686366.geojson"
+ },
+ "1686631": {
+  "count": 11,
+  "iso": "CH-GR",
+  "kind": "subdivision_2",
+  "name": "Grisons",
+  "url": "data/admin2/1686631.geojson"
+ },
+ "1686649": {
+  "count": 2,
+  "iso": "CH-AR",
+  "kind": "subdivision_2",
+  "name": "Appenzell Ausserrhoden",
+  "url": "data/admin2/1686649.geojson"
+ },
+ "1686699": {
+  "count": 14,
+  "iso": "CH-VS",
+  "kind": "subdivision_2",
+  "name": "Valais/Wallis",
+  "url": "data/admin2/1686699.geojson"
+ },
+ "1687006": {
+  "count": 9,
+  "iso": "CH-SG",
+  "kind": "subdivision_2",
+  "name": "St. Gallen",
+  "url": "data/admin2/1687006.geojson"
+ },
+ "1687730": {
+  "count": 8,
+  "iso": "CH-TI",
+  "kind": "subdivision_2",
+  "name": "Ticino",
+  "url": "data/admin2/1687730.geojson"
+ },
+ "1688583": {
+  "count": 6,
+  "iso": "CH-SZ",
+  "kind": "subdivision_2",
+  "name": "Schwyz",
+  "url": "data/admin2/1688583.geojson"
+ },
+ "1690227": {
+  "count": 12,
+  "iso": "CH-ZH",
+  "kind": "subdivision_2",
+  "name": "Zurich",
+  "url": "data/admin2/1690227.geojson"
+ },
+ "1693811": {
+  "count": 7,
+  "iso": "CH-TG",
+  "kind": "subdivision_2",
+  "name": "Thurgau",
+  "url": "data/admin2/1693811.geojson"
+ },
+ "1696112": {
+  "count": 8,
+  "iso": "CH-SH",
+  "kind": "subdivision_2",
+  "name": "Schaffhausen",
+  "url": "data/admin2/1696112.geojson"
+ },
+ "1697347": {
+  "count": 3,
+  "iso": "CH-JU",
+  "kind": "subdivision_2",
+  "name": "Jura",
+  "url": "data/admin2/1697347.geojson"
+ },
+ "1698314": {
+  "count": 7,
+  "iso": "CH-FR",
+  "kind": "subdivision_2",
+  "name": "Fribourg",
+  "url": "data/admin2/1698314.geojson"
+ },
+ "169960058": {
+  "count": 42,
+  "iso": "KE-600",
+  "kind": "subdivision_2",
+  "name": "Nyanza",
+  "url": "data/admin2/169960058.geojson"
+ },
+ "1699639": {
+  "count": 3,
+  "iso": "CH-BS",
+  "kind": "subdivision_2",
+  "name": "Basel-City",
+  "url": "data/admin2/1699639.geojson"
+ },
+ "1701133": {
+  "count": 8,
+  "iso": "CH-SO",
+  "kind": "subdivision_2",
+  "name": "Solothurn",
+  "url": "data/admin2/1701133.geojson"
+ },
+ "1701740": {
+  "count": 6,
+  "iso": "FI-08",
+  "kind": "subdivision_2",
+  "name": "Central Finland",
+  "url": "data/admin2/1701740.geojson"
+ },
+ "1701741": {
+  "count": 5,
+  "iso": "FI-11",
+  "kind": "subdivision_2",
+  "name": "Pirkanmaa",
+  "url": "data/admin2/1701741.geojson"
+ },
+ "1702263": {
+  "count": 4,
+  "iso": "FI-03",
+  "kind": "subdivision_2",
+  "name": "South Ostrobothnia",
+  "url": "data/admin2/1702263.geojson"
+ },
+ "1702330": {
+  "count": 2,
+  "iso": "FI-07",
+  "kind": "subdivision_2",
+  "name": "Central Ostrobothnia",
+  "url": "data/admin2/1702330.geojson"
+ },
+ "1702420": {
+  "count": 6,
+  "iso": "CH-NE",
+  "kind": "subdivision_2",
+  "name": "Neuch\u00e2tel",
+  "url": "data/admin2/1702420.geojson"
+ },
+ "1702421": {
+  "count": 10,
+  "iso": "CH-VD",
+  "kind": "subdivision_2",
+  "name": "Vaud",
+  "url": "data/admin2/1702421.geojson"
+ },
+ "1707148": {
+  "count": 5,
+  "iso": "ET-TI",
+  "kind": "subdivision_2",
+  "name": "Tigray",
+  "url": "data/admin2/1707148.geojson"
+ },
+ "1707249": {
+  "count": 5,
+  "iso": "ET-AF",
+  "kind": "subdivision_2",
+  "name": "Afar Region",
+  "url": "data/admin2/1707249.geojson"
+ },
+ "1707264": {
+  "count": 11,
+  "iso": "ET-AM",
+  "kind": "subdivision_2",
+  "name": "Amhara Region",
+  "url": "data/admin2/1707264.geojson"
+ },
+ "1707653": {
+  "count": 3,
+  "iso": "ET-BE",
+  "kind": "subdivision_2",
+  "name": "Benishangul-Gumuz Region",
+  "url": "data/admin2/1707653.geojson"
+ },
+ "1707655": {
+  "count": 3,
+  "iso": "ET-GA",
+  "kind": "subdivision_2",
+  "name": "Gambela Region",
+  "url": "data/admin2/1707655.geojson"
+ },
+ "1707656": {
+  "count": 17,
+  "iso": "ET-OR",
+  "kind": "subdivision_2",
+  "name": "Oromia Region",
+  "url": "data/admin2/1707656.geojson"
+ },
+ "1707658": {
+  "count": 9,
+  "iso": "ET-SO",
+  "kind": "subdivision_2",
+  "name": "Somali Region",
+  "url": "data/admin2/1707658.geojson"
+ },
+ "171322084": {
+  "count": 7,
+  "iso": "CZ-US",
+  "kind": "subdivision_2",
+  "name": "\u00dast\u00ed nad Labem",
+  "url": "data/admin2/171322084.geojson"
+ },
+ "1719443": {
+  "count": 3,
+  "iso": "MA-02",
+  "kind": "subdivision_2",
+  "name": "Oriental",
+  "url": "data/admin2/1719443.geojson"
+ },
+ "1724359": {
+  "count": 5,
+  "iso": "FI-10",
+  "kind": "subdivision_2",
+  "name": "Lapland",
+  "url": "data/admin2/1724359.geojson"
+ },
+ "1724360": {
+  "count": 6,
+  "iso": "FI-14",
+  "kind": "subdivision_2",
+  "name": "North Ostrobothnia",
+  "url": "data/admin2/1724360.geojson"
+ },
+ "173473725": {
+  "count": 14,
+  "iso": "NO-09",
+  "kind": "subdivision_2",
+  "name": "Aust-Agder",
+  "url": "data/admin2/173473725.geojson"
+ },
+ "174742": {
+  "count": 5,
+  "iso": "TR-30",
+  "kind": "subdivision_2",
+  "name": "Hakk\u00e2ri",
+  "url": "data/admin2/174742.geojson"
+ },
+ "174881661": {
+  "count": 7,
+  "iso": "VN-55",
+  "kind": "subdivision_2",
+  "name": "B\u1ea1c Li\u00eau",
+  "url": "data/admin2/174881661.geojson"
+ },
+ "176095": {
+  "count": 17,
+  "iso": "RU-LEN",
+  "kind": "subdivision_2",
+  "name": "Leningrad Oblast",
+  "url": "data/admin2/176095.geojson"
+ },
+ "1768185": {
+  "count": 45,
+  "iso": "JP-11",
+  "kind": "subdivision_2",
+  "name": "Saitama Prefecture",
+  "url": "data/admin2/1768185.geojson"
+ },
+ "1783980": {
+  "count": 5,
+  "iso": "IT-78",
+  "kind": "subdivision_2",
+  "name": "Calabria",
+  "url": "data/admin2/1783980.geojson"
+ },
+ "1790755": {
+  "count": 5,
+  "iso": "NZ-BOP",
+  "kind": "subdivision_2",
+  "name": "Bay of Plenty",
+  "url": "data/admin2/1790755.geojson"
+ },
+ "1791324": {
+  "count": 5,
+  "iso": "IN-SK",
+  "kind": "subdivision_2",
+  "name": "Sikkim",
+  "url": "data/admin2/1791324.geojson"
+ },
+ "179296": {
+  "count": 3,
+  "iso": "IT-36",
+  "kind": "subdivision_2",
+  "name": "Friuli \u2013 Venezia Giulia",
+  "url": "data/admin2/179296.geojson"
+ },
+ "1800608": {
+  "count": 59,
+  "iso": "JP-07",
+  "kind": "subdivision_2",
+  "name": "Fukushima Prefecture",
+  "url": "data/admin2/1800608.geojson"
+ },
+ "1800742": {
+  "count": 25,
+  "iso": "JP-09",
+  "kind": "subdivision_2",
+  "name": "Tochigi Prefecture",
+  "url": "data/admin2/1800742.geojson"
+ },
+ "1834655": {
+  "count": 39,
+  "iso": "JP-02",
+  "kind": "subdivision_2",
+  "name": "Aomori Prefecture",
+  "url": "data/admin2/1834655.geojson"
+ },
+ "1842150": {
+  "count": 19,
+  "iso": "JP-41",
+  "kind": "subdivision_2",
+  "name": "Saga Prefecture",
+  "url": "data/admin2/1842150.geojson"
+ },
+ "1842151": {
+  "count": 17,
+  "iso": "JP-42",
+  "kind": "subdivision_2",
+  "name": "Nagasaki Prefecture",
+  "url": "data/admin2/1842151.geojson"
+ },
+ "1842184": {
+  "count": 26,
+  "iso": "JP-45",
+  "kind": "subdivision_2",
+  "name": "Miyazaki Prefecture",
+  "url": "data/admin2/1842184.geojson"
+ },
+ "1842185": {
+  "count": 44,
+  "iso": "JP-43",
+  "kind": "subdivision_2",
+  "name": "Kumamoto Prefecture",
+  "url": "data/admin2/1842185.geojson"
+ },
+ "1842186": {
+  "count": 26,
+  "iso": "JP-46",
+  "kind": "subdivision_2",
+  "name": "Kagoshima Prefecture",
+  "url": "data/admin2/1842186.geojson"
+ },
+ "1844412": {
+  "count": 13,
+  "iso": "VN-04",
+  "kind": "subdivision_2",
+  "name": "Cao B\u1eb1ng Province",
+  "url": "data/admin2/1844412.geojson"
+ },
+ "1851649": {
+  "count": 34,
+  "iso": "JP-10",
+  "kind": "subdivision_2",
+  "name": "Gunma Prefecture",
+  "url": "data/admin2/1851649.geojson"
+ },
+ "18522414": {
+  "count": 18,
+  "iso": "MX-NAY",
+  "kind": "subdivision_2",
+  "name": "Nayarit",
+  "url": "data/admin2/18522414.geojson"
+ },
+ "185579": {
+  "count": 141,
+  "iso": "BR-PA",
+  "kind": "subdivision_2",
+  "name": "Par\u00e1",
+  "url": "data/admin2/185579.geojson"
+ },
+ "186431": {
+  "count": 8,
+  "iso": "TR-36",
+  "kind": "subdivision_2",
+  "name": "Kars",
+  "url": "data/admin2/186431.geojson"
+ },
+ "186432": {
+  "count": 20,
+  "iso": "TR-25",
+  "kind": "subdivision_2",
+  "name": "Erzurum",
+  "url": "data/admin2/186432.geojson"
+ },
+ "186433": {
+  "count": 8,
+  "iso": "TR-04",
+  "kind": "subdivision_2",
+  "name": "A\u011fr\u0131",
+  "url": "data/admin2/186433.geojson"
+ },
+ "186434": {
+  "count": 4,
+  "iso": "TR-76",
+  "kind": "subdivision_2",
+  "name": "I\u011fd\u0131r",
+  "url": "data/admin2/186434.geojson"
+ },
+ "1873490": {
+  "count": 9,
+  "iso": "VN-59",
+  "kind": "subdivision_2",
+  "name": "C\u00e0 Mau Province",
+  "url": "data/admin2/1873490.geojson"
+ },
+ "1874283": {
+  "count": 8,
+  "iso": "VN-CT",
+  "kind": "subdivision_2",
+  "name": "C\u1ea7n Th\u01a1",
+  "url": "data/admin2/1874283.geojson"
+ },
+ "1874307": {
+  "count": 4,
+  "iso": "PE-TAC",
+  "kind": "subdivision_2",
+  "name": "Tacna",
+  "url": "data/admin2/1874307.geojson"
+ },
+ "1875748": {
+  "count": 11,
+  "iso": "VN-44",
+  "kind": "subdivision_2",
+  "name": "An Giang Province",
+  "url": "data/admin2/1875748.geojson"
+ },
+ "1875866": {
+  "count": 8,
+  "iso": "VN-45",
+  "kind": "subdivision_2",
+  "name": "\u0110\u1ed3ng Th\u00e1p Province",
+  "url": "data/admin2/1875866.geojson"
+ },
+ "1875887": {
+  "count": 8,
+  "iso": "VN-49",
+  "kind": "subdivision_2",
+  "name": "V\u0129nh Long Province",
+  "url": "data/admin2/1875887.geojson"
+ },
+ "1875889": {
+  "count": 3,
+  "iso": "PE-MOQ",
+  "kind": "subdivision_2",
+  "name": "Moquegua",
+  "url": "data/admin2/1875889.geojson"
+ },
+ "1879287": {
+  "count": 8,
+  "iso": "PE-ARE",
+  "kind": "subdivision_2",
+  "name": "Arequipa",
+  "url": "data/admin2/1879287.geojson"
+ },
+ "1884018": {
+  "count": 17,
+  "iso": "VN-30",
+  "kind": "subdivision_2",
+  "name": "Gia Lai Province",
+  "url": "data/admin2/1884018.geojson"
+ },
+ "1884034": {
+  "count": 15,
+  "iso": "VN-33",
+  "kind": "subdivision_2",
+  "name": "\u0110\u1eafk L\u1eafk Province",
+  "url": "data/admin2/1884034.geojson"
+ },
+ "1885367": {
+  "count": 12,
+  "iso": "VN-35",
+  "kind": "subdivision_2",
+  "name": "L\u00e2m \u0110\u1ed3ng Province",
+  "url": "data/admin2/1885367.geojson"
+ },
+ "1887959": {
+  "count": 5,
+  "iso": "VN-34",
+  "kind": "subdivision_2",
+  "name": "Kh\u00e1nh H\u00f2a Province",
+  "url": "data/admin2/1887959.geojson"
+ },
+ "1890793": {
+  "count": 12,
+  "iso": "VN-29",
+  "kind": "subdivision_2",
+  "name": "Qu\u1ea3ng Ng\u00e3i Province",
+  "url": "data/admin2/1890793.geojson"
+ },
+ "1891287": {
+  "count": 3,
+  "iso": "PE-MDD",
+  "kind": "subdivision_2",
+  "name": "Madre de Dios",
+  "url": "data/admin2/1891287.geojson"
+ },
+ "1891418": {
+  "count": 6,
+  "iso": "VN-DN",
+  "kind": "subdivision_2",
+  "name": "\u0110\u00e0 N\u1eb5ng",
+  "url": "data/admin2/1891418.geojson"
+ },
+ "1891483": {
+  "count": 9,
+  "iso": "VN-26",
+  "kind": "subdivision_2",
+  "name": "Hu\u1ebf",
+  "url": "data/admin2/1891483.geojson"
+ },
+ "1895630": {
+  "count": 9,
+  "iso": "VN-25",
+  "kind": "subdivision_2",
+  "name": "Qu\u1ea3ng Tr\u1ecb Province",
+  "url": "data/admin2/1895630.geojson"
+ },
+ "1896111": {
+  "count": 13,
+  "iso": "PE-CAJ",
+  "kind": "subdivision_2",
+  "name": "Cajamarca",
+  "url": "data/admin2/1896111.geojson"
+ },
+ "1898458": {
+  "count": 12,
+  "iso": "VN-23",
+  "kind": "subdivision_2",
+  "name": "H\u00e0 T\u0129nh Province",
+  "url": "data/admin2/1898458.geojson"
+ },
+ "1898509": {
+  "count": 21,
+  "iso": "VN-22",
+  "kind": "subdivision_2",
+  "name": "Ngh\u1ec7 An Province",
+  "url": "data/admin2/1898509.geojson"
+ },
+ "1898590": {
+  "count": 27,
+  "iso": "VN-21",
+  "kind": "subdivision_2",
+  "name": "Thanh H\u00f3a Province",
+  "url": "data/admin2/1898590.geojson"
+ },
+ "1898961": {
+  "count": 9,
+  "iso": "VN-37",
+  "kind": "subdivision_2",
+  "name": "T\u00e2y Ninh Province",
+  "url": "data/admin2/1898961.geojson"
+ },
+ "1899013": {
+  "count": 5,
+  "iso": "PE-ICA",
+  "kind": "subdivision_2",
+  "name": "Ica",
+  "url": "data/admin2/1899013.geojson"
+ },
+ "190090": {
+  "count": 64,
+  "iso": "RU-KYA",
+  "kind": "subdivision_2",
+  "name": "Krasnoyarsk Krai",
+  "url": "data/admin2/190090.geojson"
+ },
+ "1900963": {
+  "count": 9,
+  "iso": "VN-18",
+  "kind": "subdivision_2",
+  "name": "Ninh B\u00ecnh Province",
+  "url": "data/admin2/1900963.geojson"
+ },
+ "1901032": {
+  "count": 10,
+  "iso": "VN-66",
+  "kind": "subdivision_2",
+  "name": "H\u01b0ng Y\u00ean Province",
+  "url": "data/admin2/1901032.geojson"
+ },
+ "1902682": {
+  "count": 12,
+  "iso": "VN-HP",
+  "kind": "subdivision_2",
+  "name": "H\u1ea3i Ph\u00f2ng",
+  "url": "data/admin2/1902682.geojson"
+ },
+ "1902690": {
+  "count": 8,
+  "iso": "VN-56",
+  "kind": "subdivision_2",
+  "name": "B\u1eafc Ninh City",
+  "url": "data/admin2/1902690.geojson"
+ },
+ "1902930": {
+  "count": 13,
+  "iso": "VN-68",
+  "kind": "subdivision_2",
+  "name": "Ph\u00fa Th\u1ecd Province",
+  "url": "data/admin2/1902930.geojson"
+ },
+ "1902947": {
+  "count": 9,
+  "iso": "VN-13",
+  "kind": "subdivision_2",
+  "name": "Quang Ninh City",
+  "url": "data/admin2/1902947.geojson"
+ },
+ "1902967": {
+  "count": 9,
+  "iso": "VN-69",
+  "kind": "subdivision_2",
+  "name": "Th\u00e1i Nguy\u00ean Province",
+  "url": "data/admin2/1902967.geojson"
+ },
+ "1903291": {
+  "count": 12,
+  "iso": "VN-05",
+  "kind": "subdivision_2",
+  "name": "S\u01a1n La Province",
+  "url": "data/admin2/1903291.geojson"
+ },
+ "1903322": {
+  "count": 6,
+  "iso": "VN-01",
+  "kind": "subdivision_2",
+  "name": "Lai Ch\u00e2u Province",
+  "url": "data/admin2/1903322.geojson"
+ },
+ "1903340": {
+  "count": 10,
+  "iso": "VN-71",
+  "kind": "subdivision_2",
+  "name": "\u0110i\u1ec7n Bi\u00ean Province",
+  "url": "data/admin2/1903340.geojson"
+ },
+ "1903400": {
+  "count": 11,
+  "iso": "VN-02",
+  "kind": "subdivision_2",
+  "name": "L\u00e0o Cai Province",
+  "url": "data/admin2/1903400.geojson"
+ },
+ "1903418": {
+  "count": 7,
+  "iso": "VN-07",
+  "kind": "subdivision_2",
+  "name": "Tuy\u00ean Quang Province",
+  "url": "data/admin2/1903418.geojson"
+ },
+ "1903516": {
+  "count": 30,
+  "iso": "VN-HN",
+  "kind": "subdivision_2",
+  "name": "H\u00e0 N\u1ed9i",
+  "url": "data/admin2/1903516.geojson"
+ },
+ "1904421": {
+  "count": 11,
+  "iso": "VN-39",
+  "kind": "subdivision_2",
+  "name": "\u0110\u1ed3ng Nai",
+  "url": "data/admin2/1904421.geojson"
+ },
+ "1907899": {
+  "count": 13,
+  "iso": "PE-PUN",
+  "kind": "subdivision_2",
+  "name": "Puno",
+  "url": "data/admin2/1907899.geojson"
+ },
+ "1908765": {
+  "count": 7,
+  "iso": "TH-15",
+  "kind": "subdivision_2",
+  "name": "Ang Thong Province",
+  "url": "data/admin2/1908765.geojson"
+ },
+ "1908766": {
+  "count": 23,
+  "iso": "TH-31",
+  "kind": "subdivision_2",
+  "name": "Buri Ram Province",
+  "url": "data/admin2/1908766.geojson"
+ },
+ "1908767": {
+  "count": 11,
+  "iso": "TH-24",
+  "kind": "subdivision_2",
+  "name": "Chachoengsao Province",
+  "url": "data/admin2/1908767.geojson"
+ },
+ "1908768": {
+  "count": 8,
+  "iso": "TH-18",
+  "kind": "subdivision_2",
+  "name": "Chai Nat Province",
+  "url": "data/admin2/1908768.geojson"
+ },
+ "1908769": {
+  "count": 17,
+  "iso": "TH-36",
+  "kind": "subdivision_2",
+  "name": "Chaiyaphum Province",
+  "url": "data/admin2/1908769.geojson"
+ },
+ "1908770": {
+  "count": 10,
+  "iso": "TH-22",
+  "kind": "subdivision_2",
+  "name": "Chanthaburi Province",
+  "url": "data/admin2/1908770.geojson"
+ },
+ "1908771": {
+  "count": 26,
+  "iso": "TH-50",
+  "kind": "subdivision_2",
+  "name": "Chiang Mai Province",
+  "url": "data/admin2/1908771.geojson"
+ },
+ "1908772": {
+  "count": 17,
+  "iso": "TH-57",
+  "kind": "subdivision_2",
+  "name": "Chiang Rai Province",
+  "url": "data/admin2/1908772.geojson"
+ },
+ "1908773": {
+  "count": 10,
+  "iso": "TH-20",
+  "kind": "subdivision_2",
+  "name": "Chon Buri Province",
+  "url": "data/admin2/1908773.geojson"
+ },
+ "1908774": {
+  "count": 8,
+  "iso": "TH-86",
+  "kind": "subdivision_2",
+  "name": "Chumphon Province",
+  "url": "data/admin2/1908774.geojson"
+ },
+ "1908775": {
+  "count": 18,
+  "iso": "TH-46",
+  "kind": "subdivision_2",
+  "name": "Kalasin Province",
+  "url": "data/admin2/1908775.geojson"
+ },
+ "1908776": {
+  "count": 9,
+  "iso": "TH-62",
+  "kind": "subdivision_2",
+  "name": "Kamphaeng Phet Province",
+  "url": "data/admin2/1908776.geojson"
+ },
+ "1908777": {
+  "count": 13,
+  "iso": "TH-71",
+  "kind": "subdivision_2",
+  "name": "Kanchanaburi Province",
+  "url": "data/admin2/1908777.geojson"
+ },
+ "1908778": {
+  "count": 26,
+  "iso": "TH-40",
+  "kind": "subdivision_2",
+  "name": "Khon Kaen Province",
+  "url": "data/admin2/1908778.geojson"
+ },
+ "1908779": {
+  "count": 7,
+  "iso": "TH-81",
+  "kind": "subdivision_2",
+  "name": "Krabi Province",
+  "url": "data/admin2/1908779.geojson"
+ },
+ "1908781": {
+  "count": 13,
+  "iso": "TH-52",
+  "kind": "subdivision_2",
+  "name": "Lampang Province",
+  "url": "data/admin2/1908781.geojson"
+ },
+ "1908782": {
+  "count": 7,
+  "iso": "TH-51",
+  "kind": "subdivision_2",
+  "name": "Lamphun Province",
+  "url": "data/admin2/1908782.geojson"
+ },
+ "1908783": {
+  "count": 13,
+  "iso": "TH-42",
+  "kind": "subdivision_2",
+  "name": "Loei Province",
+  "url": "data/admin2/1908783.geojson"
+ },
+ "1908784": {
+  "count": 11,
+  "iso": "TH-16",
+  "kind": "subdivision_2",
+  "name": "Lop Buri Province",
+  "url": "data/admin2/1908784.geojson"
+ },
+ "1908785": {
+  "count": 7,
+  "iso": "TH-58",
+  "kind": "subdivision_2",
+  "name": "Mae Hong Son Province",
+  "url": "data/admin2/1908785.geojson"
+ },
+ "1908786": {
+  "count": 13,
+  "iso": "TH-44",
+  "kind": "subdivision_2",
+  "name": "Maha Sarakham Province",
+  "url": "data/admin2/1908786.geojson"
+ },
+ "1908787": {
+  "count": 4,
+  "iso": "TH-26",
+  "kind": "subdivision_2",
+  "name": "Nakhon Nayok Province",
+  "url": "data/admin2/1908787.geojson"
+ },
+ "1908788": {
+  "count": 7,
+  "iso": "TH-73",
+  "kind": "subdivision_2",
+  "name": "Nakhon Pathom Province",
+  "url": "data/admin2/1908788.geojson"
+ },
+ "1908789": {
+  "count": 12,
+  "iso": "TH-48",
+  "kind": "subdivision_2",
+  "name": "Nakhon Phanom Province",
+  "url": "data/admin2/1908789.geojson"
+ },
+ "1908790": {
+  "count": 31,
+  "iso": "TH-30",
+  "kind": "subdivision_2",
+  "name": "Nakhon Ratchasima Province",
+  "url": "data/admin2/1908790.geojson"
+ },
+ "1908791": {
+  "count": 16,
+  "iso": "TH-60",
+  "kind": "subdivision_2",
+  "name": "Nakhon Sawan Province",
+  "url": "data/admin2/1908791.geojson"
+ },
+ "1908792": {
+  "count": 24,
+  "iso": "TH-80",
+  "kind": "subdivision_2",
+  "name": "Nakhon Si Thammarat Province",
+  "url": "data/admin2/1908792.geojson"
+ },
+ "1908793": {
+  "count": 15,
+  "iso": "TH-55",
+  "kind": "subdivision_2",
+  "name": "Nan Province",
+  "url": "data/admin2/1908793.geojson"
+ },
+ "1908794": {
+  "count": 13,
+  "iso": "TH-96",
+  "kind": "subdivision_2",
+  "name": "Narathiwat Province",
+  "url": "data/admin2/1908794.geojson"
+ },
+ "1908795": {
+  "count": 9,
+  "iso": "TH-43",
+  "kind": "subdivision_2",
+  "name": "Nong Khai Province",
+  "url": "data/admin2/1908795.geojson"
+ },
+ "1908796": {
+  "count": 6,
+  "iso": "TH-12",
+  "kind": "subdivision_2",
+  "name": "Nonthaburi Province",
+  "url": "data/admin2/1908796.geojson"
+ },
+ "1908797": {
+  "count": 6,
+  "iso": "TH-13",
+  "kind": "subdivision_2",
+  "name": "Pathum Thani Province",
+  "url": "data/admin2/1908797.geojson"
+ },
+ "1908798": {
+  "count": 12,
+  "iso": "TH-94",
+  "kind": "subdivision_2",
+  "name": "Pattani Province",
+  "url": "data/admin2/1908798.geojson"
+ },
+ "1908799": {
+  "count": 6,
+  "iso": "TH-82",
+  "kind": "subdivision_2",
+  "name": "Phang-nga Province",
+  "url": "data/admin2/1908799.geojson"
+ },
+ "1908800": {
+  "count": 11,
+  "iso": "TH-93",
+  "kind": "subdivision_2",
+  "name": "Phatthalung Province",
+  "url": "data/admin2/1908800.geojson"
+ },
+ "1908801": {
+  "count": 9,
+  "iso": "TH-56",
+  "kind": "subdivision_2",
+  "name": "Phayao Province",
+  "url": "data/admin2/1908801.geojson"
+ },
+ "1908802": {
+  "count": 12,
+  "iso": "TH-67",
+  "kind": "subdivision_2",
+  "name": "Phetchabun Province",
+  "url": "data/admin2/1908802.geojson"
+ },
+ "1908803": {
+  "count": 8,
+  "iso": "TH-76",
+  "kind": "subdivision_2",
+  "name": "Phetchaburi Province",
+  "url": "data/admin2/1908803.geojson"
+ },
+ "1908804": {
+  "count": 11,
+  "iso": "TH-66",
+  "kind": "subdivision_2",
+  "name": "Phichit Province",
+  "url": "data/admin2/1908804.geojson"
+ },
+ "1908805": {
+  "count": 10,
+  "iso": "TH-65",
+  "kind": "subdivision_2",
+  "name": "Phitsanulok Province",
+  "url": "data/admin2/1908805.geojson"
+ },
+ "1908806": {
+  "count": 16,
+  "iso": "TH-14",
+  "kind": "subdivision_2",
+  "name": "Phra Nakhon Si Ayutthaya Province",
+  "url": "data/admin2/1908806.geojson"
+ },
+ "1908807": {
+  "count": 8,
+  "iso": "TH-54",
+  "kind": "subdivision_2",
+  "name": "Phrae Province",
+  "url": "data/admin2/1908807.geojson"
+ },
+ "1908808": {
+  "count": 7,
+  "iso": "TH-25",
+  "kind": "subdivision_2",
+  "name": "Prachin Buri Province",
+  "url": "data/admin2/1908808.geojson"
+ },
+ "1908809": {
+  "count": 8,
+  "iso": "TH-77",
+  "kind": "subdivision_2",
+  "name": "Prachuap Khiri Khan Province",
+  "url": "data/admin2/1908809.geojson"
+ },
+ "1908810": {
+  "count": 5,
+  "iso": "TH-85",
+  "kind": "subdivision_2",
+  "name": "Ranong Province",
+  "url": "data/admin2/1908810.geojson"
+ },
+ "1908811": {
+  "count": 10,
+  "iso": "TH-70",
+  "kind": "subdivision_2",
+  "name": "Ratchaburi Province",
+  "url": "data/admin2/1908811.geojson"
+ },
+ "1908812": {
+  "count": 8,
+  "iso": "TH-21",
+  "kind": "subdivision_2",
+  "name": "Rayong Province",
+  "url": "data/admin2/1908812.geojson"
+ },
+ "1908813": {
+  "count": 20,
+  "iso": "TH-45",
+  "kind": "subdivision_2",
+  "name": "Roi Et Province",
+  "url": "data/admin2/1908813.geojson"
+ },
+ "1908814": {
+  "count": 18,
+  "iso": "TH-47",
+  "kind": "subdivision_2",
+  "name": "Sakon Nakhon Province",
+  "url": "data/admin2/1908814.geojson"
+ },
+ "1908815": {
+  "count": 6,
+  "iso": "TH-11",
+  "kind": "subdivision_2",
+  "name": "Samut Prakan Province",
+  "url": "data/admin2/1908815.geojson"
+ },
+ "1908816": {
+  "count": 3,
+  "iso": "TH-74",
+  "kind": "subdivision_2",
+  "name": "Samut Sakhon Province",
+  "url": "data/admin2/1908816.geojson"
+ },
+ "1908817": {
+  "count": 3,
+  "iso": "TH-75",
+  "kind": "subdivision_2",
+  "name": "Samut Songkhram Province",
+  "url": "data/admin2/1908817.geojson"
+ },
+ "1908818": {
+  "count": 13,
+  "iso": "TH-19",
+  "kind": "subdivision_2",
+  "name": "Saraburi Province",
+  "url": "data/admin2/1908818.geojson"
+ },
+ "1908819": {
+  "count": 6,
+  "iso": "TH-91",
+  "kind": "subdivision_2",
+  "name": "Satun Province",
+  "url": "data/admin2/1908819.geojson"
+ },
+ "1908820": {
+  "count": 6,
+  "iso": "TH-17",
+  "kind": "subdivision_2",
+  "name": "Sing Buri Province",
+  "url": "data/admin2/1908820.geojson"
+ },
+ "1908821": {
+  "count": 21,
+  "iso": "TH-33",
+  "kind": "subdivision_2",
+  "name": "Si Sa Ket Province",
+  "url": "data/admin2/1908821.geojson"
+ },
+ "1908822": {
+  "count": 15,
+  "iso": "TH-90",
+  "kind": "subdivision_2",
+  "name": "Songkhla Province",
+  "url": "data/admin2/1908822.geojson"
+ },
+ "1908823": {
+  "count": 9,
+  "iso": "TH-64",
+  "kind": "subdivision_2",
+  "name": "Sukhothai Province",
+  "url": "data/admin2/1908823.geojson"
+ },
+ "1908824": {
+  "count": 10,
+  "iso": "TH-72",
+  "kind": "subdivision_2",
+  "name": "Suphan Buri Province",
+  "url": "data/admin2/1908824.geojson"
+ },
+ "1908825": {
+  "count": 17,
+  "iso": "TH-84",
+  "kind": "subdivision_2",
+  "name": "Surat Thani Province",
+  "url": "data/admin2/1908825.geojson"
+ },
+ "1908826": {
+  "count": 18,
+  "iso": "TH-32",
+  "kind": "subdivision_2",
+  "name": "Surin Province",
+  "url": "data/admin2/1908826.geojson"
+ },
+ "1908827": {
+  "count": 10,
+  "iso": "TH-63",
+  "kind": "subdivision_2",
+  "name": "Tak Province",
+  "url": "data/admin2/1908827.geojson"
+ },
+ "1908828": {
+  "count": 10,
+  "iso": "TH-92",
+  "kind": "subdivision_2",
+  "name": "Trang Province",
+  "url": "data/admin2/1908828.geojson"
+ },
+ "1908829": {
+  "count": 5,
+  "iso": "TH-23",
+  "kind": "subdivision_2",
+  "name": "Trat Province",
+  "url": "data/admin2/1908829.geojson"
+ },
+ "1908830": {
+  "count": 24,
+  "iso": "TH-34",
+  "kind": "subdivision_2",
+  "name": "Ubon Ratchathani Province",
+  "url": "data/admin2/1908830.geojson"
+ },
+ "1908831": {
+  "count": 20,
+  "iso": "TH-41",
+  "kind": "subdivision_2",
+  "name": "Udon Thani Province",
+  "url": "data/admin2/1908831.geojson"
+ },
+ "1908832": {
+  "count": 9,
+  "iso": "TH-53",
+  "kind": "subdivision_2",
+  "name": "Uttaradit Province",
+  "url": "data/admin2/1908832.geojson"
+ },
+ "1908872": {
+  "count": 8,
+  "iso": "TH-95",
+  "kind": "subdivision_2",
+  "name": "Yala Province",
+  "url": "data/admin2/1908872.geojson"
+ },
+ "1908873": {
+  "count": 9,
+  "iso": "TH-35",
+  "kind": "subdivision_2",
+  "name": "Yasothon Province",
+  "url": "data/admin2/1908873.geojson"
+ },
+ "190911": {
+  "count": 10,
+  "iso": "RU-KK",
+  "kind": "subdivision_2",
+  "name": "Khakassia",
+  "url": "data/admin2/190911.geojson"
+ },
+ "191706": {
+  "count": 13,
+  "iso": "RU-YAN",
+  "kind": "subdivision_2",
+  "name": "Yamalo-Nenets Autonomous Okrug",
+  "url": "data/admin2/191706.geojson"
+ },
+ "1921996": {
+  "count": 4,
+  "iso": "PE-UCA",
+  "kind": "subdivision_2",
+  "name": "Ucayali",
+  "url": "data/admin2/1921996.geojson"
+ },
+ "1923695": {
+  "count": 13,
+  "iso": "PE-CUS",
+  "kind": "subdivision_2",
+  "name": "Cusco",
+  "url": "data/admin2/1923695.geojson"
+ },
+ "1925819": {
+  "count": 7,
+  "iso": "TH-39",
+  "kind": "subdivision_2",
+  "name": "Nong Bua Lam Phu Province",
+  "url": "data/admin2/1925819.geojson"
+ },
+ "192732": {
+  "count": 10,
+  "iso": "",
+  "kind": "subdivision_2",
+  "name": "Northern Ireland",
+  "url": "data/admin2/192732.geojson"
+ },
+ "1929522": {
+  "count": 7,
+  "iso": "PE-APU",
+  "kind": "subdivision_2",
+  "name": "Apur\u00edmac",
+  "url": "data/admin2/1929522.geojson"
+ },
+ "1930901": {
+  "count": 11,
+  "iso": "PE-AYA",
+  "kind": "subdivision_2",
+  "name": "Ayacucho",
+  "url": "data/admin2/1930901.geojson"
+ },
+ "1933551": {
+  "count": 7,
+  "iso": "PE-HUV",
+  "kind": "subdivision_2",
+  "name": "Huancavelica",
+  "url": "data/admin2/1933551.geojson"
+ },
+ "1942586": {
+  "count": 11,
+  "iso": "IN-DL",
+  "kind": "subdivision_2",
+  "name": "Delhi",
+  "url": "data/admin2/1942586.geojson"
+ },
+ "1942587": {
+  "count": 74,
+  "iso": "IN-UP",
+  "kind": "subdivision_2",
+  "name": "Uttar Pradesh",
+  "url": "data/admin2/1942587.geojson"
+ },
+ "1942601": {
+  "count": 21,
+  "iso": "IN-HR",
+  "kind": "subdivision_2",
+  "name": "Haryana",
+  "url": "data/admin2/1942601.geojson"
+ },
+ "1942686": {
+  "count": 22,
+  "iso": "IN-PB",
+  "kind": "subdivision_2",
+  "name": "Punjab",
+  "url": "data/admin2/1942686.geojson"
+ },
+ "194271": {
+  "count": 78,
+  "iso": "RO-AB",
+  "kind": "subdivision_2",
+  "name": "Alba",
+  "url": "data/admin2/194271.geojson"
+ },
+ "1942920": {
+  "count": 32,
+  "iso": "IN-RJ",
+  "kind": "subdivision_2",
+  "name": "Rajasthan",
+  "url": "data/admin2/1942920.geojson"
+ },
+ "1943188": {
+  "count": 21,
+  "iso": "IN-JK",
+  "kind": "subdivision_2",
+  "name": "Jammu and Kashmir",
+  "url": "data/admin2/1943188.geojson"
+ },
+ "1944659": {
+  "count": 11,
+  "iso": "PE-LIM",
+  "kind": "subdivision_2",
+  "name": "Lima",
+  "url": "data/admin2/1944659.geojson"
+ },
+ "1948258": {
+  "count": 9,
+  "iso": "PE-JUN",
+  "kind": "subdivision_2",
+  "name": "Jun\u00edn",
+  "url": "data/admin2/1948258.geojson"
+ },
+ "1948452": {
+  "count": 3,
+  "iso": "PE-PAS",
+  "kind": "subdivision_2",
+  "name": "Pasco",
+  "url": "data/admin2/1948452.geojson"
+ },
+ "1949080": {
+  "count": 36,
+  "iso": "IN-GJ",
+  "kind": "subdivision_2",
+  "name": "Gujarat",
+  "url": "data/admin2/1949080.geojson"
+ },
+ "1950071": {
+  "count": 54,
+  "iso": "IN-MP",
+  "kind": "subdivision_2",
+  "name": "Madhya Pradesh",
+  "url": "data/admin2/1950071.geojson"
+ },
+ "1950884": {
+  "count": 35,
+  "iso": "IN-MH",
+  "kind": "subdivision_2",
+  "name": "Maharashtra",
+  "url": "data/admin2/1950884.geojson"
+ },
+ "1953170": {
+  "count": 20,
+  "iso": "PE-ANC",
+  "kind": "subdivision_2",
+  "name": "Ancash",
+  "url": "data/admin2/1953170.geojson"
+ },
+ "1954493": {
+  "count": 11,
+  "iso": "PE-HUC",
+  "kind": "subdivision_2",
+  "name": "Hu\u00e1nuco",
+  "url": "data/admin2/1954493.geojson"
+ },
+ "1958982": {
+  "count": 38,
+  "iso": "IN-BR",
+  "kind": "subdivision_2",
+  "name": "Bihar",
+  "url": "data/admin2/1958982.geojson"
+ },
+ "1960177": {
+  "count": 22,
+  "iso": "IN-WB",
+  "kind": "subdivision_2",
+  "name": "West Bengal",
+  "url": "data/admin2/1960177.geojson"
+ },
+ "1960191": {
+  "count": 24,
+  "iso": "IN-JH",
+  "kind": "subdivision_2",
+  "name": "Jharkhand",
+  "url": "data/admin2/1960191.geojson"
+ },
+ "1967959": {
+  "count": 12,
+  "iso": "PE-LAL",
+  "kind": "subdivision_2",
+  "name": "La Libertad",
+  "url": "data/admin2/1967959.geojson"
+ },
+ "1969722": {
+  "count": 3,
+  "iso": "PE-LAM",
+  "kind": "subdivision_2",
+  "name": "Lambayeque",
+  "url": "data/admin2/1969722.geojson"
+ },
+ "1971661": {
+  "count": 10,
+  "iso": "PE-SAM",
+  "kind": "subdivision_2",
+  "name": "San Mart\u00edn",
+  "url": "data/admin2/1971661.geojson"
+ },
+ "1973462": {
+  "count": 7,
+  "iso": "PE-AMA",
+  "kind": "subdivision_2",
+  "name": "Amazonas",
+  "url": "data/admin2/1973462.geojson"
+ },
+ "1973756": {
+  "count": 24,
+  "iso": "VN-SG",
+  "kind": "subdivision_2",
+  "name": "Ho Chi Minh City",
+  "url": "data/admin2/1973756.geojson"
+ },
+ "198590": {
+  "count": 46,
+  "iso": "CN-JL",
+  "kind": "subdivision_2",
+  "name": "Jilin",
+  "url": "data/admin2/198590.geojson"
+ },
+ "1986151": {
+  "count": 8,
+  "iso": "PE-PIU",
+  "kind": "subdivision_2",
+  "name": "Piura",
+  "url": "data/admin2/1986151.geojson"
+ },
+ "1986974": {
+  "count": 3,
+  "iso": "PE-TUM",
+  "kind": "subdivision_2",
+  "name": "Tumbes",
+  "url": "data/admin2/1986974.geojson"
+ },
+ "198847": {
+  "count": 7,
+  "iso": "CL-VS",
+  "kind": "subdivision_2",
+  "name": "Valparaiso Region",
+  "url": "data/admin2/198847.geojson"
+ },
+ "198848": {
+  "count": 6,
+  "iso": "CL-RM",
+  "kind": "subdivision_2",
+  "name": "Santiago Metropolitan Region",
+  "url": "data/admin2/198848.geojson"
+ },
+ "199073": {
+  "count": 79,
+  "iso": "CN-HL",
+  "kind": "subdivision_2",
+  "name": "Heilongjiang",
+  "url": "data/admin2/199073.geojson"
+ },
+ "1991849": {
+  "count": 29,
+  "iso": "GH-AA",
+  "kind": "subdivision_2",
+  "name": "Greater Accra Region",
+  "url": "data/admin2/1991849.geojson"
+ },
+ "1994077": {
+  "count": 7,
+  "iso": "PE-LOR",
+  "kind": "subdivision_2",
+  "name": "Loreto",
+  "url": "data/admin2/1994077.geojson"
+ },
+ "1997164": {
+  "count": 2,
+  "iso": "FI-05",
+  "kind": "subdivision_2",
+  "name": "Kainuu",
+  "url": "data/admin2/1997164.geojson"
+ },
+ "1999428": {
+  "count": 3,
+  "iso": "FI-13",
+  "kind": "subdivision_2",
+  "name": "North Karelia",
+  "url": "data/admin2/1999428.geojson"
+ },
+ "2000320": {
+  "count": 3,
+  "iso": "FI-12",
+  "kind": "subdivision_2",
+  "name": "Ostrobothnia",
+  "url": "data/admin2/2000320.geojson"
+ },
+ "2000361": {
+  "count": 3,
+  "iso": "FI-17",
+  "kind": "subdivision_2",
+  "name": "Satakunta",
+  "url": "data/admin2/2000361.geojson"
+ },
+ "2018151": {
+  "count": 15,
+  "iso": "IN-KL",
+  "kind": "subdivision_2",
+  "name": "Kerala",
+  "url": "data/admin2/2018151.geojson"
+ },
+ "2019939": {
+  "count": 30,
+  "iso": "IN-KA",
+  "kind": "subdivision_2",
+  "name": "Karnataka",
+  "url": "data/admin2/2019939.geojson"
+ },
+ "2022095": {
+  "count": 14,
+  "iso": "IN-AP",
+  "kind": "subdivision_2",
+  "name": "Andhra Pradesh",
+  "url": "data/admin2/2022095.geojson"
+ },
+ "2025855": {
+  "count": 3,
+  "iso": "IN-AN",
+  "kind": "subdivision_2",
+  "name": "Andaman and Nicobar Islands",
+  "url": "data/admin2/2025855.geojson"
+ },
+ "2025886": {
+  "count": 31,
+  "iso": "IN-AS",
+  "kind": "subdivision_2",
+  "name": "Assam",
+  "url": "data/admin2/2025886.geojson"
+ },
+ "2026458": {
+  "count": 8,
+  "iso": "IN-TR",
+  "kind": "subdivision_2",
+  "name": "Tripura",
+  "url": "data/admin2/2026458.geojson"
+ },
+ "2027346": {
+  "count": 25,
+  "iso": "IN-AR",
+  "kind": "subdivision_2",
+  "name": "Arunachal Pradesh",
+  "url": "data/admin2/2027346.geojson"
+ },
+ "2027521": {
+  "count": 13,
+  "iso": "IN-ML",
+  "kind": "subdivision_2",
+  "name": "Meghalaya",
+  "url": "data/admin2/2027521.geojson"
+ },
+ "2027869": {
+  "count": 17,
+  "iso": "IN-MN",
+  "kind": "subdivision_2",
+  "name": "Manipur",
+  "url": "data/admin2/2027869.geojson"
+ },
+ "2027973": {
+  "count": 10,
+  "iso": "IN-NL",
+  "kind": "subdivision_2",
+  "name": "Nagaland",
+  "url": "data/admin2/2027973.geojson"
+ },
+ "2029046": {
+  "count": 11,
+  "iso": "IN-MZ",
+  "kind": "subdivision_2",
+  "name": "Mizoram",
+  "url": "data/admin2/2029046.geojson"
+ },
+ "206487": {
+  "count": 3,
+  "iso": "CL-LI",
+  "kind": "subdivision_2",
+  "name": "O'Higgins Region",
+  "url": "data/admin2/206487.geojson"
+ },
+ "2067231": {
+  "count": 2,
+  "iso": "FI-02",
+  "kind": "subdivision_2",
+  "name": "South Karelia",
+  "url": "data/admin2/2067231.geojson"
+ },
+ "207748332": {
+  "count": 8,
+  "iso": "KZ-ATY",
+  "kind": "subdivision_2",
+  "name": "Atyrau",
+  "url": "data/admin2/207748332.geojson"
+ },
+ "2077868": {
+  "count": 112,
+  "iso": "RO-SV",
+  "kind": "subdivision_2",
+  "name": "Suceava",
+  "url": "data/admin2/2077868.geojson"
+ },
+ "2094141": {
+  "count": 22,
+  "iso": "NZ-AUK",
+  "kind": "subdivision_2",
+  "name": "Auckland",
+  "url": "data/admin2/2094141.geojson"
+ },
+ "2094142": {
+  "count": 11,
+  "iso": "NZ-WKO",
+  "kind": "subdivision_2",
+  "name": "Waikato",
+  "url": "data/admin2/2094142.geojson"
+ },
+ "2095259": {
+  "count": 43,
+  "iso": "RU-TVE",
+  "kind": "subdivision_2",
+  "name": "Tver Oblast",
+  "url": "data/admin2/2095259.geojson"
+ },
+ "2099216": {
+  "count": 15,
+  "iso": "RU-MUR",
+  "kind": "subdivision_2",
+  "name": "Murmansk Oblast",
+  "url": "data/admin2/2099216.geojson"
+ },
+ "211147520": {
+  "count": 26,
+  "iso": "NO-05",
+  "kind": "subdivision_2",
+  "name": "Oppland",
+  "url": "data/admin2/211147520.geojson"
+ },
+ "2128285": {
+  "count": 18,
+  "iso": "CN-HI",
+  "kind": "subdivision_2",
+  "name": "Hainan",
+  "url": "data/admin2/2128285.geojson"
+ },
+ "2133870": {
+  "count": 3,
+  "iso": "NZ-NTL",
+  "kind": "subdivision_2",
+  "name": "Northland",
+  "url": "data/admin2/2133870.geojson"
+ },
+ "2137477": {
+  "count": 26,
+  "iso": "JP-26",
+  "kind": "subdivision_2",
+  "name": "Kyoto Prefecture",
+  "url": "data/admin2/2137477.geojson"
+ },
+ "2145268": {
+  "count": 7,
+  "iso": "DE-BY",
+  "kind": "subdivision_2",
+  "name": "Bavaria",
+  "url": "data/admin2/2145268.geojson"
+ },
+ "215417029": {
+  "count": 29,
+  "iso": "GH-BA",
+  "kind": "subdivision_2",
+  "name": "Brong-Ahafo",
+  "url": "data/admin2/215417029.geojson"
+ },
+ "216222579": {
+  "count": 13,
+  "iso": "KZ-AKT",
+  "kind": "subdivision_2",
+  "name": "Aktobe",
+  "url": "data/admin2/216222579.geojson"
+ },
+ "2181889": {
+  "count": 2,
+  "iso": "CO-SAP",
+  "kind": "subdivision_2",
+  "name": "Archipelago of San Andr\u00e9s, Providencia and Santa Catalina",
+  "url": "data/admin2/2181889.geojson"
+ },
+ "22225": {
+  "count": 7,
+  "iso": "HU-SO",
+  "kind": "subdivision_2",
+  "name": "Somogy",
+  "url": "data/admin2/22225.geojson"
+ },
+ "22234": {
+  "count": 9,
+  "iso": "HU-BA",
+  "kind": "subdivision_2",
+  "name": "Baranya",
+  "url": "data/admin2/22234.geojson"
+ },
+ "22238": {
+  "count": 4,
+  "iso": "HU-ZA",
+  "kind": "subdivision_2",
+  "name": "Zala",
+  "url": "data/admin2/22238.geojson"
+ },
+ "22239": {
+  "count": 5,
+  "iso": "HU-TO",
+  "kind": "subdivision_2",
+  "name": "Tolna",
+  "url": "data/admin2/22239.geojson"
+ },
+ "22249": {
+  "count": 5,
+  "iso": "HU-GS",
+  "kind": "subdivision_2",
+  "name": "Gy\u0151r-Moson-Sopron",
+  "url": "data/admin2/22249.geojson"
+ },
+ "22250": {
+  "count": 6,
+  "iso": "HU-VA",
+  "kind": "subdivision_2",
+  "name": "Vas",
+  "url": "data/admin2/22250.geojson"
+ },
+ "22252": {
+  "count": 5,
+  "iso": "HU-KE",
+  "kind": "subdivision_2",
+  "name": "Kom\u00e1rom-Esztergom",
+  "url": "data/admin2/22252.geojson"
+ },
+ "22255": {
+  "count": 8,
+  "iso": "HU-FE",
+  "kind": "subdivision_2",
+  "name": "Fej\u00e9r",
+  "url": "data/admin2/22255.geojson"
+ },
+ "22259": {
+  "count": 17,
+  "iso": "HU-PE",
+  "kind": "subdivision_2",
+  "name": "Pest",
+  "url": "data/admin2/22259.geojson"
+ },
+ "22260": {
+  "count": 11,
+  "iso": "HU-BK",
+  "kind": "subdivision_2",
+  "name": "B\u00e1cs-Kiskun",
+  "url": "data/admin2/22260.geojson"
+ },
+ "22265": {
+  "count": 5,
+  "iso": "HU-CS",
+  "kind": "subdivision_2",
+  "name": "Csongr\u00e1d-Csan\u00e1d",
+  "url": "data/admin2/22265.geojson"
+ },
+ "22266": {
+  "count": 8,
+  "iso": "HU-BE",
+  "kind": "subdivision_2",
+  "name": "B\u00e9k\u00e9s",
+  "url": "data/admin2/22266.geojson"
+ },
+ "22267": {
+  "count": 9,
+  "iso": "HU-HB",
+  "kind": "subdivision_2",
+  "name": "Hajd\u00fa-Bihar",
+  "url": "data/admin2/22267.geojson"
+ },
+ "22268": {
+  "count": 12,
+  "iso": "HU-SZ",
+  "kind": "subdivision_2",
+  "name": "Szabolcs-Szatm\u00e1r-Bereg",
+  "url": "data/admin2/22268.geojson"
+ },
+ "22271": {
+  "count": 15,
+  "iso": "HU-BZ",
+  "kind": "subdivision_2",
+  "name": "Borsod-Aba\u00faj-Zempl\u00e9n",
+  "url": "data/admin2/22271.geojson"
+ },
+ "22273": {
+  "count": 6,
+  "iso": "HU-HE",
+  "kind": "subdivision_2",
+  "name": "Heves",
+  "url": "data/admin2/22273.geojson"
+ },
+ "22274": {
+  "count": 5,
+  "iso": "HU-NO",
+  "kind": "subdivision_2",
+  "name": "N\u00f3gr\u00e1d",
+  "url": "data/admin2/22274.geojson"
+ },
+ "22278": {
+  "count": 12,
+  "iso": "HU-VE",
+  "kind": "subdivision_2",
+  "name": "Veszpr\u00e9m",
+  "url": "data/admin2/22278.geojson"
+ },
+ "223122": {
+  "count": 15,
+  "iso": "TR-31",
+  "kind": "subdivision_2",
+  "name": "Hatay",
+  "url": "data/admin2/223122.geojson"
+ },
+ "223131": {
+  "count": 13,
+  "iso": "TR-33",
+  "kind": "subdivision_2",
+  "name": "Mersin",
+  "url": "data/admin2/223131.geojson"
+ },
+ "223132": {
+  "count": 19,
+  "iso": "TR-07",
+  "kind": "subdivision_2",
+  "name": "Antalya",
+  "url": "data/admin2/223132.geojson"
+ },
+ "223133": {
+  "count": 29,
+  "iso": "TR-42",
+  "kind": "subdivision_2",
+  "name": "Konya",
+  "url": "data/admin2/223133.geojson"
+ },
+ "223134": {
+  "count": 13,
+  "iso": "TR-32",
+  "kind": "subdivision_2",
+  "name": "Isparta",
+  "url": "data/admin2/223134.geojson"
+ },
+ "223136": {
+  "count": 13,
+  "iso": "TR-48",
+  "kind": "subdivision_2",
+  "name": "Mu\u011fla",
+  "url": "data/admin2/223136.geojson"
+ },
+ "223137": {
+  "count": 6,
+  "iso": "TR-70",
+  "kind": "subdivision_2",
+  "name": "Karaman",
+  "url": "data/admin2/223137.geojson"
+ },
+ "223138": {
+  "count": 11,
+  "iso": "TR-46",
+  "kind": "subdivision_2",
+  "name": "Kahramanmara\u015f",
+  "url": "data/admin2/223138.geojson"
+ },
+ "223139": {
+  "count": 10,
+  "iso": "TR-27",
+  "kind": "subdivision_2",
+  "name": "Gaziantep",
+  "url": "data/admin2/223139.geojson"
+ },
+ "223140": {
+  "count": 3,
+  "iso": "TR-79",
+  "kind": "subdivision_2",
+  "name": "Kilis",
+  "url": "data/admin2/223140.geojson"
+ },
+ "223141": {
+  "count": 8,
+  "iso": "TR-02",
+  "kind": "subdivision_2",
+  "name": "Ad\u0131yaman",
+  "url": "data/admin2/223141.geojson"
+ },
+ "223166": {
+  "count": 16,
+  "iso": "TR-09",
+  "kind": "subdivision_2",
+  "name": "Ayd\u0131n",
+  "url": "data/admin2/223166.geojson"
+ },
+ "223167": {
+  "count": 30,
+  "iso": "TR-35",
+  "kind": "subdivision_2",
+  "name": "Izmir",
+  "url": "data/admin2/223167.geojson"
+ },
+ "223168": {
+  "count": 17,
+  "iso": "TR-45",
+  "kind": "subdivision_2",
+  "name": "Manisa",
+  "url": "data/admin2/223168.geojson"
+ },
+ "223169": {
+  "count": 18,
+  "iso": "TR-20",
+  "kind": "subdivision_2",
+  "name": "Denizli",
+  "url": "data/admin2/223169.geojson"
+ },
+ "223170": {
+  "count": 6,
+  "iso": "TR-64",
+  "kind": "subdivision_2",
+  "name": "U\u015fak",
+  "url": "data/admin2/223170.geojson"
+ },
+ "223171": {
+  "count": 18,
+  "iso": "TR-03",
+  "kind": "subdivision_2",
+  "name": "Afyonkarahisar",
+  "url": "data/admin2/223171.geojson"
+ },
+ "223172": {
+  "count": 13,
+  "iso": "TR-43",
+  "kind": "subdivision_2",
+  "name": "K\u00fctahya",
+  "url": "data/admin2/223172.geojson"
+ },
+ "2232180": {
+  "count": 11,
+  "iso": "IR-03",
+  "kind": "subdivision_2",
+  "name": "East Azerbaijan Province",
+  "url": "data/admin2/2232180.geojson"
+ },
+ "223407": {
+  "count": 23,
+  "iso": "PL-KP",
+  "kind": "subdivision_2",
+  "name": "Kuyavian-Pomeranian Voivodeship",
+  "url": "data/admin2/223407.geojson"
+ },
+ "223408": {
+  "count": 21,
+  "iso": "PL-WN",
+  "kind": "subdivision_2",
+  "name": "Warmian-Masurian Voivodeship",
+  "url": "data/admin2/223408.geojson"
+ },
+ "223420": {
+  "count": 9,
+  "iso": "TR-11",
+  "kind": "subdivision_2",
+  "name": "Bilecik",
+  "url": "data/admin2/223420.geojson"
+ },
+ "223421": {
+  "count": 13,
+  "iso": "TR-26",
+  "kind": "subdivision_2",
+  "name": "Eski\u015fehir",
+  "url": "data/admin2/223421.geojson"
+ },
+ "223422": {
+  "count": 28,
+  "iso": "TR-06",
+  "kind": "subdivision_2",
+  "name": "Ankara",
+  "url": "data/admin2/223422.geojson"
+ },
+ "223423": {
+  "count": 8,
+  "iso": "TR-71",
+  "kind": "subdivision_2",
+  "name": "K\u0131r\u0131kkale",
+  "url": "data/admin2/223423.geojson"
+ },
+ "223424": {
+  "count": 12,
+  "iso": "TR-60",
+  "kind": "subdivision_2",
+  "name": "Tokat",
+  "url": "data/admin2/223424.geojson"
+ },
+ "223425": {
+  "count": 16,
+  "iso": "TR-58",
+  "kind": "subdivision_2",
+  "name": "Sivas",
+  "url": "data/admin2/223425.geojson"
+ },
+ "223426": {
+  "count": 14,
+  "iso": "TR-44",
+  "kind": "subdivision_2",
+  "name": "Malatya",
+  "url": "data/admin2/223426.geojson"
+ },
+ "223434": {
+  "count": 13,
+  "iso": "TR-63",
+  "kind": "subdivision_2",
+  "name": "\u015eanl\u0131urfa",
+  "url": "data/admin2/223434.geojson"
+ },
+ "223435": {
+  "count": 18,
+  "iso": "TR-21",
+  "kind": "subdivision_2",
+  "name": "Diyarbak\u0131r",
+  "url": "data/admin2/223435.geojson"
+ },
+ "223436": {
+  "count": 11,
+  "iso": "TR-47",
+  "kind": "subdivision_2",
+  "name": "Mardin",
+  "url": "data/admin2/223436.geojson"
+ },
+ "223437": {
+  "count": 6,
+  "iso": "TR-72",
+  "kind": "subdivision_2",
+  "name": "Batman",
+  "url": "data/admin2/223437.geojson"
+ },
+ "223438": {
+  "count": 6,
+  "iso": "TR-73",
+  "kind": "subdivision_2",
+  "name": "\u015e\u0131rnak",
+  "url": "data/admin2/223438.geojson"
+ },
+ "223440": {
+  "count": 6,
+  "iso": "TR-49",
+  "kind": "subdivision_2",
+  "name": "Mu\u015f",
+  "url": "data/admin2/223440.geojson"
+ },
+ "223441": {
+  "count": 7,
+  "iso": "TR-13",
+  "kind": "subdivision_2",
+  "name": "Bitlis",
+  "url": "data/admin2/223441.geojson"
+ },
+ "223442": {
+  "count": 12,
+  "iso": "TR-65",
+  "kind": "subdivision_2",
+  "name": "Van",
+  "url": "data/admin2/223442.geojson"
+ },
+ "223443": {
+  "count": 10,
+  "iso": "TR-23",
+  "kind": "subdivision_2",
+  "name": "Elaz\u0131\u011f",
+  "url": "data/admin2/223443.geojson"
+ },
+ "223444": {
+  "count": 8,
+  "iso": "TR-12",
+  "kind": "subdivision_2",
+  "name": "Bing\u00f6l",
+  "url": "data/admin2/223444.geojson"
+ },
+ "223445": {
+  "count": 9,
+  "iso": "TR-24",
+  "kind": "subdivision_2",
+  "name": "Erzincan",
+  "url": "data/admin2/223445.geojson"
+ },
+ "223446": {
+  "count": 3,
+  "iso": "TR-69",
+  "kind": "subdivision_2",
+  "name": "Bayburt",
+  "url": "data/admin2/223446.geojson"
+ },
+ "223447": {
+  "count": 18,
+  "iso": "TR-61",
+  "kind": "subdivision_2",
+  "name": "Trabzon",
+  "url": "data/admin2/223447.geojson"
+ },
+ "223448": {
+  "count": 9,
+  "iso": "TR-08",
+  "kind": "subdivision_2",
+  "name": "Artvin",
+  "url": "data/admin2/223448.geojson"
+ },
+ "223449": {
+  "count": 14,
+  "iso": "TR-28",
+  "kind": "subdivision_2",
+  "name": "Giresun",
+  "url": "data/admin2/223449.geojson"
+ },
+ "223450": {
+  "count": 19,
+  "iso": "TR-52",
+  "kind": "subdivision_2",
+  "name": "Ordu",
+  "url": "data/admin2/223450.geojson"
+ },
+ "223451": {
+  "count": 17,
+  "iso": "TR-55",
+  "kind": "subdivision_2",
+  "name": "Samsun",
+  "url": "data/admin2/223451.geojson"
+ },
+ "223452": {
+  "count": 7,
+  "iso": "TR-05",
+  "kind": "subdivision_2",
+  "name": "Amasya",
+  "url": "data/admin2/223452.geojson"
+ },
+ "223453": {
+  "count": 14,
+  "iso": "TR-19",
+  "kind": "subdivision_2",
+  "name": "\u00c7orum",
+  "url": "data/admin2/223453.geojson"
+ },
+ "223454": {
+  "count": 12,
+  "iso": "TR-18",
+  "kind": "subdivision_2",
+  "name": "\u00c7ank\u0131r\u0131",
+  "url": "data/admin2/223454.geojson"
+ },
+ "223455": {
+  "count": 6,
+  "iso": "TR-78",
+  "kind": "subdivision_2",
+  "name": "Karab\u00fck",
+  "url": "data/admin2/223455.geojson"
+ },
+ "223456": {
+  "count": 20,
+  "iso": "TR-37",
+  "kind": "subdivision_2",
+  "name": "Kastamonu",
+  "url": "data/admin2/223456.geojson"
+ },
+ "223457": {
+  "count": 10,
+  "iso": "TR-57",
+  "kind": "subdivision_2",
+  "name": "Sinop",
+  "url": "data/admin2/223457.geojson"
+ },
+ "223458": {
+  "count": 4,
+  "iso": "TR-74",
+  "kind": "subdivision_2",
+  "name": "Bart\u0131n",
+  "url": "data/admin2/223458.geojson"
+ },
+ "223459": {
+  "count": 8,
+  "iso": "TR-67",
+  "kind": "subdivision_2",
+  "name": "Zonguldak",
+  "url": "data/admin2/223459.geojson"
+ },
+ "223460": {
+  "count": 8,
+  "iso": "TR-81",
+  "kind": "subdivision_2",
+  "name": "D\u00fczce",
+  "url": "data/admin2/223460.geojson"
+ },
+ "223461": {
+  "count": 10,
+  "iso": "TR-14",
+  "kind": "subdivision_2",
+  "name": "Bolu",
+  "url": "data/admin2/223461.geojson"
+ },
+ "223462": {
+  "count": 15,
+  "iso": "TR-54",
+  "kind": "subdivision_2",
+  "name": "Sakarya",
+  "url": "data/admin2/223462.geojson"
+ },
+ "223463": {
+  "count": 16,
+  "iso": "TR-16",
+  "kind": "subdivision_2",
+  "name": "Bursa",
+  "url": "data/admin2/223463.geojson"
+ },
+ "223464": {
+  "count": 20,
+  "iso": "TR-10",
+  "kind": "subdivision_2",
+  "name": "Bal\u0131kesir",
+  "url": "data/admin2/223464.geojson"
+ },
+ "223465": {
+  "count": 8,
+  "iso": "TR-22",
+  "kind": "subdivision_2",
+  "name": "Edirne",
+  "url": "data/admin2/223465.geojson"
+ },
+ "223469": {
+  "count": 9,
+  "iso": "TR-39",
+  "kind": "subdivision_2",
+  "name": "K\u0131rklareli",
+  "url": "data/admin2/223469.geojson"
+ },
+ "223470": {
+  "count": 11,
+  "iso": "TR-59",
+  "kind": "subdivision_2",
+  "name": "Tekirda\u011f",
+  "url": "data/admin2/223470.geojson"
+ },
+ "223471": {
+  "count": 12,
+  "iso": "TR-17",
+  "kind": "subdivision_2",
+  "name": "Canakkale",
+  "url": "data/admin2/223471.geojson"
+ },
+ "223472": {
+  "count": 5,
+  "iso": "TR-77",
+  "kind": "subdivision_2",
+  "name": "Yalova",
+  "url": "data/admin2/223472.geojson"
+ },
+ "223473": {
+  "count": 16,
+  "iso": "TR-41",
+  "kind": "subdivision_2",
+  "name": "Kocaeli",
+  "url": "data/admin2/223473.geojson"
+ },
+ "223474": {
+  "count": 35,
+  "iso": "TR-34",
+  "kind": "subdivision_2",
+  "name": "Istanbul",
+  "url": "data/admin2/223474.geojson"
+ },
+ "223537": {
+  "count": 8,
+  "iso": "TR-62",
+  "kind": "subdivision_2",
+  "name": "Tunceli",
+  "url": "data/admin2/223537.geojson"
+ },
+ "223541": {
+  "count": 7,
+  "iso": "TR-29",
+  "kind": "subdivision_2",
+  "name": "G\u00fcm\u00fc\u015fhane",
+  "url": "data/admin2/223541.geojson"
+ },
+ "223542": {
+  "count": 12,
+  "iso": "TR-53",
+  "kind": "subdivision_2",
+  "name": "Rize",
+  "url": "data/admin2/223542.geojson"
+ },
+ "223543": {
+  "count": 8,
+  "iso": "TR-56",
+  "kind": "subdivision_2",
+  "name": "Siirt",
+  "url": "data/admin2/223543.geojson"
+ },
+ "224040": {
+  "count": 46,
+  "iso": "US-SC",
+  "kind": "subdivision_2",
+  "name": "South Carolina",
+  "url": "data/admin2/224040.geojson"
+ },
+ "224042": {
+  "count": 130,
+  "iso": "US-VA",
+  "kind": "subdivision_2",
+  "name": "Virginia",
+  "url": "data/admin2/224042.geojson"
+ },
+ "224045": {
+  "count": 99,
+  "iso": "US-NC",
+  "kind": "subdivision_2",
+  "name": "North Carolina",
+  "url": "data/admin2/224045.geojson"
+ },
+ "224457": {
+  "count": 30,
+  "iso": "PL-DS",
+  "kind": "subdivision_2",
+  "name": "Lower Silesian Voivodeship",
+  "url": "data/admin2/224457.geojson"
+ },
+ "224458": {
+  "count": 24,
+  "iso": "PL-LD",
+  "kind": "subdivision_2",
+  "name": "\u0141\u00f3d\u017a Voivodeship",
+  "url": "data/admin2/224458.geojson"
+ },
+ "224459": {
+  "count": 22,
+  "iso": "PL-MA",
+  "kind": "subdivision_2",
+  "name": "Lesser Poland Voivodeship",
+  "url": "data/admin2/224459.geojson"
+ },
+ "224460": {
+  "count": 12,
+  "iso": "PL-OP",
+  "kind": "subdivision_2",
+  "name": "Opole Voivodeship",
+  "url": "data/admin2/224460.geojson"
+ },
+ "224462": {
+  "count": 36,
+  "iso": "PL-SL",
+  "kind": "subdivision_2",
+  "name": "Silesian Voivodeship",
+  "url": "data/admin2/224462.geojson"
+ },
+ "2248573": {
+  "count": 104,
+  "iso": "RO-MS",
+  "kind": "subdivision_2",
+  "name": "Mure\u0219",
+  "url": "data/admin2/2248573.geojson"
+ },
+ "2248586": {
+  "count": 73,
+  "iso": "RO-SB",
+  "kind": "subdivision_2",
+  "name": "Sibiu",
+  "url": "data/admin2/2248586.geojson"
+ },
+ "2248612": {
+  "count": 61,
+  "iso": "RO-BV",
+  "kind": "subdivision_2",
+  "name": "Bra\u0219ov",
+  "url": "data/admin2/2248612.geojson"
+ },
+ "2248621": {
+  "count": 45,
+  "iso": "RO-CV",
+  "kind": "subdivision_2",
+  "name": "Covasna",
+  "url": "data/admin2/2248621.geojson"
+ },
+ "2248660": {
+  "count": 75,
+  "iso": "RO-HR",
+  "kind": "subdivision_2",
+  "name": "Harghita",
+  "url": "data/admin2/2248660.geojson"
+ },
+ "2248675": {
+  "count": 83,
+  "iso": "RO-NT",
+  "kind": "subdivision_2",
+  "name": "Neam\u021b",
+  "url": "data/admin2/2248675.geojson"
+ },
+ "2248681": {
+  "count": 93,
+  "iso": "RO-BC",
+  "kind": "subdivision_2",
+  "name": "Bac\u0103u",
+  "url": "data/admin2/2248681.geojson"
+ },
+ "2248721": {
+  "count": 82,
+  "iso": "RO-AR",
+  "kind": "subdivision_2",
+  "name": "Arad",
+  "url": "data/admin2/2248721.geojson"
+ },
+ "2248737": {
+  "count": 69,
+  "iso": "RO-HD",
+  "kind": "subdivision_2",
+  "name": "Hunedoara",
+  "url": "data/admin2/2248737.geojson"
+ },
+ "224922": {
+  "count": 64,
+  "iso": "US-LA",
+  "kind": "subdivision_2",
+  "name": "Louisiana",
+  "url": "data/admin2/224922.geojson"
+ },
+ "224951": {
+  "count": 21,
+  "iso": "US-NJ",
+  "kind": "subdivision_2",
+  "name": "New Jersey",
+  "url": "data/admin2/224951.geojson"
+ },
+ "225444": {
+  "count": 6,
+  "iso": "IR-28",
+  "kind": "subdivision_2",
+  "name": "North Khorasan Province",
+  "url": "data/admin2/225444.geojson"
+ },
+ "2256729": {
+  "count": 84,
+  "iso": "RO-BT",
+  "kind": "subdivision_2",
+  "name": "Boto\u0219ani",
+  "url": "data/admin2/2256729.geojson"
+ },
+ "2256747": {
+  "count": 98,
+  "iso": "RO-IS",
+  "kind": "subdivision_2",
+  "name": "Ia\u0219i",
+  "url": "data/admin2/2256747.geojson"
+ },
+ "2256753": {
+  "count": 85,
+  "iso": "RO-VS",
+  "kind": "subdivision_2",
+  "name": "Vaslui",
+  "url": "data/admin2/2256753.geojson"
+ },
+ "2260187": {
+  "count": 73,
+  "iso": "RO-VN",
+  "kind": "subdivision_2",
+  "name": "Vrancea",
+  "url": "data/admin2/2260187.geojson"
+ },
+ "2260192": {
+  "count": 64,
+  "iso": "RO-GL",
+  "kind": "subdivision_2",
+  "name": "Gala\u021bi",
+  "url": "data/admin2/2260192.geojson"
+ },
+ "2261275": {
+  "count": 69,
+  "iso": "RO-GJ",
+  "kind": "subdivision_2",
+  "name": "Gorj",
+  "url": "data/admin2/2261275.geojson"
+ },
+ "2261289": {
+  "count": 88,
+  "iso": "RO-VL",
+  "kind": "subdivision_2",
+  "name": "V\u00e2lcea",
+  "url": "data/admin2/2261289.geojson"
+ },
+ "2261315": {
+  "count": 105,
+  "iso": "RO-AG",
+  "kind": "subdivision_2",
+  "name": "Arge\u0219",
+  "url": "data/admin2/2261315.geojson"
+ },
+ "2267150": {
+  "count": 21,
+  "iso": "VE-B",
+  "kind": "subdivision_2",
+  "name": "Anzoategui State",
+  "url": "data/admin2/2267150.geojson"
+ },
+ "2269155": {
+  "count": 11,
+  "iso": "VE-F",
+  "kind": "subdivision_2",
+  "name": "Bolivar State",
+  "url": "data/admin2/2269155.geojson"
+ },
+ "2269770": {
+  "count": 9,
+  "iso": "VE-O",
+  "kind": "subdivision_2",
+  "name": "Nueva Esparta State",
+  "url": "data/admin2/2269770.geojson"
+ },
+ "2269792": {
+  "count": 24,
+  "iso": "VE-I",
+  "kind": "subdivision_2",
+  "name": "Falcon State",
+  "url": "data/admin2/2269792.geojson"
+ },
+ "2269815": {
+  "count": 7,
+  "iso": "VE-Z",
+  "kind": "subdivision_2",
+  "name": "Amazonas State",
+  "url": "data/admin2/2269815.geojson"
+ },
+ "229593": {
+  "count": 8,
+  "iso": "IR-08",
+  "kind": "subdivision_2",
+  "name": "Kerman Province",
+  "url": "data/admin2/229593.geojson"
+ },
+ "2297418": {
+  "count": 25,
+  "iso": "KR-11",
+  "kind": "subdivision_2",
+  "name": "Seoul",
+  "url": "data/admin2/2297418.geojson"
+ },
+ "2297419": {
+  "count": 6,
+  "iso": "KR-28",
+  "kind": "subdivision_2",
+  "name": "Incheon",
+  "url": "data/admin2/2297419.geojson"
+ },
+ "229766": {
+  "count": 10,
+  "iso": "IR-16",
+  "kind": "subdivision_2",
+  "name": "Ilam Province",
+  "url": "data/admin2/229766.geojson"
+ },
+ "229893": {
+  "count": 23,
+  "iso": "IR-15",
+  "kind": "subdivision_2",
+  "name": "Lorestan Province",
+  "url": "data/admin2/229893.geojson"
+ },
+ "230004311": {
+  "count": 21,
+  "iso": "NO-06",
+  "kind": "subdivision_2",
+  "name": "Buskerud",
+  "url": "data/admin2/230004311.geojson"
+ },
+ "230033": {
+  "count": 30,
+  "iso": "IR-14",
+  "kind": "subdivision_2",
+  "name": "Chaharmahal and Bakhtiyari Province",
+  "url": "data/admin2/230033.geojson"
+ },
+ "2304454": {
+  "count": 23,
+  "iso": "KR-47",
+  "kind": "subdivision_2",
+  "name": "North Gyeongsang",
+  "url": "data/admin2/2304454.geojson"
+ },
+ "2306392": {
+  "count": 33,
+  "iso": "KR-41",
+  "kind": "subdivision_2",
+  "name": "Gyeonggi",
+  "url": "data/admin2/2306392.geojson"
+ },
+ "2308426": {
+  "count": 19,
+  "iso": "KR-42",
+  "kind": "subdivision_2",
+  "name": "Gangwon State",
+  "url": "data/admin2/2308426.geojson"
+ },
+ "2316593": {
+  "count": 130,
+  "iso": "AU-NSW",
+  "kind": "subdivision_2",
+  "name": "New South Wales",
+  "url": "data/admin2/2316593.geojson"
+ },
+ "2316594": {
+  "count": 19,
+  "iso": "AU-NT",
+  "kind": "subdivision_2",
+  "name": "Northern Territory",
+  "url": "data/admin2/2316594.geojson"
+ },
+ "2316595": {
+  "count": 72,
+  "iso": "AU-QLD",
+  "kind": "subdivision_2",
+  "name": "Queensland",
+  "url": "data/admin2/2316595.geojson"
+ },
+ "2316596": {
+  "count": 71,
+  "iso": "AU-SA",
+  "kind": "subdivision_2",
+  "name": "South Australia",
+  "url": "data/admin2/2316596.geojson"
+ },
+ "2316598": {
+  "count": 131,
+  "iso": "AU-WA",
+  "kind": "subdivision_2",
+  "name": "Western Australia",
+  "url": "data/admin2/2316598.geojson"
+ },
+ "231672": {
+  "count": 3,
+  "iso": "CL-CO",
+  "kind": "subdivision_2",
+  "name": "Coquimbo Region",
+  "url": "data/admin2/231672.geojson"
+ },
+ "2316741": {
+  "count": 80,
+  "iso": "AU-VIC",
+  "kind": "subdivision_2",
+  "name": "Victoria",
+  "url": "data/admin2/2316741.geojson"
+ },
+ "2319368": {
+  "count": 10,
+  "iso": "TR-15",
+  "kind": "subdivision_2",
+  "name": "Burdur",
+  "url": "data/admin2/2319368.geojson"
+ },
+ "2327258": {
+  "count": 12,
+  "iso": "KR-43",
+  "kind": "subdivision_2",
+  "name": "North Chungcheong",
+  "url": "data/admin2/2327258.geojson"
+ },
+ "2327259": {
+  "count": 14,
+  "iso": "KR-44",
+  "kind": "subdivision_2",
+  "name": "South Chungcheong",
+  "url": "data/admin2/2327259.geojson"
+ },
+ "2340636": {
+  "count": 113,
+  "iso": "MX-MIC",
+  "kind": "subdivision_2",
+  "name": "Michoac\u00e1n",
+  "url": "data/admin2/2340636.geojson"
+ },
+ "2340903": {
+  "count": 18,
+  "iso": "MX-QUE",
+  "kind": "subdivision_2",
+  "name": "Quer\u00e9taro",
+  "url": "data/admin2/2340903.geojson"
+ },
+ "2340909": {
+  "count": 46,
+  "iso": "MX-GUA",
+  "kind": "subdivision_2",
+  "name": "Guanajuato",
+  "url": "data/admin2/2340909.geojson"
+ },
+ "2340910": {
+  "count": 127,
+  "iso": "MX-JAL",
+  "kind": "subdivision_2",
+  "name": "Jalisco",
+  "url": "data/admin2/2340910.geojson"
+ },
+ "2340912": {
+  "count": 8,
+  "iso": "MX-COL",
+  "kind": "subdivision_2",
+  "name": "Colima",
+  "url": "data/admin2/2340912.geojson"
+ },
+ "2349984": {
+  "count": 4,
+  "iso": "KR-30",
+  "kind": "subdivision_2",
+  "name": "Daejeon",
+  "url": "data/admin2/2349984.geojson"
+ },
+ "2355168": {
+  "count": 13,
+  "iso": "KR-45",
+  "kind": "subdivision_2",
+  "name": "Jeonbuk-do",
+  "url": "data/admin2/2355168.geojson"
+ },
+ "2355471": {
+  "count": 86,
+  "iso": "RO-DB",
+  "kind": "subdivision_2",
+  "name": "D\u00e2mbovi\u021ba",
+  "url": "data/admin2/2355471.geojson"
+ },
+ "2355507": {
+  "count": 103,
+  "iso": "RO-PH",
+  "kind": "subdivision_2",
+  "name": "Prahova",
+  "url": "data/admin2/2355507.geojson"
+ },
+ "2355511": {
+  "count": 87,
+  "iso": "RO-BZ",
+  "kind": "subdivision_2",
+  "name": "Buz\u0103u",
+  "url": "data/admin2/2355511.geojson"
+ },
+ "2355512": {
+  "count": 45,
+  "iso": "RO-BR",
+  "kind": "subdivision_2",
+  "name": "Br\u0103ila",
+  "url": "data/admin2/2355512.geojson"
+ },
+ "2355517": {
+  "count": 64,
+  "iso": "RO-IL",
+  "kind": "subdivision_2",
+  "name": "Ialomi\u021ba",
+  "url": "data/admin2/2355517.geojson"
+ },
+ "2366863": {
+  "count": 101,
+  "iso": "RO-TM",
+  "kind": "subdivision_2",
+  "name": "Timi\u0219",
+  "url": "data/admin2/2366863.geojson"
+ },
+ "2366873": {
+  "count": 77,
+  "iso": "RO-CS",
+  "kind": "subdivision_2",
+  "name": "Cara\u0219-Severin",
+  "url": "data/admin2/2366873.geojson"
+ },
+ "2366962": {
+  "count": 67,
+  "iso": "RO-MH",
+  "kind": "subdivision_2",
+  "name": "Mehedin\u021bi",
+  "url": "data/admin2/2366962.geojson"
+ },
+ "2366970": {
+  "count": 112,
+  "iso": "RO-DJ",
+  "kind": "subdivision_2",
+  "name": "Dolj",
+  "url": "data/admin2/2366970.geojson"
+ },
+ "2366978": {
+  "count": 110,
+  "iso": "RO-OT",
+  "kind": "subdivision_2",
+  "name": "Olt",
+  "url": "data/admin2/2366978.geojson"
+ },
+ "2366986": {
+  "count": 104,
+  "iso": "RO-TR",
+  "kind": "subdivision_2",
+  "name": "Teleorman",
+  "url": "data/admin2/2366986.geojson"
+ },
+ "2366987": {
+  "count": 59,
+  "iso": "RO-GR",
+  "kind": "subdivision_2",
+  "name": "Giurgiu",
+  "url": "data/admin2/2366987.geojson"
+ },
+ "2366996": {
+  "count": 36,
+  "iso": "RO-IF",
+  "kind": "subdivision_2",
+  "name": "Ilfov",
+  "url": "data/admin2/2366996.geojson"
+ },
+ "2367015": {
+  "count": 56,
+  "iso": "RO-CL",
+  "kind": "subdivision_2",
+  "name": "C\u0103l\u0103ra\u0219i",
+  "url": "data/admin2/2367015.geojson"
+ },
+ "2367022": {
+  "count": 71,
+  "iso": "RO-CT",
+  "kind": "subdivision_2",
+  "name": "Constan\u021ba",
+  "url": "data/admin2/2367022.geojson"
+ },
+ "2367044": {
+  "count": 50,
+  "iso": "RO-TL",
+  "kind": "subdivision_2",
+  "name": "Tulcea",
+  "url": "data/admin2/2367044.geojson"
+ },
+ "2369652": {
+  "count": 29,
+  "iso": "AU-TAS",
+  "kind": "subdivision_2",
+  "name": "Tasmania",
+  "url": "data/admin2/2369652.geojson"
+ },
+ "238392": {
+  "count": 2,
+  "iso": "CL-AP",
+  "kind": "subdivision_2",
+  "name": "Arica y Parinacota Region",
+  "url": "data/admin2/238392.geojson"
+ },
+ "238393": {
+  "count": 2,
+  "iso": "CL-TA",
+  "kind": "subdivision_2",
+  "name": "Tarapac\u0430 Region",
+  "url": "data/admin2/238393.geojson"
+ },
+ "2388356": {
+  "count": 8,
+  "iso": "ID-BT",
+  "kind": "subdivision_2",
+  "name": "Banten",
+  "url": "data/admin2/2388356.geojson"
+ },
+ "2388357": {
+  "count": 36,
+  "iso": "ID-JT",
+  "kind": "subdivision_2",
+  "name": "Central Java",
+  "url": "data/admin2/2388357.geojson"
+ },
+ "2388361": {
+  "count": 28,
+  "iso": "ID-JB",
+  "kind": "subdivision_2",
+  "name": "West Java",
+  "url": "data/admin2/2388361.geojson"
+ },
+ "2388613": {
+  "count": 14,
+  "iso": "ID-KT",
+  "kind": "subdivision_2",
+  "name": "Central Kalimantan",
+  "url": "data/admin2/2388613.geojson"
+ },
+ "2388615": {
+  "count": 13,
+  "iso": "ID-KS",
+  "kind": "subdivision_2",
+  "name": "South Kalimantan",
+  "url": "data/admin2/2388615.geojson"
+ },
+ "2388616": {
+  "count": 14,
+  "iso": "ID-KB",
+  "kind": "subdivision_2",
+  "name": "West Kalimantan",
+  "url": "data/admin2/2388616.geojson"
+ },
+ "2388664": {
+  "count": 9,
+  "iso": "ID-ST",
+  "kind": "subdivision_2",
+  "name": "Central Sulawesi",
+  "url": "data/admin2/2388664.geojson"
+ },
+ "2388665": {
+  "count": 6,
+  "iso": "ID-GO",
+  "kind": "subdivision_2",
+  "name": "Gorontalo",
+  "url": "data/admin2/2388665.geojson"
+ },
+ "2388666": {
+  "count": 13,
+  "iso": "ID-SA",
+  "kind": "subdivision_2",
+  "name": "North Sulawesi",
+  "url": "data/admin2/2388666.geojson"
+ },
+ "2388667": {
+  "count": 21,
+  "iso": "ID-SN",
+  "kind": "subdivision_2",
+  "name": "South Sulawesi",
+  "url": "data/admin2/2388667.geojson"
+ },
+ "2388668": {
+  "count": 12,
+  "iso": "ID-SG",
+  "kind": "subdivision_2",
+  "name": "Southeast Sulawesi",
+  "url": "data/admin2/2388668.geojson"
+ },
+ "2388669": {
+  "count": 5,
+  "iso": "ID-SR",
+  "kind": "subdivision_2",
+  "name": "West Sulawesi",
+  "url": "data/admin2/2388669.geojson"
+ },
+ "2390836": {
+  "count": 21,
+  "iso": "ID-AC",
+  "kind": "subdivision_2",
+  "name": "Aceh",
+  "url": "data/admin2/2390836.geojson"
+ },
+ "2390837": {
+  "count": 9,
+  "iso": "ID-BE",
+  "kind": "subdivision_2",
+  "name": "Bengkulu",
+  "url": "data/admin2/2390837.geojson"
+ },
+ "2390838": {
+  "count": 11,
+  "iso": "ID-JA",
+  "kind": "subdivision_2",
+  "name": "Jambi",
+  "url": "data/admin2/2390838.geojson"
+ },
+ "2390839": {
+  "count": 15,
+  "iso": "ID-LA",
+  "kind": "subdivision_2",
+  "name": "Lampung",
+  "url": "data/admin2/2390839.geojson"
+ },
+ "2390840": {
+  "count": 12,
+  "iso": "ID-RI",
+  "kind": "subdivision_2",
+  "name": "Riau",
+  "url": "data/admin2/2390840.geojson"
+ },
+ "2390841": {
+  "count": 19,
+  "iso": "ID-SB",
+  "kind": "subdivision_2",
+  "name": "West Sumatra",
+  "url": "data/admin2/2390841.geojson"
+ },
+ "2390842": {
+  "count": 16,
+  "iso": "ID-SS",
+  "kind": "subdivision_2",
+  "name": "South Sumatra",
+  "url": "data/admin2/2390842.geojson"
+ },
+ "2390843": {
+  "count": 33,
+  "iso": "ID-SU",
+  "kind": "subdivision_2",
+  "name": "North Sumatra",
+  "url": "data/admin2/2390843.geojson"
+ },
+ "2393403": {
+  "count": 17,
+  "iso": "KR-48",
+  "kind": "subdivision_2",
+  "name": "South Gyeongsang",
+  "url": "data/admin2/2393403.geojson"
+ },
+ "2395674": {
+  "count": 7,
+  "iso": "KR-27",
+  "kind": "subdivision_2",
+  "name": "Daegu",
+  "url": "data/admin2/2395674.geojson"
+ },
+ "2395867": {
+  "count": 5,
+  "iso": "KR-31",
+  "kind": "subdivision_2",
+  "name": "Ulsan",
+  "url": "data/admin2/2395867.geojson"
+ },
+ "2396450": {
+  "count": 13,
+  "iso": "KR-26",
+  "kind": "subdivision_2",
+  "name": "Busan",
+  "url": "data/admin2/2396450.geojson"
+ },
+ "2396778": {
+  "count": 17,
+  "iso": "ID-NT",
+  "kind": "subdivision_2",
+  "name": "East Nusa Tenggara",
+  "url": "data/admin2/2396778.geojson"
+ },
+ "2396795": {
+  "count": 5,
+  "iso": "ID-MA",
+  "kind": "subdivision_2",
+  "name": "Maluku",
+  "url": "data/admin2/2396795.geojson"
+ },
+ "2396796": {
+  "count": 6,
+  "iso": "ID-MU",
+  "kind": "subdivision_2",
+  "name": "North Maluku",
+  "url": "data/admin2/2396796.geojson"
+ },
+ "2398560": {
+  "count": 2,
+  "iso": "KR-49",
+  "kind": "subdivision_2",
+  "name": "Jeju",
+  "url": "data/admin2/2398560.geojson"
+ },
+ "239882": {
+  "count": 4,
+  "iso": "CL-ML",
+  "kind": "subdivision_2",
+  "name": "Maule Region",
+  "url": "data/admin2/239882.geojson"
+ },
+ "2399704": {
+  "count": 57,
+  "iso": "MX-ZAC",
+  "kind": "subdivision_2",
+  "name": "Zacatecas",
+  "url": "data/admin2/2399704.geojson"
+ },
+ "2399740": {
+  "count": 39,
+  "iso": "MX-DUR",
+  "kind": "subdivision_2",
+  "name": "Durango",
+  "url": "data/admin2/2399740.geojson"
+ },
+ "2405230": {
+  "count": 23,
+  "iso": "AR-A",
+  "kind": "subdivision_2",
+  "name": "Salta",
+  "url": "data/admin2/2405230.geojson"
+ },
+ "240932": {
+  "count": 3,
+  "iso": "CL-AN",
+  "kind": "subdivision_2",
+  "name": "Antofagasta Region",
+  "url": "data/admin2/240932.geojson"
+ },
+ "241037": {
+  "count": 10,
+  "iso": "IR-05",
+  "kind": "subdivision_2",
+  "name": "Kermanshah Province",
+  "url": "data/admin2/241037.geojson"
+ },
+ "241038": {
+  "count": 19,
+  "iso": "IR-13",
+  "kind": "subdivision_2",
+  "name": "Hamadan Province",
+  "url": "data/admin2/241038.geojson"
+ },
+ "241472": {
+  "count": 20,
+  "iso": "IR-01",
+  "kind": "subdivision_2",
+  "name": "Gilan Province",
+  "url": "data/admin2/241472.geojson"
+ },
+ "241473": {
+  "count": 16,
+  "iso": "IR-19",
+  "kind": "subdivision_2",
+  "name": "Zanjan Province",
+  "url": "data/admin2/241473.geojson"
+ },
+ "241474": {
+  "count": 12,
+  "iso": "IR-20",
+  "kind": "subdivision_2",
+  "name": "Semnan Province",
+  "url": "data/admin2/241474.geojson"
+ },
+ "241475": {
+  "count": 26,
+  "iso": "IR-10",
+  "kind": "subdivision_2",
+  "name": "Isfahan Province",
+  "url": "data/admin2/241475.geojson"
+ },
+ "241478": {
+  "count": 13,
+  "iso": "IR-17",
+  "kind": "subdivision_2",
+  "name": "Kohgiluye and Buyer Ahmad Province",
+  "url": "data/admin2/241478.geojson"
+ },
+ "241546": {
+  "count": 8,
+  "iso": "IR-12",
+  "kind": "subdivision_2",
+  "name": "Kurdistan Province",
+  "url": "data/admin2/241546.geojson"
+ },
+ "2415518": {
+  "count": 42,
+  "iso": "MX-TAM",
+  "kind": "subdivision_2",
+  "name": "Tamaulipas",
+  "url": "data/admin2/2415518.geojson"
+ },
+ "2415761": {
+  "count": 213,
+  "iso": "MX-VER",
+  "kind": "subdivision_2",
+  "name": "Veracruz",
+  "url": "data/admin2/2415761.geojson"
+ },
+ "241593": {
+  "count": 26,
+  "iso": "IR-04",
+  "kind": "subdivision_2",
+  "name": "West Azerbaijan Province",
+  "url": "data/admin2/241593.geojson"
+ },
+ "2424034": {
+  "count": 4,
+  "iso": "MA-08",
+  "kind": "subdivision_2",
+  "name": "Dr\u00e2a-Tafilalet",
+  "url": "data/admin2/2424034.geojson"
+ },
+ "2424036": {
+  "count": 4,
+  "iso": "MA-09",
+  "kind": "subdivision_2",
+  "name": "Souss-Massa",
+  "url": "data/admin2/2424036.geojson"
+ },
+ "2424040": {
+  "count": 4,
+  "iso": "MA-10",
+  "kind": "subdivision_2",
+  "name": "Guelmim-Oued Noun",
+  "url": "data/admin2/2424040.geojson"
+ },
+ "2424085": {
+  "count": 6,
+  "iso": "MA-06",
+  "kind": "subdivision_2",
+  "name": "Casablanca-Settat",
+  "url": "data/admin2/2424085.geojson"
+ },
+ "2424086": {
+  "count": 4,
+  "iso": "MA-07",
+  "kind": "subdivision_2",
+  "name": "Marrakech-Safi",
+  "url": "data/admin2/2424086.geojson"
+ },
+ "2424260": {
+  "count": 6,
+  "iso": "MA-11",
+  "kind": "subdivision_2",
+  "name": "La\u00e2youne-Sakia El Hamra",
+  "url": "data/admin2/2424260.geojson"
+ },
+ "242620": {
+  "count": 496,
+  "iso": "BR-RS",
+  "kind": "subdivision_2",
+  "name": "Rio Grande do Sul",
+  "url": "data/admin2/242620.geojson"
+ },
+ "2439316": {
+  "count": 86,
+  "iso": "MX-GRO",
+  "kind": "subdivision_2",
+  "name": "Guerrero",
+  "url": "data/admin2/2439316.geojson"
+ },
+ "2444378": {
+  "count": 2,
+  "iso": "VE-A",
+  "kind": "subdivision_2",
+  "name": "Capital District",
+  "url": "data/admin2/2444378.geojson"
+ },
+ "2455086": {
+  "count": 18,
+  "iso": "MX-SIN",
+  "kind": "subdivision_2",
+  "name": "Sinaloa",
+  "url": "data/admin2/2455086.geojson"
+ },
+ "2465058": {
+  "count": 17,
+  "iso": "KZ-ALA",
+  "kind": "subdivision_2",
+  "name": "Almaty",
+  "url": "data/admin2/2465058.geojson"
+ },
+ "250523988": {
+  "count": 25,
+  "iso": "PL-PK",
+  "kind": "subdivision_2",
+  "name": "Podkarpackie Voivodeship",
+  "url": "data/admin2/250523988.geojson"
+ },
+ "252891": {
+  "count": 3,
+  "iso": "CL-BI",
+  "kind": "subdivision_2",
+  "name": "Biobio Region",
+  "url": "data/admin2/252891.geojson"
+ },
+ "2529822": {
+  "count": 559,
+  "iso": "MX-OAX",
+  "kind": "subdivision_2",
+  "name": "Oaxaca",
+  "url": "data/admin2/2529822.geojson"
+ },
+ "253252": {
+  "count": 8,
+  "iso": "RU-IN",
+  "kind": "subdivision_2",
+  "name": "Ingushetia",
+  "url": "data/admin2/253252.geojson"
+ },
+ "253256": {
+  "count": 9,
+  "iso": "RU-AD",
+  "kind": "subdivision_2",
+  "name": "Republic of Adygea",
+  "url": "data/admin2/253256.geojson"
+ },
+ "255446": {
+  "count": 23,
+  "iso": "IR-07",
+  "kind": "subdivision_2",
+  "name": "Fars Province",
+  "url": "data/admin2/255446.geojson"
+ },
+ "2556679": {
+  "count": 119,
+  "iso": "MX-CHP",
+  "kind": "subdivision_2",
+  "name": "Chiapas",
+  "url": "data/admin2/2556679.geojson"
+ },
+ "2556680": {
+  "count": 16,
+  "iso": "MX-TAB",
+  "kind": "subdivision_2",
+  "name": "Tabasco",
+  "url": "data/admin2/2556680.geojson"
+ },
+ "2568834": {
+  "count": 11,
+  "iso": "MX-CAM",
+  "kind": "subdivision_2",
+  "name": "Campeche",
+  "url": "data/admin2/2568834.geojson"
+ },
+ "2589601": {
+  "count": 4,
+  "iso": "MX-BCN",
+  "kind": "subdivision_2",
+  "name": "Baja California",
+  "url": "data/admin2/2589601.geojson"
+ },
+ "2589611": {
+  "count": 3,
+  "iso": "MX-BCS",
+  "kind": "subdivision_2",
+  "name": "Baja California Sur",
+  "url": "data/admin2/2589611.geojson"
+ },
+ "2610002": {
+  "count": 11,
+  "iso": "MX-AGU",
+  "kind": "subdivision_2",
+  "name": "Aguascalientes",
+  "url": "data/admin2/2610002.geojson"
+ },
+ "2614434": {
+  "count": 9,
+  "iso": "MX-ROO",
+  "kind": "subdivision_2",
+  "name": "Quintana Roo",
+  "url": "data/admin2/2614434.geojson"
+ },
+ "2614435": {
+  "count": 103,
+  "iso": "MX-YUC",
+  "kind": "subdivision_2",
+  "name": "Yucat\u00e1n",
+  "url": "data/admin2/2614435.geojson"
+ },
+ "2679957": {
+  "count": 55,
+  "iso": "JP-12",
+  "kind": "subdivision_2",
+  "name": "Chiba Prefecture",
+  "url": "data/admin2/2679957.geojson"
+ },
+ "2682940": {
+  "count": 44,
+  "iso": "JP-08",
+  "kind": "subdivision_2",
+  "name": "Ibaraki Prefecture",
+  "url": "data/admin2/2682940.geojson"
+ },
+ "2689487": {
+  "count": 33,
+  "iso": "JP-14",
+  "kind": "subdivision_2",
+  "name": "Kanagawa Prefecture",
+  "url": "data/admin2/2689487.geojson"
+ },
+ "26935": {
+  "count": 9,
+  "iso": "HU-JN",
+  "kind": "subdivision_2",
+  "name": "J\u00e1sz-Nagykun-Szolnok",
+  "url": "data/admin2/26935.geojson"
+ },
+ "269575": {
+  "count": 8,
+  "iso": "IR-18",
+  "kind": "subdivision_2",
+  "name": "Bushehr Province",
+  "url": "data/admin2/269575.geojson"
+ },
+ "269635": {
+  "count": 8,
+  "iso": "IR-24",
+  "kind": "subdivision_2",
+  "name": "Ardabil Province",
+  "url": "data/admin2/269635.geojson"
+ },
+ "269900": {
+  "count": 16,
+  "iso": "IR-02",
+  "kind": "subdivision_2",
+  "name": "Mazandaran Province",
+  "url": "data/admin2/269900.geojson"
+ },
+ "269903": {
+  "count": 15,
+  "iso": "IR-27",
+  "kind": "subdivision_2",
+  "name": "Golestan Province",
+  "url": "data/admin2/269903.geojson"
+ },
+ "271889": {
+  "count": 3,
+  "iso": "CL-AT",
+  "kind": "subdivision_2",
+  "name": "Atacama Region",
+  "url": "data/admin2/271889.geojson"
+ },
+ "272632": {
+  "count": 20,
+  "iso": "VE-V",
+  "kind": "subdivision_2",
+  "name": "Zulia State",
+  "url": "data/admin2/272632.geojson"
+ },
+ "272633": {
+  "count": 29,
+  "iso": "VE-S",
+  "kind": "subdivision_2",
+  "name": "Tachira State",
+  "url": "data/admin2/272633.geojson"
+ },
+ "272634": {
+  "count": 20,
+  "iso": "VE-T",
+  "kind": "subdivision_2",
+  "name": "Trujillo State",
+  "url": "data/admin2/272634.geojson"
+ },
+ "272635": {
+  "count": 22,
+  "iso": "VE-L",
+  "kind": "subdivision_2",
+  "name": "Merida State",
+  "url": "data/admin2/272635.geojson"
+ },
+ "272661": {
+  "count": 14,
+  "iso": "VE-P",
+  "kind": "subdivision_2",
+  "name": "Portuguesa State",
+  "url": "data/admin2/272661.geojson"
+ },
+ "272662": {
+  "count": 9,
+  "iso": "VE-H",
+  "kind": "subdivision_2",
+  "name": "Cojedes State",
+  "url": "data/admin2/272662.geojson"
+ },
+ "272663": {
+  "count": 15,
+  "iso": "VE-J",
+  "kind": "subdivision_2",
+  "name": "Guarico State",
+  "url": "data/admin2/272663.geojson"
+ },
+ "272669": {
+  "count": 4,
+  "iso": "VE-Y",
+  "kind": "subdivision_2",
+  "name": "Delta Amacuro State",
+  "url": "data/admin2/272669.geojson"
+ },
+ "272670": {
+  "count": 13,
+  "iso": "VE-N",
+  "kind": "subdivision_2",
+  "name": "Monagas State",
+  "url": "data/admin2/272670.geojson"
+ },
+ "272671": {
+  "count": 15,
+  "iso": "VE-R",
+  "kind": "subdivision_2",
+  "name": "Sucre State",
+  "url": "data/admin2/272671.geojson"
+ },
+ "272673": {
+  "count": 21,
+  "iso": "VE-M",
+  "kind": "subdivision_2",
+  "name": "Miranda State",
+  "url": "data/admin2/272673.geojson"
+ },
+ "272743": {
+  "count": 15,
+  "iso": "VE-U",
+  "kind": "subdivision_2",
+  "name": "Yaracuy State",
+  "url": "data/admin2/272743.geojson"
+ },
+ "272744": {
+  "count": 9,
+  "iso": "VE-K",
+  "kind": "subdivision_2",
+  "name": "Lara State",
+  "url": "data/admin2/272744.geojson"
+ },
+ "272745": {
+  "count": 14,
+  "iso": "VE-G",
+  "kind": "subdivision_2",
+  "name": "Carabobo State",
+  "url": "data/admin2/272745.geojson"
+ },
+ "272746": {
+  "count": 16,
+  "iso": "VE-D",
+  "kind": "subdivision_2",
+  "name": "Aragua State",
+  "url": "data/admin2/272746.geojson"
+ },
+ "273588796": {
+  "count": 7,
+  "iso": "CZ-JM",
+  "kind": "subdivision_2",
+  "name": "South Moravian",
+  "url": "data/admin2/273588796.geojson"
+ },
+ "2746948": {
+  "count": 7,
+  "iso": "TH-37",
+  "kind": "subdivision_2",
+  "name": "Amnat Charoen Province",
+  "url": "data/admin2/2746948.geojson"
+ },
+ "274988": {
+  "count": 2,
+  "iso": "CL-LR",
+  "kind": "subdivision_2",
+  "name": "Los R\u00edos",
+  "url": "data/admin2/274988.geojson"
+ },
+ "274991": {
+  "count": 3,
+  "iso": "CL-LL",
+  "kind": "subdivision_2",
+  "name": "Los Lagos Region",
+  "url": "data/admin2/274991.geojson"
+ },
+ "278721": {
+  "count": 23,
+  "iso": "IE-C",
+  "kind": "subdivision_2",
+  "name": "Connacht",
+  "url": "data/admin2/278721.geojson"
+ },
+ "278746": {
+  "count": 81,
+  "iso": "IE-L",
+  "kind": "subdivision_2",
+  "name": "Leinster",
+  "url": "data/admin2/278746.geojson"
+ },
+ "278750": {
+  "count": 45,
+  "iso": "IE-M",
+  "kind": "subdivision_2",
+  "name": "Munster",
+  "url": "data/admin2/278750.geojson"
+ },
+ "279283359": {
+  "count": 9,
+  "iso": "MA-13",
+  "kind": "subdivision_2",
+  "name": "Suss-Massa-Draa",
+  "url": "data/admin2/279283359.geojson"
+ },
+ "280685284": {
+  "count": 9,
+  "iso": "VN-32",
+  "kind": "subdivision_2",
+  "name": "Ph\u00fa Y\u00ean",
+  "url": "data/admin2/280685284.geojson"
+ },
+ "2849847": {
+  "count": 9,
+  "iso": "AR-P",
+  "kind": "subdivision_2",
+  "name": "Formosa",
+  "url": "data/admin2/2849847.geojson"
+ },
+ "286342": {
+  "count": 88,
+  "iso": "CN-GX",
+  "kind": "subdivision_2",
+  "name": "Guangxi",
+  "url": "data/admin2/286342.geojson"
+ },
+ "286937": {
+  "count": 82,
+  "iso": "CN-GZ",
+  "kind": "subdivision_2",
+  "name": "Guizhou",
+  "url": "data/admin2/286937.geojson"
+ },
+ "2897141": {
+  "count": 16,
+  "iso": "PT-11",
+  "kind": "subdivision_2",
+  "name": "Lisbon",
+  "url": "data/admin2/2897141.geojson"
+ },
+ "289880991": {
+  "count": 4,
+  "iso": "PH-MNL",
+  "kind": "subdivision_2",
+  "name": "San Juan",
+  "url": "data/admin2/289880991.geojson"
+ },
+ "291255197": {
+  "count": 8,
+  "iso": "VN-72",
+  "kind": "subdivision_2",
+  "name": "\u0110\u1eafk N\u00f4ng",
+  "url": "data/admin2/291255197.geojson"
+ },
+ "292156236": {
+  "count": 11,
+  "iso": "VN-52",
+  "kind": "subdivision_2",
+  "name": "S\u00f3c Tr\u0103ng",
+  "url": "data/admin2/292156236.geojson"
+ },
+ "292745581": {
+  "count": 11,
+  "iso": "CZ-ST",
+  "kind": "subdivision_2",
+  "name": "Central Bohemian",
+  "url": "data/admin2/292745581.geojson"
+ },
+ "2932285": {
+  "count": 8,
+  "iso": "MY-10",
+  "kind": "subdivision_2",
+  "name": "Selangor",
+  "url": "data/admin2/2932285.geojson"
+ },
+ "2934602": {
+  "count": 8,
+  "iso": "TH-38",
+  "kind": "subdivision_2",
+  "name": "Bueng Kan Province",
+  "url": "data/admin2/2934602.geojson"
+ },
+ "2934603": {
+  "count": 7,
+  "iso": "TH-49",
+  "kind": "subdivision_2",
+  "name": "Mukdahan Province",
+  "url": "data/admin2/2934603.geojson"
+ },
+ "2934604": {
+  "count": 2,
+  "iso": "TH-83",
+  "kind": "subdivision_2",
+  "name": "Phuket Province",
+  "url": "data/admin2/2934604.geojson"
+ },
+ "2934605": {
+  "count": 9,
+  "iso": "TH-27",
+  "kind": "subdivision_2",
+  "name": "Sa Kaeo Province",
+  "url": "data/admin2/2934605.geojson"
+ },
+ "2934606": {
+  "count": 8,
+  "iso": "TH-61",
+  "kind": "subdivision_2",
+  "name": "Uthai Thani Province",
+  "url": "data/admin2/2934606.geojson"
+ },
+ "2939653": {
+  "count": 11,
+  "iso": "MY-01",
+  "kind": "subdivision_2",
+  "name": "Johor",
+  "url": "data/admin2/2939653.geojson"
+ },
+ "2939673": {
+  "count": 3,
+  "iso": "MY-04",
+  "kind": "subdivision_2",
+  "name": "Malacca",
+  "url": "data/admin2/2939673.geojson"
+ },
+ "2939674": {
+  "count": 7,
+  "iso": "MY-05",
+  "kind": "subdivision_2",
+  "name": "Negeri Sembilan",
+  "url": "data/admin2/2939674.geojson"
+ },
+ "294074761": {
+  "count": 4,
+  "iso": "MA-15",
+  "kind": "subdivision_2",
+  "name": "La\u00e2youne-Boujdour-Sakia El Hamra",
+  "url": "data/admin2/294074761.geojson"
+ },
+ "295255648": {
+  "count": 9,
+  "iso": "VN-57",
+  "kind": "subdivision_2",
+  "name": "B\u00ecnh D\u01b0\u01a1ng",
+  "url": "data/admin2/295255648.geojson"
+ },
+ "296378": {
+  "count": 2,
+  "iso": "CL-AR",
+  "kind": "subdivision_2",
+  "name": "Araucania Region",
+  "url": "data/admin2/296378.geojson"
+ },
+ "296584": {
+  "count": 294,
+  "iso": "BR-SC",
+  "kind": "subdivision_2",
+  "name": "Santa Catarina",
+  "url": "data/admin2/296584.geojson"
+ },
+ "2969732": {
+  "count": 4,
+  "iso": "IQ-DA",
+  "kind": "subdivision_2",
+  "name": "Duhok Governorate",
+  "url": "data/admin2/2969732.geojson"
+ },
+ "2969761": {
+  "count": 6,
+  "iso": "IQ-AR",
+  "kind": "subdivision_2",
+  "name": "Erbil Governorate",
+  "url": "data/admin2/2969761.geojson"
+ },
+ "2969789": {
+  "count": 9,
+  "iso": "IQ-NI",
+  "kind": "subdivision_2",
+  "name": "Nineveh Governorate",
+  "url": "data/admin2/2969789.geojson"
+ },
+ "2969790": {
+  "count": 10,
+  "iso": "IQ-SU",
+  "kind": "subdivision_2",
+  "name": "Sulaymaniyah Governorate",
+  "url": "data/admin2/2969790.geojson"
+ },
+ "297640": {
+  "count": 399,
+  "iso": "BR-PR",
+  "kind": "subdivision_2",
+  "name": "Paran\u00e1",
+  "url": "data/admin2/297640.geojson"
+ },
+ "298204": {
+  "count": 644,
+  "iso": "BR-SP",
+  "kind": "subdivision_2",
+  "name": "S\u00e3o Paulo",
+  "url": "data/admin2/298204.geojson"
+ },
+ "300646916": {
+  "count": 11,
+  "iso": "VN-31",
+  "kind": "subdivision_2",
+  "name": "B\u00ecnh \u0110\u1ecbnh",
+  "url": "data/admin2/300646916.geojson"
+ },
+ "301079": {
+  "count": 165,
+  "iso": "BR-RN",
+  "kind": "subdivision_2",
+  "name": "Rio Grande do Norte",
+  "url": "data/admin2/301079.geojson"
+ },
+ "301464": {
+  "count": 225,
+  "iso": "BR-PB",
+  "kind": "subdivision_2",
+  "name": "Para\u00edba",
+  "url": "data/admin2/301464.geojson"
+ },
+ "301482": {
+  "count": 4,
+  "iso": "IT-42",
+  "kind": "subdivision_2",
+  "name": "Liguria",
+  "url": "data/admin2/301482.geojson"
+ },
+ "301542": {
+  "count": 3,
+  "iso": "CL-MA",
+  "kind": "subdivision_2",
+  "name": "Magallanes and Chilean Antarctica Region",
+  "url": "data/admin2/301542.geojson"
+ },
+ "302635": {
+  "count": 185,
+  "iso": "BR-CE",
+  "kind": "subdivision_2",
+  "name": "Cear\u00e1",
+  "url": "data/admin2/302635.geojson"
+ },
+ "302819": {
+  "count": 224,
+  "iso": "BR-PI",
+  "kind": "subdivision_2",
+  "name": "Piau\u00ed",
+  "url": "data/admin2/302819.geojson"
+ },
+ "303702": {
+  "count": 185,
+  "iso": "BR-PE",
+  "kind": "subdivision_2",
+  "name": "Pernambuco",
+  "url": "data/admin2/303702.geojson"
+ },
+ "303781": {
+  "count": 101,
+  "iso": "BR-AL",
+  "kind": "subdivision_2",
+  "name": "Alagoas",
+  "url": "data/admin2/303781.geojson"
+ },
+ "303940": {
+  "count": 75,
+  "iso": "BR-SE",
+  "kind": "subdivision_2",
+  "name": "Sergipe",
+  "url": "data/admin2/303940.geojson"
+ },
+ "305693": {
+  "count": 4,
+  "iso": "CL-AI",
+  "kind": "subdivision_2",
+  "name": "Aysen del General Carlos Ibanez del Campo Region",
+  "url": "data/admin2/305693.geojson"
+ },
+ "3060792": {
+  "count": 9,
+  "iso": "EG-SIN",
+  "kind": "subdivision_2",
+  "name": "North Sinai",
+  "url": "data/admin2/3060792.geojson"
+ },
+ "3060793": {
+  "count": 7,
+  "iso": "EG-JS",
+  "kind": "subdivision_2",
+  "name": "South Sinai",
+  "url": "data/admin2/3060793.geojson"
+ },
+ "3061757": {
+  "count": 8,
+  "iso": "EG-ASN",
+  "kind": "subdivision_2",
+  "name": "Aswan",
+  "url": "data/admin2/3061757.geojson"
+ },
+ "3061758": {
+  "count": 7,
+  "iso": "EG-BA",
+  "kind": "subdivision_2",
+  "name": "Red Sea",
+  "url": "data/admin2/3061758.geojson"
+ },
+ "3061826": {
+  "count": 11,
+  "iso": "EG-MT",
+  "kind": "subdivision_2",
+  "name": "Matruh",
+  "url": "data/admin2/3061826.geojson"
+ },
+ "3061827": {
+  "count": 8,
+  "iso": "EG-WAD",
+  "kind": "subdivision_2",
+  "name": "New Valley",
+  "url": "data/admin2/3061827.geojson"
+ },
+ "3061846": {
+  "count": 15,
+  "iso": "EG-ALX",
+  "kind": "subdivision_2",
+  "name": "Alexandria",
+  "url": "data/admin2/3061846.geojson"
+ },
+ "3062184": {
+  "count": 9,
+  "iso": "EG-IS",
+  "kind": "subdivision_2",
+  "name": "Al Ismailiya",
+  "url": "data/admin2/3062184.geojson"
+ },
+ "3062185": {
+  "count": 4,
+  "iso": "EG-SUZ",
+  "kind": "subdivision_2",
+  "name": "Suez",
+  "url": "data/admin2/3062185.geojson"
+ },
+ "3082668": {
+  "count": 17,
+  "iso": "AR-C",
+  "kind": "subdivision_2",
+  "name": "Autonomous City of Buenos Aires",
+  "url": "data/admin2/3082668.geojson"
+ },
+ "309466838": {
+  "count": 7,
+  "iso": "VN-36",
+  "kind": "subdivision_2",
+  "name": "Ninh Thu\u1eadn",
+  "url": "data/admin2/309466838.geojson"
+ },
+ "313937843": {
+  "count": 18,
+  "iso": "VN-27",
+  "kind": "subdivision_2",
+  "name": "Qu\u1ea3ng Nam",
+  "url": "data/admin2/313937843.geojson"
+ },
+ "315173": {
+  "count": 854,
+  "iso": "BR-MG",
+  "kind": "subdivision_2",
+  "name": "Minas Gerais",
+  "url": "data/admin2/315173.geojson"
+ },
+ "3218753": {
+  "count": 20,
+  "iso": "JP-34",
+  "kind": "subdivision_2",
+  "name": "Hiroshima Prefecture",
+  "url": "data/admin2/3218753.geojson"
+ },
+ "3242292": {
+  "count": 8,
+  "iso": "IQ-AN",
+  "kind": "subdivision_2",
+  "name": "Al-Anbar Governorate",
+  "url": "data/admin2/3242292.geojson"
+ },
+ "3242293": {
+  "count": 3,
+  "iso": "IQ-BG",
+  "kind": "subdivision_2",
+  "name": "Baghdad Governorate",
+  "url": "data/admin2/3242293.geojson"
+ },
+ "3242294": {
+  "count": 8,
+  "iso": "IQ-DI",
+  "kind": "subdivision_2",
+  "name": "Diyala Governorate",
+  "url": "data/admin2/3242294.geojson"
+ },
+ "3242295": {
+  "count": 7,
+  "iso": "IQ-SD",
+  "kind": "subdivision_2",
+  "name": "Saladin Governorate",
+  "url": "data/admin2/3242295.geojson"
+ },
+ "3244377": {
+  "count": 4,
+  "iso": "IQ-QA",
+  "kind": "subdivision_2",
+  "name": "Al-Qadisiyah Governorate",
+  "url": "data/admin2/3244377.geojson"
+ },
+ "3244378": {
+  "count": 5,
+  "iso": "IQ-BB",
+  "kind": "subdivision_2",
+  "name": "Babil Governorate",
+  "url": "data/admin2/3244378.geojson"
+ },
+ "3244379": {
+  "count": 7,
+  "iso": "IQ-BA",
+  "kind": "subdivision_2",
+  "name": "Basra Governorate",
+  "url": "data/admin2/3244379.geojson"
+ },
+ "3244380": {
+  "count": 5,
+  "iso": "IQ-DQ",
+  "kind": "subdivision_2",
+  "name": "Dhi Qar Governorate",
+  "url": "data/admin2/3244380.geojson"
+ },
+ "3244381": {
+  "count": 3,
+  "iso": "IQ-KA",
+  "kind": "subdivision_2",
+  "name": "Karbala Governorate",
+  "url": "data/admin2/3244381.geojson"
+ },
+ "3244382": {
+  "count": 6,
+  "iso": "IQ-MA",
+  "kind": "subdivision_2",
+  "name": "Maysan Governorate",
+  "url": "data/admin2/3244382.geojson"
+ },
+ "3244383": {
+  "count": 4,
+  "iso": "IQ-MU",
+  "kind": "subdivision_2",
+  "name": "Muthanna Governorate",
+  "url": "data/admin2/3244383.geojson"
+ },
+ "3244384": {
+  "count": 3,
+  "iso": "IQ-NA",
+  "kind": "subdivision_2",
+  "name": "Al-Najaf Governorate",
+  "url": "data/admin2/3244384.geojson"
+ },
+ "3244385": {
+  "count": 5,
+  "iso": "IQ-WA",
+  "kind": "subdivision_2",
+  "name": "Wasit Governorate",
+  "url": "data/admin2/3244385.geojson"
+ },
+ "325866": {
+  "count": 52,
+  "iso": "BR-RO",
+  "kind": "subdivision_2",
+  "name": "Rond\u00f4nia",
+  "url": "data/admin2/325866.geojson"
+ },
+ "326182153": {
+  "count": 33,
+  "iso": "KE-800",
+  "kind": "subdivision_2",
+  "name": "Western",
+  "url": "data/admin2/326182153.geojson"
+ },
+ "326213592": {
+  "count": 10,
+  "iso": "VN-58",
+  "kind": "subdivision_2",
+  "name": "B\u00ecnh Ph\u01b0\u1edbc",
+  "url": "data/admin2/326213592.geojson"
+ },
+ "326266": {
+  "count": 22,
+  "iso": "BR-AC",
+  "kind": "subdivision_2",
+  "name": "Acre",
+  "url": "data/admin2/326266.geojson"
+ },
+ "326287": {
+  "count": 15,
+  "iso": "BR-RR",
+  "kind": "subdivision_2",
+  "name": "Roraima",
+  "url": "data/admin2/326287.geojson"
+ },
+ "3285636": {
+  "count": 19,
+  "iso": "JP-31",
+  "kind": "subdivision_2",
+  "name": "Tottori Prefecture",
+  "url": "data/admin2/3285636.geojson"
+ },
+ "3300249": {
+  "count": 22,
+  "iso": "IR-21",
+  "kind": "subdivision_2",
+  "name": "Yazd Province",
+  "url": "data/admin2/3300249.geojson"
+ },
+ "331463": {
+  "count": 16,
+  "iso": "BR-AP",
+  "kind": "subdivision_2",
+  "name": "Amap\u00e1",
+  "url": "data/admin2/331463.geojson"
+ },
+ "332476": {
+  "count": 61,
+  "iso": "BR-AM",
+  "kind": "subdivision_2",
+  "name": "Amazonas",
+  "url": "data/admin2/332476.geojson"
+ },
+ "3327998": {
+  "count": 15,
+  "iso": "GH-UE",
+  "kind": "subdivision_2",
+  "name": "Upper East Region",
+  "url": "data/admin2/3327998.geojson"
+ },
+ "3328013": {
+  "count": 11,
+  "iso": "GH-UW",
+  "kind": "subdivision_2",
+  "name": "Upper West Region",
+  "url": "data/admin2/3328013.geojson"
+ },
+ "3328699": {
+  "count": 26,
+  "iso": "GH-TV",
+  "kind": "subdivision_2",
+  "name": "Volta Region",
+  "url": "data/admin2/3328699.geojson"
+ },
+ "332924": {
+  "count": 210,
+  "iso": "BR-MA",
+  "kind": "subdivision_2",
+  "name": "Maranh\u00e3o",
+  "url": "data/admin2/332924.geojson"
+ },
+ "3330249": {
+  "count": 43,
+  "iso": "GH-AH",
+  "kind": "subdivision_2",
+  "name": "Ashanti Region",
+  "url": "data/admin2/3330249.geojson"
+ },
+ "3330281": {
+  "count": 22,
+  "iso": "GH-CP",
+  "kind": "subdivision_2",
+  "name": "Central Region",
+  "url": "data/admin2/3330281.geojson"
+ },
+ "333597": {
+  "count": 142,
+  "iso": "BR-MT",
+  "kind": "subdivision_2",
+  "name": "Mato Grosso",
+  "url": "data/admin2/333597.geojson"
+ },
+ "334051": {
+  "count": 78,
+  "iso": "BR-MS",
+  "kind": "subdivision_2",
+  "name": "Mato Grosso do Sul",
+  "url": "data/admin2/334051.geojson"
+ },
+ "334443": {
+  "count": 245,
+  "iso": "BR-GO",
+  "kind": "subdivision_2",
+  "name": "Goi\u00e1s",
+  "url": "data/admin2/334443.geojson"
+ },
+ "3346137": {
+  "count": 19,
+  "iso": "JP-32",
+  "kind": "subdivision_2",
+  "name": "Shimane Prefecture",
+  "url": "data/admin2/3346137.geojson"
+ },
+ "336819": {
+  "count": 141,
+  "iso": "BR-TO",
+  "kind": "subdivision_2",
+  "name": "Tocantins",
+  "url": "data/admin2/336819.geojson"
+ },
+ "3385992": {
+  "count": 13,
+  "iso": "IR-22",
+  "kind": "subdivision_2",
+  "name": "Hormozgan Province",
+  "url": "data/admin2/3385992.geojson"
+ },
+ "3395162": {
+  "count": 7,
+  "iso": "VE-C",
+  "kind": "subdivision_2",
+  "name": "Apure State",
+  "url": "data/admin2/3395162.geojson"
+ },
+ "340121140": {
+  "count": 7,
+  "iso": "CZ-JC",
+  "kind": "subdivision_2",
+  "name": "South Bohemian",
+  "url": "data/admin2/340121140.geojson"
+ },
+ "3406823": {
+  "count": 3,
+  "iso": "MA-12",
+  "kind": "subdivision_2",
+  "name": "Dakhla-Oued Ed-Dahab",
+  "url": "data/admin2/3406823.geojson"
+ },
+ "341906": {
+  "count": 40,
+  "iso": "JP-27",
+  "kind": "subdivision_2",
+  "name": "Osaka Prefecture",
+  "url": "data/admin2/341906.geojson"
+ },
+ "3438227": {
+  "count": 36,
+  "iso": "ID-JI",
+  "kind": "subdivision_2",
+  "name": "East Java",
+  "url": "data/admin2/3438227.geojson"
+ },
+ "3459013": {
+  "count": 20,
+  "iso": "PT-13",
+  "kind": "subdivision_2",
+  "name": "Porto",
+  "url": "data/admin2/3459013.geojson"
+ },
+ "347809223": {
+  "count": 18,
+  "iso": "KE-500",
+  "kind": "subdivision_2",
+  "name": "North Eastern",
+  "url": "data/admin2/347809223.geojson"
+ },
+ "349036": {
+  "count": 4,
+  "iso": "ES-GA",
+  "kind": "subdivision_2",
+  "name": "Galicia",
+  "url": "data/admin2/349036.geojson"
+ },
+ "349041": {
+  "count": 9,
+  "iso": "ES-CL",
+  "kind": "subdivision_2",
+  "name": "Castile and Le\u00f3n",
+  "url": "data/admin2/349041.geojson"
+ },
+ "349042": {
+  "count": 3,
+  "iso": "ES-PV",
+  "kind": "subdivision_2",
+  "name": "Autonomous Community of the Basque Country",
+  "url": "data/admin2/349042.geojson"
+ },
+ "349043": {
+  "count": 3,
+  "iso": "ES-VC",
+  "kind": "subdivision_2",
+  "name": "Valencian Community",
+  "url": "data/admin2/349043.geojson"
+ },
+ "349044": {
+  "count": 8,
+  "iso": "ES-AN",
+  "kind": "subdivision_2",
+  "name": "Andalusia",
+  "url": "data/admin2/349044.geojson"
+ },
+ "349045": {
+  "count": 3,
+  "iso": "ES-AR",
+  "kind": "subdivision_2",
+  "name": "Aragon",
+  "url": "data/admin2/349045.geojson"
+ },
+ "349048": {
+  "count": 2,
+  "iso": "ES-CN",
+  "kind": "subdivision_2",
+  "name": "Canary Islands",
+  "url": "data/admin2/349048.geojson"
+ },
+ "349050": {
+  "count": 2,
+  "iso": "ES-EX",
+  "kind": "subdivision_2",
+  "name": "Extremadura",
+  "url": "data/admin2/349050.geojson"
+ },
+ "349052": {
+  "count": 5,
+  "iso": "ES-CM",
+  "kind": "subdivision_2",
+  "name": "Castile-La Mancha",
+  "url": "data/admin2/349052.geojson"
+ },
+ "349053": {
+  "count": 4,
+  "iso": "ES-CT",
+  "kind": "subdivision_2",
+  "name": "Catalonia",
+  "url": "data/admin2/349053.geojson"
+ },
+ "3492709": {
+  "count": 17,
+  "iso": "KE-110",
+  "kind": "subdivision_2",
+  "name": "Nairobi County",
+  "url": "data/admin2/3492709.geojson"
+ },
+ "349344": {
+  "count": 5,
+  "iso": "ZA-GT",
+  "kind": "subdivision_2",
+  "name": "Gauteng",
+  "url": "data/admin2/349344.geojson"
+ },
+ "349390": {
+  "count": 11,
+  "iso": "ZA-NL",
+  "kind": "subdivision_2",
+  "name": "KwaZulu-Natal",
+  "url": "data/admin2/349390.geojson"
+ },
+ "349519": {
+  "count": 4,
+  "iso": "ZA-NW",
+  "kind": "subdivision_2",
+  "name": "North West",
+  "url": "data/admin2/349519.geojson"
+ },
+ "349547": {
+  "count": 5,
+  "iso": "ZA-LP",
+  "kind": "subdivision_2",
+  "name": "Limpopo",
+  "url": "data/admin2/349547.geojson"
+ },
+ "349556": {
+  "count": 3,
+  "iso": "ZA-MP",
+  "kind": "subdivision_2",
+  "name": "Mpumalanga",
+  "url": "data/admin2/349556.geojson"
+ },
+ "3498732": {
+  "count": 29,
+  "iso": "GH-NP",
+  "kind": "subdivision_2",
+  "name": "Northern Region",
+  "url": "data/admin2/3498732.geojson"
+ },
+ "3498733": {
+  "count": 33,
+  "iso": "GH-EP",
+  "kind": "subdivision_2",
+  "name": "Eastern Region",
+  "url": "data/admin2/3498733.geojson"
+ },
+ "3498734": {
+  "count": 23,
+  "iso": "GH-WP",
+  "kind": "subdivision_2",
+  "name": "Western Region",
+  "url": "data/admin2/3498734.geojson"
+ },
+ "350569351": {
+  "count": 26,
+  "iso": "NO-12",
+  "kind": "subdivision_2",
+  "name": "Hordaland",
+  "url": "data/admin2/350569351.geojson"
+ },
+ "35183": {
+  "count": 13,
+  "iso": "AT-6",
+  "kind": "subdivision_2",
+  "name": "Styria",
+  "url": "data/admin2/35183.geojson"
+ },
+ "3559887": {
+  "count": 29,
+  "iso": "JP-15",
+  "kind": "subdivision_2",
+  "name": "Niigata Prefecture",
+  "url": "data/admin2/3559887.geojson"
+ },
+ "3560284": {
+  "count": 77,
+  "iso": "JP-20",
+  "kind": "subdivision_2",
+  "name": "Nagano Prefecture",
+  "url": "data/admin2/3560284.geojson"
+ },
+ "3560336": {
+  "count": 54,
+  "iso": "JP-23",
+  "kind": "subdivision_2",
+  "name": "Aichi Prefecture",
+  "url": "data/admin2/3560336.geojson"
+ },
+ "356874258": {
+  "count": 16,
+  "iso": "KZ-VOS",
+  "kind": "subdivision_2",
+  "name": "East Kazakhstan",
+  "url": "data/admin2/356874258.geojson"
+ },
+ "356911": {
+  "count": 16,
+  "iso": "JP-44",
+  "kind": "subdivision_2",
+  "name": "Oita Prefecture",
+  "url": "data/admin2/356911.geojson"
+ },
+ "356912": {
+  "count": 41,
+  "iso": "JP-28",
+  "kind": "subdivision_2",
+  "name": "Hyogo Prefecture",
+  "url": "data/admin2/356912.geojson"
+ },
+ "357112": {
+  "count": 16,
+  "iso": "JP-18",
+  "kind": "subdivision_2",
+  "name": "Fukui Prefecture",
+  "url": "data/admin2/357112.geojson"
+ },
+ "357800": {
+  "count": 19,
+  "iso": "JP-25",
+  "kind": "subdivision_2",
+  "name": "Shiga Prefecture",
+  "url": "data/admin2/357800.geojson"
+ },
+ "3578391": {
+  "count": 27,
+  "iso": "JP-19",
+  "kind": "subdivision_2",
+  "name": "Yamanashi Prefecture",
+  "url": "data/admin2/3578391.geojson"
+ },
+ "357968": {
+  "count": 26,
+  "iso": "PK-BA",
+  "kind": "subdivision_2",
+  "name": "Balochistan",
+  "url": "data/admin2/357968.geojson"
+ },
+ "357981": {
+  "count": 23,
+  "iso": "PK-SD",
+  "kind": "subdivision_2",
+  "name": "Sindh",
+  "url": "data/admin2/357981.geojson"
+ },
+ "357988": {
+  "count": 34,
+  "iso": "PK-PB",
+  "kind": "subdivision_2",
+  "name": "Punjab",
+  "url": "data/admin2/357988.geojson"
+ },
+ "357995": {
+  "count": 10,
+  "iso": "PK-GB",
+  "kind": "subdivision_2",
+  "name": "Gilgit-Baltistan",
+  "url": "data/admin2/357995.geojson"
+ },
+ "3584607": {
+  "count": 13,
+  "iso": "EG-GH",
+  "kind": "subdivision_2",
+  "name": "Gharbiyya Governorate",
+  "url": "data/admin2/3584607.geojson"
+ },
+ "358631": {
+  "count": 41,
+  "iso": "JP-29",
+  "kind": "subdivision_2",
+  "name": "Nara Prefecture",
+  "url": "data/admin2/358631.geojson"
+ },
+ "3592494": {
+  "count": 28,
+  "iso": "AR-X",
+  "kind": "subdivision_2",
+  "name": "C\u00f3rdoba",
+  "url": "data/admin2/3592494.geojson"
+ },
+ "362413": {
+  "count": 415,
+  "iso": "BR-BA",
+  "kind": "subdivision_2",
+  "name": "Bahia",
+  "url": "data/admin2/362413.geojson"
+ },
+ "364186": {
+  "count": 12,
+  "iso": "IN-HP",
+  "kind": "subdivision_2",
+  "name": "Himachal Pradesh",
+  "url": "data/admin2/364186.geojson"
+ },
+ "3661581": {
+  "count": 8,
+  "iso": "IR-06",
+  "kind": "subdivision_2",
+  "name": "Khuzestan Province",
+  "url": "data/admin2/3661581.geojson"
+ },
+ "3667294": {
+  "count": 9,
+  "iso": "SA-04",
+  "kind": "subdivision_2",
+  "name": "Eastern Province",
+  "url": "data/admin2/3667294.geojson"
+ },
+ "3667317": {
+  "count": 7,
+  "iso": "SA-10",
+  "kind": "subdivision_2",
+  "name": "Najran Region",
+  "url": "data/admin2/3667317.geojson"
+ },
+ "3673927": {
+  "count": 4,
+  "iso": "SA-08",
+  "kind": "subdivision_2",
+  "name": "Northern Borders Province",
+  "url": "data/admin2/3673927.geojson"
+ },
+ "3676707": {
+  "count": 9,
+  "iso": "SA-06",
+  "kind": "subdivision_2",
+  "name": "\u1e24a'il Province",
+  "url": "data/admin2/3676707.geojson"
+ },
+ "3678409": {
+  "count": 23,
+  "iso": "SA-01",
+  "kind": "subdivision_2",
+  "name": "Riyadh Region",
+  "url": "data/admin2/3678409.geojson"
+ },
+ "3678598": {
+  "count": 15,
+  "iso": "SA-14",
+  "kind": "subdivision_2",
+  "name": "'Asir Province",
+  "url": "data/admin2/3678598.geojson"
+ },
+ "3678639": {
+  "count": 17,
+  "iso": "SA-02",
+  "kind": "subdivision_2",
+  "name": "Makkah Region",
+  "url": "data/admin2/3678639.geojson"
+ },
+ "3679867": {
+  "count": 5,
+  "iso": "SA-07",
+  "kind": "subdivision_2",
+  "name": "Tabuk Province",
+  "url": "data/admin2/3679867.geojson"
+ },
+ "3679869": {
+  "count": 9,
+  "iso": "SA-03",
+  "kind": "subdivision_2",
+  "name": "Medina Province",
+  "url": "data/admin2/3679869.geojson"
+ },
+ "3679872": {
+  "count": 13,
+  "iso": "SA-05",
+  "kind": "subdivision_2",
+  "name": "Al-Qassim Province",
+  "url": "data/admin2/3679872.geojson"
+ },
+ "3679888": {
+  "count": 9,
+  "iso": "SA-11",
+  "kind": "subdivision_2",
+  "name": "Al-Bahah Province",
+  "url": "data/admin2/3679888.geojson"
+ },
+ "3679903": {
+  "count": 17,
+  "iso": "SA-09",
+  "kind": "subdivision_2",
+  "name": "Jazan Province",
+  "url": "data/admin2/3679903.geojson"
+ },
+ "3698564": {
+  "count": 17,
+  "iso": "NG-YO",
+  "kind": "subdivision_2",
+  "name": "Yobe",
+  "url": "data/admin2/3698564.geojson"
+ },
+ "3703236": {
+  "count": 27,
+  "iso": "NG-JI",
+  "kind": "subdivision_2",
+  "name": "Jigawa State",
+  "url": "data/admin2/3703236.geojson"
+ },
+ "3706956": {
+  "count": 14,
+  "iso": "NG-ZA",
+  "kind": "subdivision_2",
+  "name": "Zamfara State",
+  "url": "data/admin2/3706956.geojson"
+ },
+ "3707368": {
+  "count": 22,
+  "iso": "NG-SO",
+  "kind": "subdivision_2",
+  "name": "Sokoto State",
+  "url": "data/admin2/3707368.geojson"
+ },
+ "3707933": {
+  "count": 22,
+  "iso": "NG-KE",
+  "kind": "subdivision_2",
+  "name": "Kebbi State",
+  "url": "data/admin2/3707933.geojson"
+ },
+ "3709353": {
+  "count": 23,
+  "iso": "NG-KD",
+  "kind": "subdivision_2",
+  "name": "Kaduna State",
+  "url": "data/admin2/3709353.geojson"
+ },
+ "3710302": {
+  "count": 44,
+  "iso": "NG-KN",
+  "kind": "subdivision_2",
+  "name": "Kano State",
+  "url": "data/admin2/3710302.geojson"
+ },
+ "3711481": {
+  "count": 34,
+  "iso": "NG-KT",
+  "kind": "subdivision_2",
+  "name": "Katsina State",
+  "url": "data/admin2/3711481.geojson"
+ },
+ "3713501": {
+  "count": 17,
+  "iso": "NG-AB",
+  "kind": "subdivision_2",
+  "name": "Abia State",
+  "url": "data/admin2/3713501.geojson"
+ },
+ "3715359": {
+  "count": 30,
+  "iso": "NG-AK",
+  "kind": "subdivision_2",
+  "name": "Akwa Ibom State",
+  "url": "data/admin2/3715359.geojson"
+ },
+ "3715505": {
+  "count": 21,
+  "iso": "NG-AN",
+  "kind": "subdivision_2",
+  "name": "Anambra State",
+  "url": "data/admin2/3715505.geojson"
+ },
+ "3715844": {
+  "count": 9,
+  "iso": "NG-BY",
+  "kind": "subdivision_2",
+  "name": "Bayelsa State",
+  "url": "data/admin2/3715844.geojson"
+ },
+ "3716076": {
+  "count": 23,
+  "iso": "NG-BE",
+  "kind": "subdivision_2",
+  "name": "Benue State",
+  "url": "data/admin2/3716076.geojson"
+ },
+ "3716250": {
+  "count": 19,
+  "iso": "NG-CR",
+  "kind": "subdivision_2",
+  "name": "Cross River State",
+  "url": "data/admin2/3716250.geojson"
+ },
+ "3716950": {
+  "count": 24,
+  "iso": "NG-DE",
+  "kind": "subdivision_2",
+  "name": "Delta State",
+  "url": "data/admin2/3716950.geojson"
+ },
+ "3717071": {
+  "count": 13,
+  "iso": "NG-EB",
+  "kind": "subdivision_2",
+  "name": "Ebonyi State",
+  "url": "data/admin2/3717071.geojson"
+ },
+ "3717119": {
+  "count": 18,
+  "iso": "NG-ED",
+  "kind": "subdivision_2",
+  "name": "Edo State",
+  "url": "data/admin2/3717119.geojson"
+ },
+ "3717154": {
+  "count": 16,
+  "iso": "NG-EK",
+  "kind": "subdivision_2",
+  "name": "Ekiti State",
+  "url": "data/admin2/3717154.geojson"
+ },
+ "3717212": {
+  "count": 17,
+  "iso": "NG-EN",
+  "kind": "subdivision_2",
+  "name": "Enugu State",
+  "url": "data/admin2/3717212.geojson"
+ },
+ "3717259": {
+  "count": 6,
+  "iso": "NG-FC",
+  "kind": "subdivision_2",
+  "name": "Federal Capital Territory",
+  "url": "data/admin2/3717259.geojson"
+ },
+ "3717825": {
+  "count": 27,
+  "iso": "NG-IM",
+  "kind": "subdivision_2",
+  "name": "Imo State",
+  "url": "data/admin2/3717825.geojson"
+ },
+ "3717971": {
+  "count": 21,
+  "iso": "NG-KO",
+  "kind": "subdivision_2",
+  "name": "Kogi State",
+  "url": "data/admin2/3717971.geojson"
+ },
+ "3718090": {
+  "count": 16,
+  "iso": "NG-KW",
+  "kind": "subdivision_2",
+  "name": "Kwara State",
+  "url": "data/admin2/3718090.geojson"
+ },
+ "3718182": {
+  "count": 18,
+  "iso": "NG-LA",
+  "kind": "subdivision_2",
+  "name": "Lagos State",
+  "url": "data/admin2/3718182.geojson"
+ },
+ "3718384": {
+  "count": 25,
+  "iso": "NG-NI",
+  "kind": "subdivision_2",
+  "name": "Niger State",
+  "url": "data/admin2/3718384.geojson"
+ },
+ "3718463": {
+  "count": 20,
+  "iso": "NG-OG",
+  "kind": "subdivision_2",
+  "name": "Ogun State",
+  "url": "data/admin2/3718463.geojson"
+ },
+ "3718605": {
+  "count": 17,
+  "iso": "NG-ON",
+  "kind": "subdivision_2",
+  "name": "Ondo State",
+  "url": "data/admin2/3718605.geojson"
+ },
+ "3718720": {
+  "count": 31,
+  "iso": "NG-OS",
+  "kind": "subdivision_2",
+  "name": "Osun State",
+  "url": "data/admin2/3718720.geojson"
+ },
+ "3720358": {
+  "count": 20,
+  "iso": "NG-AD",
+  "kind": "subdivision_2",
+  "name": "Adamawa State",
+  "url": "data/admin2/3720358.geojson"
+ },
+ "3720422": {
+  "count": 12,
+  "iso": "NG-GO",
+  "kind": "subdivision_2",
+  "name": "Gombe State",
+  "url": "data/admin2/3720422.geojson"
+ },
+ "3720495": {
+  "count": 13,
+  "iso": "NG-NA",
+  "kind": "subdivision_2",
+  "name": "Nasarawa State",
+  "url": "data/admin2/3720495.geojson"
+ },
+ "3720554": {
+  "count": 33,
+  "iso": "NG-OY",
+  "kind": "subdivision_2",
+  "name": "Oyo State",
+  "url": "data/admin2/3720554.geojson"
+ },
+ "3720611": {
+  "count": 18,
+  "iso": "NG-PL",
+  "kind": "subdivision_2",
+  "name": "Plateau State",
+  "url": "data/admin2/3720611.geojson"
+ },
+ "3720743": {
+  "count": 20,
+  "iso": "NG-RI",
+  "kind": "subdivision_2",
+  "name": "Rivers State",
+  "url": "data/admin2/3720743.geojson"
+ },
+ "3720850": {
+  "count": 15,
+  "iso": "NG-TA",
+  "kind": "subdivision_2",
+  "name": "Taraba State",
+  "url": "data/admin2/3720850.geojson"
+ },
+ "3721167": {
+  "count": 26,
+  "iso": "NG-BO",
+  "kind": "subdivision_2",
+  "name": "Borno State",
+  "url": "data/admin2/3721167.geojson"
+ },
+ "3722233": {
+  "count": 20,
+  "iso": "NG-BA",
+  "kind": "subdivision_2",
+  "name": "Bauchi State",
+  "url": "data/admin2/3722233.geojson"
+ },
+ "37244": {
+  "count": 23,
+  "iso": "HU-BU",
+  "kind": "subdivision_2",
+  "name": "Budapest",
+  "url": "data/admin2/37244.geojson"
+ },
+ "3726124": {
+  "count": 10,
+  "iso": "EG-FYM",
+  "kind": "subdivision_2",
+  "name": "Faiyum",
+  "url": "data/admin2/3726124.geojson"
+ },
+ "3726170": {
+  "count": 11,
+  "iso": "EG-BNS",
+  "kind": "subdivision_2",
+  "name": "Bani Sweif",
+  "url": "data/admin2/3726170.geojson"
+ },
+ "3726175": {
+  "count": 13,
+  "iso": "EG-MN",
+  "kind": "subdivision_2",
+  "name": "Al Minya",
+  "url": "data/admin2/3726175.geojson"
+ },
+ "3726184": {
+  "count": 15,
+  "iso": "EG-AST",
+  "kind": "subdivision_2",
+  "name": "Asyut",
+  "url": "data/admin2/3726184.geojson"
+ },
+ "3726186": {
+  "count": 19,
+  "iso": "EG-SHG",
+  "kind": "subdivision_2",
+  "name": "Suhaj",
+  "url": "data/admin2/3726186.geojson"
+ },
+ "3726189": {
+  "count": 16,
+  "iso": "EG-KN",
+  "kind": "subdivision_2",
+  "name": "Qena",
+  "url": "data/admin2/3726189.geojson"
+ },
+ "37355": {
+  "count": 3,
+  "iso": "FI-18",
+  "kind": "subdivision_2",
+  "name": "Uusimaa",
+  "url": "data/admin2/37355.geojson"
+ },
+ "3738284": {
+  "count": 14,
+  "iso": "PT-03",
+  "kind": "subdivision_2",
+  "name": "Braga",
+  "url": "data/admin2/3738284.geojson"
+ },
+ "3763132": {
+  "count": 13,
+  "iso": "VE-E",
+  "kind": "subdivision_2",
+  "name": "Barinas State",
+  "url": "data/admin2/3763132.geojson"
+ },
+ "377733": {
+  "count": 9,
+  "iso": "RO-B",
+  "kind": "subdivision_2",
+  "name": "Bucharest",
+  "url": "data/admin2/377733.geojson"
+ },
+ "3780131": {
+  "count": 25,
+  "iso": "PK-KP",
+  "kind": "subdivision_2",
+  "name": "Khyber Pakhtunkhwa",
+  "url": "data/admin2/3780131.geojson"
+ },
+ "3790801": {
+  "count": 34,
+  "iso": "JP-04",
+  "kind": "subdivision_2",
+  "name": "Miyagi Prefecture",
+  "url": "data/admin2/3790801.geojson"
+ },
+ "3790869": {
+  "count": 35,
+  "iso": "JP-06",
+  "kind": "subdivision_2",
+  "name": "Yamagata Prefecture",
+  "url": "data/admin2/3790869.geojson"
+ },
+ "3791413": {
+  "count": 25,
+  "iso": "JP-05",
+  "kind": "subdivision_2",
+  "name": "Akita Prefecture",
+  "url": "data/admin2/3791413.geojson"
+ },
+ "3792412": {
+  "count": 29,
+  "iso": "JP-03",
+  "kind": "subdivision_2",
+  "name": "Iwate Prefecture",
+  "url": "data/admin2/3792412.geojson"
+ },
+ "3792876": {
+  "count": 10,
+  "iso": "FR-GES",
+  "kind": "subdivision_2",
+  "name": "Grand Est",
+  "url": "data/admin2/3792876.geojson"
+ },
+ "3792877": {
+  "count": 12,
+  "iso": "FR-ARA",
+  "kind": "subdivision_2",
+  "name": "Auvergne-Rh\u00f4ne-Alpes",
+  "url": "data/admin2/3792877.geojson"
+ },
+ "3792878": {
+  "count": 8,
+  "iso": "FR-BFC",
+  "kind": "subdivision_2",
+  "name": "Bourgogne \u2013 Franche-Comt\u00e9",
+  "url": "data/admin2/3792878.geojson"
+ },
+ "3792880": {
+  "count": 12,
+  "iso": "FR-NAQ",
+  "kind": "subdivision_2",
+  "name": "Nouvelle-Aquitaine",
+  "url": "data/admin2/3792880.geojson"
+ },
+ "3792883": {
+  "count": 13,
+  "iso": "FR-OCC",
+  "kind": "subdivision_2",
+  "name": "Occitania",
+  "url": "data/admin2/3792883.geojson"
+ },
+ "3793170": {
+  "count": 5,
+  "iso": "FR-NOR",
+  "kind": "subdivision_2",
+  "name": "Normandy",
+  "url": "data/admin2/3793170.geojson"
+ },
+ "3793529": {
+  "count": 15,
+  "iso": "JP-16",
+  "kind": "subdivision_2",
+  "name": "Toyama Prefecture",
+  "url": "data/admin2/3793529.geojson"
+ },
+ "3793581": {
+  "count": 34,
+  "iso": "JP-22",
+  "kind": "subdivision_2",
+  "name": "Shizuoka Prefecture",
+  "url": "data/admin2/3793581.geojson"
+ },
+ "3794726": {
+  "count": 18,
+  "iso": "JP-17",
+  "kind": "subdivision_2",
+  "name": "Ishikawa Prefecture",
+  "url": "data/admin2/3794726.geojson"
+ },
+ "3794962": {
+  "count": 27,
+  "iso": "JP-33",
+  "kind": "subdivision_2",
+  "name": "Okayama Prefecture",
+  "url": "data/admin2/3794962.geojson"
+ },
+ "3795000": {
+  "count": 24,
+  "iso": "JP-36",
+  "kind": "subdivision_2",
+  "name": "Tokushima Prefecture",
+  "url": "data/admin2/3795000.geojson"
+ },
+ "3795031": {
+  "count": 34,
+  "iso": "JP-39",
+  "kind": "subdivision_2",
+  "name": "Kochi Prefecture",
+  "url": "data/admin2/3795031.geojson"
+ },
+ "3795063": {
+  "count": 16,
+  "iso": "JP-38",
+  "kind": "subdivision_2",
+  "name": "Ehime Prefecture",
+  "url": "data/admin2/3795063.geojson"
+ },
+ "3795064": {
+  "count": 13,
+  "iso": "JP-37",
+  "kind": "subdivision_2",
+  "name": "Kagawa Prefecture",
+  "url": "data/admin2/3795064.geojson"
+ },
+ "3795635": {
+  "count": 42,
+  "iso": "JP-47",
+  "kind": "subdivision_2",
+  "name": "Okinawa Prefecture",
+  "url": "data/admin2/3795635.geojson"
+ },
+ "3795658": {
+  "count": 177,
+  "iso": "JP-01",
+  "kind": "subdivision_2",
+  "name": "Hokkaido Prefecture",
+  "url": "data/admin2/3795658.geojson"
+ },
+ "3797243": {
+  "count": 7,
+  "iso": "ID-BB",
+  "kind": "subdivision_2",
+  "name": "Bangka-Belitung Islands",
+  "url": "data/admin2/3797243.geojson"
+ },
+ "38092": {
+  "count": 3,
+  "iso": "FI-19",
+  "kind": "subdivision_2",
+  "name": "Southwest Finland",
+  "url": "data/admin2/38092.geojson"
+ },
+ "3824206": {
+  "count": 20,
+  "iso": "EG-GZ",
+  "kind": "subdivision_2",
+  "name": "Aj Jiza",
+  "url": "data/admin2/3824206.geojson"
+ },
+ "3824207": {
+  "count": 11,
+  "iso": "EG-MNF",
+  "kind": "subdivision_2",
+  "name": "Monufia Governorate",
+  "url": "data/admin2/3824207.geojson"
+ },
+ "3824513": {
+  "count": 20,
+  "iso": "EG-BH",
+  "kind": "subdivision_2",
+  "name": "Lake",
+  "url": "data/admin2/3824513.geojson"
+ },
+ "3824588": {
+  "count": 11,
+  "iso": "BD-B",
+  "kind": "subdivision_2",
+  "name": "Chattogram Division",
+  "url": "data/admin2/3824588.geojson"
+ },
+ "3825003": {
+  "count": 10,
+  "iso": "BD-D",
+  "kind": "subdivision_2",
+  "name": "Khulna Division",
+  "url": "data/admin2/3825003.geojson"
+ },
+ "3842543": {
+  "count": 5,
+  "iso": "SA-12",
+  "kind": "subdivision_2",
+  "name": "Al Jawf Region",
+  "url": "data/admin2/3842543.geojson"
+ },
+ "3859335": {
+  "count": 8,
+  "iso": "BD-E",
+  "kind": "subdivision_2",
+  "name": "Rajshahi Division",
+  "url": "data/admin2/3859335.geojson"
+ },
+ "3879783": {
+  "count": 26,
+  "iso": "MY-12",
+  "kind": "subdivision_2",
+  "name": "Sabah",
+  "url": "data/admin2/3879783.geojson"
+ },
+ "3879784": {
+  "count": 39,
+  "iso": "MY-13",
+  "kind": "subdivision_2",
+  "name": "Sarawak",
+  "url": "data/admin2/3879784.geojson"
+ },
+ "388395538": {
+  "count": 9,
+  "iso": "VN-67",
+  "kind": "subdivision_2",
+  "name": "Nam \u0110\u1ecbnh",
+  "url": "data/admin2/388395538.geojson"
+ },
+ "389600569": {
+  "count": 4,
+  "iso": "CZ-PA",
+  "kind": "subdivision_2",
+  "name": "Pardubice",
+  "url": "data/admin2/389600569.geojson"
+ },
+ "3898131": {
+  "count": 10,
+  "iso": "PT-16",
+  "kind": "subdivision_2",
+  "name": "Viana do Castelo",
+  "url": "data/admin2/3898131.geojson"
+ },
+ "390558": {
+  "count": 18,
+  "iso": "CA-NS",
+  "kind": "subdivision_2",
+  "name": "Nova Scotia",
+  "url": "data/admin2/390558.geojson"
+ },
+ "3905924": {
+  "count": 14,
+  "iso": "PT-09",
+  "kind": "subdivision_2",
+  "name": "Guarda",
+  "url": "data/admin2/3905924.geojson"
+ },
+ "3905929": {
+  "count": 12,
+  "iso": "PT-04",
+  "kind": "subdivision_2",
+  "name": "Bragan\u00e7a",
+  "url": "data/admin2/3905929.geojson"
+ },
+ "390840": {
+  "count": 3,
+  "iso": "CA-NU",
+  "kind": "subdivision_2",
+  "name": "Nunavut",
+  "url": "data/admin2/390840.geojson"
+ },
+ "390841": {
+  "count": 23,
+  "iso": "CA-MB",
+  "kind": "subdivision_2",
+  "name": "Manitoba",
+  "url": "data/admin2/390841.geojson"
+ },
+ "390867": {
+  "count": 29,
+  "iso": "CA-BC",
+  "kind": "subdivision_2",
+  "name": "British Columbia",
+  "url": "data/admin2/390867.geojson"
+ },
+ "391115": {
+  "count": 3,
+  "iso": "CA-PE",
+  "kind": "subdivision_2",
+  "name": "Prince Edward Island",
+  "url": "data/admin2/391115.geojson"
+ },
+ "391178": {
+  "count": 18,
+  "iso": "CA-SK",
+  "kind": "subdivision_2",
+  "name": "Saskatchewan",
+  "url": "data/admin2/391178.geojson"
+ },
+ "391186": {
+  "count": 19,
+  "iso": "CA-AB",
+  "kind": "subdivision_2",
+  "name": "Alberta",
+  "url": "data/admin2/391186.geojson"
+ },
+ "391196": {
+  "count": 11,
+  "iso": "CA-NL",
+  "kind": "subdivision_2",
+  "name": "Newfoundland and Labrador",
+  "url": "data/admin2/391196.geojson"
+ },
+ "391220": {
+  "count": 6,
+  "iso": "CA-NT",
+  "kind": "subdivision_2",
+  "name": "Northwest Territories",
+  "url": "data/admin2/391220.geojson"
+ },
+ "39152": {
+  "count": 8,
+  "iso": "IT-82",
+  "kind": "subdivision_2",
+  "name": "Sicily",
+  "url": "data/admin2/39152.geojson"
+ },
+ "3920249": {
+  "count": 19,
+  "iso": "PT-01",
+  "kind": "subdivision_2",
+  "name": "Aveiro",
+  "url": "data/admin2/3920249.geojson"
+ },
+ "3920285": {
+  "count": 25,
+  "iso": "PT-18",
+  "kind": "subdivision_2",
+  "name": "Viseu",
+  "url": "data/admin2/3920285.geojson"
+ },
+ "3921211": {
+  "count": 7,
+  "iso": "BD-F",
+  "kind": "subdivision_2",
+  "name": "Rangpur Division",
+  "url": "data/admin2/3921211.geojson"
+ },
+ "3921222": {
+  "count": 4,
+  "iso": "BD-G",
+  "kind": "subdivision_2",
+  "name": "Sylhet Division",
+  "url": "data/admin2/3921222.geojson"
+ },
+ "3921298": {
+  "count": 6,
+  "iso": "BD-A",
+  "kind": "subdivision_2",
+  "name": "Barishal Division",
+  "url": "data/admin2/3921298.geojson"
+ },
+ "3921322": {
+  "count": 17,
+  "iso": "BD-C",
+  "kind": "subdivision_2",
+  "name": "Dhaka Division",
+  "url": "data/admin2/3921322.geojson"
+ },
+ "392472722": {
+  "count": 5,
+  "iso": "",
+  "kind": "subdivision_2",
+  "name": "Wallonne Gewest",
+  "url": "data/admin2/392472722.geojson"
+ },
+ "392915": {
+  "count": 5,
+  "iso": "US-RI",
+  "kind": "subdivision_2",
+  "name": "Rhode Island",
+  "url": "data/admin2/392915.geojson"
+ },
+ "393980": {
+  "count": 15,
+  "iso": "RU-KR",
+  "kind": "subdivision_2",
+  "name": "Karelia",
+  "url": "data/admin2/393980.geojson"
+ },
+ "394235": {
+  "count": 14,
+  "iso": "RU-SAK",
+  "kind": "subdivision_2",
+  "name": "Sakhalin Oblast",
+  "url": "data/admin2/394235.geojson"
+ },
+ "396705": {
+  "count": 27,
+  "iso": "CO-CAL",
+  "kind": "subdivision_2",
+  "name": "Caldas",
+  "url": "data/admin2/396705.geojson"
+ },
+ "3967823": {
+  "count": 13,
+  "iso": "PT-17",
+  "kind": "subdivision_2",
+  "name": "Vila Real",
+  "url": "data/admin2/3967823.geojson"
+ },
+ "40095": {
+  "count": 6,
+  "iso": "IT-75",
+  "kind": "subdivision_2",
+  "name": "Apulia",
+  "url": "data/admin2/40095.geojson"
+ },
+ "40137": {
+  "count": 2,
+  "iso": "IT-77",
+  "kind": "subdivision_2",
+  "name": "Basilicata",
+  "url": "data/admin2/40137.geojson"
+ },
+ "4016543": {
+  "count": 17,
+  "iso": "JP-35",
+  "kind": "subdivision_2",
+  "name": "Yamaguchi Prefecture",
+  "url": "data/admin2/4016543.geojson"
+ },
+ "40218": {
+  "count": 4,
+  "iso": "IT-72",
+  "kind": "subdivision_2",
+  "name": "Campania",
+  "url": "data/admin2/40218.geojson"
+ },
+ "405836": {
+  "count": 20,
+  "iso": "NO-11",
+  "kind": "subdivision_2",
+  "name": "Rogaland",
+  "url": "data/admin2/405836.geojson"
+ },
+ "406091": {
+  "count": 3,
+  "iso": "NO-03",
+  "kind": "subdivision_2",
+  "name": "Oslo",
+  "url": "data/admin2/406091.geojson"
+ },
+ "406868": {
+  "count": 23,
+  "iso": "NO-15",
+  "kind": "subdivision_2",
+  "name": "M\u00f8re og Romsdal",
+  "url": "data/admin2/406868.geojson"
+ },
+ "407492": {
+  "count": 128,
+  "iso": "CN-HA",
+  "kind": "subdivision_2",
+  "name": "Henan",
+  "url": "data/admin2/407492.geojson"
+ },
+ "40784": {
+  "count": 5,
+  "iso": "IT-62",
+  "kind": "subdivision_2",
+  "name": "Lazio",
+  "url": "data/admin2/40784.geojson"
+ },
+ "408105": {
+  "count": 25,
+  "iso": "NO-18",
+  "kind": "subdivision_2",
+  "name": "Nordland",
+  "url": "data/admin2/408105.geojson"
+ },
+ "4086617": {
+  "count": 58,
+  "iso": "MX-SLP",
+  "kind": "subdivision_2",
+  "name": "San Luis Potos\u00ed",
+  "url": "data/admin2/4086617.geojson"
+ },
+ "4103336": {
+  "count": 43,
+  "iso": "EG-C",
+  "kind": "subdivision_2",
+  "name": "Cairo",
+  "url": "data/admin2/4103336.geojson"
+ },
+ "4103337": {
+  "count": 15,
+  "iso": "EG-KB",
+  "kind": "subdivision_2",
+  "name": "Al Qalyubiya",
+  "url": "data/admin2/4103337.geojson"
+ },
+ "4103403": {
+  "count": 20,
+  "iso": "EG-DK",
+  "kind": "subdivision_2",
+  "name": "Dakahlia Governorate",
+  "url": "data/admin2/4103403.geojson"
+ },
+ "4103404": {
+  "count": 8,
+  "iso": "EG-DT",
+  "kind": "subdivision_2",
+  "name": "Damietta",
+  "url": "data/admin2/4103404.geojson"
+ },
+ "4103405": {
+  "count": 12,
+  "iso": "EG-KFS",
+  "kind": "subdivision_2",
+  "name": "Kafr El Sheikh",
+  "url": "data/admin2/4103405.geojson"
+ },
+ "4103406": {
+  "count": 8,
+  "iso": "EG-PTS",
+  "kind": "subdivision_2",
+  "name": "Port Said",
+  "url": "data/admin2/4103406.geojson"
+ },
+ "4103407": {
+  "count": 20,
+  "iso": "EG-SHR",
+  "kind": "subdivision_2",
+  "name": "Al Sharqia Governorate",
+  "url": "data/admin2/4103407.geojson"
+ },
+ "4104644": {
+  "count": 11,
+  "iso": "PT-05",
+  "kind": "subdivision_2",
+  "name": "Castelo Branco",
+  "url": "data/admin2/4104644.geojson"
+ },
+ "41256": {
+  "count": 2,
+  "iso": "IT-67",
+  "kind": "subdivision_2",
+  "name": "Molise",
+  "url": "data/admin2/41256.geojson"
+ },
+ "41977": {
+  "count": 9,
+  "iso": "IT-52",
+  "kind": "subdivision_2",
+  "name": "Tuscany",
+  "url": "data/admin2/41977.geojson"
+ },
+ "42004": {
+  "count": 2,
+  "iso": "IT-55",
+  "kind": "subdivision_2",
+  "name": "Umbria",
+  "url": "data/admin2/42004.geojson"
+ },
+ "4217435": {
+  "count": 5,
+  "iso": "FR-HDF",
+  "kind": "subdivision_2",
+  "name": "Hauts-de-France",
+  "url": "data/admin2/4217435.geojson"
+ },
+ "421866": {
+  "count": 2,
+  "iso": "UA-30",
+  "kind": "subdivision_2",
+  "name": "Kyiv",
+  "url": "data/admin2/421866.geojson"
+ },
+ "422264105": {
+  "count": 8,
+  "iso": "VN-24",
+  "kind": "subdivision_2",
+  "name": "Qu\u1ea3ng B\u00ecnh",
+  "url": "data/admin2/422264105.geojson"
+ },
+ "42611": {
+  "count": 8,
+  "iso": "IT-45",
+  "kind": "subdivision_2",
+  "name": "Emilia-Romagna",
+  "url": "data/admin2/42611.geojson"
+ },
+ "427986585": {
+  "count": 8,
+  "iso": "VN-53",
+  "kind": "subdivision_2",
+  "name": "Northeast Vietnam",
+  "url": "data/admin2/427986585.geojson"
+ },
+ "431902603": {
+  "count": 15,
+  "iso": "MX-DIF",
+  "kind": "subdivision_2",
+  "name": "Mexico",
+  "url": "data/admin2/431902603.geojson"
+ },
+ "435094273": {
+  "count": 33,
+  "iso": "IN-TG",
+  "kind": "subdivision_2",
+  "name": "Telangana",
+  "url": "data/admin2/435094273.geojson"
+ },
+ "435514": {
+  "count": 2,
+  "iso": "CZ-PR",
+  "kind": "subdivision_2",
+  "name": "Prague",
+  "url": "data/admin2/435514.geojson"
+ },
+ "43648": {
+  "count": 7,
+  "iso": "IT-34",
+  "kind": "subdivision_2",
+  "name": "Veneto",
+  "url": "data/admin2/43648.geojson"
+ },
+ "4422604": {
+  "count": 77,
+  "iso": "US-PR",
+  "kind": "subdivision_2",
+  "name": "Puerto Rico",
+  "url": "data/admin2/4422604.geojson"
+ },
+ "4443571": {
+  "count": 11,
+  "iso": "MY-03",
+  "kind": "subdivision_2",
+  "name": "Kelantan",
+  "url": "data/admin2/4443571.geojson"
+ },
+ "4444411": {
+  "count": 8,
+  "iso": "MY-11",
+  "kind": "subdivision_2",
+  "name": "Terengganu",
+  "url": "data/admin2/4444411.geojson"
+ },
+ "4444595": {
+  "count": 10,
+  "iso": "MY-06",
+  "kind": "subdivision_2",
+  "name": "Pahang",
+  "url": "data/admin2/4444595.geojson"
+ },
+ "4444908": {
+  "count": 11,
+  "iso": "MY-02",
+  "kind": "subdivision_2",
+  "name": "Kedah",
+  "url": "data/admin2/4444908.geojson"
+ },
+ "4444918": {
+  "count": 2,
+  "iso": "MY-09",
+  "kind": "subdivision_2",
+  "name": "Perlis",
+  "url": "data/admin2/4444918.geojson"
+ },
+ "4445076": {
+  "count": 14,
+  "iso": "MY-08",
+  "kind": "subdivision_2",
+  "name": "Perak",
+  "url": "data/admin2/4445076.geojson"
+ },
+ "4445131": {
+  "count": 5,
+  "iso": "MY-07",
+  "kind": "subdivision_2",
+  "name": "Penang",
+  "url": "data/admin2/4445131.geojson"
+ },
+ "44874": {
+  "count": 8,
+  "iso": "IT-21",
+  "kind": "subdivision_2",
+  "name": "Piedmont",
+  "url": "data/admin2/44874.geojson"
+ },
+ "44879": {
+  "count": 12,
+  "iso": "IT-25",
+  "kind": "subdivision_2",
+  "name": "Lombardy",
+  "url": "data/admin2/44879.geojson"
+ },
+ "4521144": {
+  "count": 26,
+  "iso": "ID-PA",
+  "kind": "subdivision_2",
+  "name": "Papua",
+  "url": "data/admin2/4521144.geojson"
+ },
+ "4521145": {
+  "count": 11,
+  "iso": "ID-PB",
+  "kind": "subdivision_2",
+  "name": "West Papua",
+  "url": "data/admin2/4521145.geojson"
+ },
+ "4521286": {
+  "count": 3,
+  "iso": "MY-15",
+  "kind": "subdivision_2",
+  "name": "Labuan",
+  "url": "data/admin2/4521286.geojson"
+ },
+ "452246286": {
+  "count": 9,
+  "iso": "VN-06",
+  "kind": "subdivision_2",
+  "name": "Y\u00ean B\u00e1i",
+  "url": "data/admin2/452246286.geojson"
+ },
+ "45757": {
+  "count": 2,
+  "iso": "IT-32",
+  "kind": "subdivision_2",
+  "name": "Trentino \u2013 Alto Adige/S\u00fcdtirol",
+  "url": "data/admin2/45757.geojson"
+ },
+ "4632580": {
+  "count": 44,
+  "iso": "KE-400",
+  "kind": "subdivision_2",
+  "name": "Eastern",
+  "url": "data/admin2/4632580.geojson"
+ },
+ "467592919": {
+  "count": 10,
+  "iso": "VN-28",
+  "kind": "subdivision_2",
+  "name": "Kon Tum",
+  "url": "data/admin2/467592919.geojson"
+ },
+ "472358604": {
+  "count": 16,
+  "iso": "KZ-AKM",
+  "kind": "subdivision_2",
+  "name": "Akmola",
+  "url": "data/admin2/472358604.geojson"
+ },
+ "4730737": {
+  "count": 7,
+  "iso": "MA-04",
+  "kind": "subdivision_2",
+  "name": "Rabat-Sal\u00e9-K\u00e9nitra",
+  "url": "data/admin2/4730737.geojson"
+ },
+ "4730909": {
+  "count": 4,
+  "iso": "MA-03",
+  "kind": "subdivision_2",
+  "name": "Fez-Meknes",
+  "url": "data/admin2/4730909.geojson"
+ },
+ "4734547": {
+  "count": 4,
+  "iso": "MA-05",
+  "kind": "subdivision_2",
+  "name": "B\u00e9ni Mellal-Kh\u00e9nifra",
+  "url": "data/admin2/4734547.geojson"
+ },
+ "47381": {
+  "count": 17,
+  "iso": "NL-FR",
+  "kind": "subdivision_2",
+  "name": "Frisia",
+  "url": "data/admin2/47381.geojson"
+ },
+ "47407": {
+  "count": 6,
+  "iso": "NL-FL",
+  "kind": "subdivision_2",
+  "name": "Flevoland",
+  "url": "data/admin2/47407.geojson"
+ },
+ "47540": {
+  "count": 12,
+  "iso": "NL-DR",
+  "kind": "subdivision_2",
+  "name": "Drenthe",
+  "url": "data/admin2/47540.geojson"
+ },
+ "47554": {
+  "count": 51,
+  "iso": "NL-GE",
+  "kind": "subdivision_2",
+  "name": "Gelderland",
+  "url": "data/admin2/47554.geojson"
+ },
+ "47608": {
+  "count": 25,
+  "iso": "NL-OV",
+  "kind": "subdivision_2",
+  "name": "Overijssel",
+  "url": "data/admin2/47608.geojson"
+ },
+ "47654": {
+  "count": 45,
+  "iso": "NL-NH",
+  "kind": "subdivision_2",
+  "name": "North Holland",
+  "url": "data/admin2/47654.geojson"
+ },
+ "47667": {
+  "count": 25,
+  "iso": "NL-UT",
+  "kind": "subdivision_2",
+  "name": "Utrecht",
+  "url": "data/admin2/47667.geojson"
+ },
+ "47696": {
+  "count": 56,
+  "iso": "NL-NB",
+  "kind": "subdivision_2",
+  "name": "North Brabant",
+  "url": "data/admin2/47696.geojson"
+ },
+ "47772": {
+  "count": 53,
+  "iso": "NL-ZH",
+  "kind": "subdivision_2",
+  "name": "South Holland",
+  "url": "data/admin2/47772.geojson"
+ },
+ "47793": {
+  "count": 31,
+  "iso": "NL-LI",
+  "kind": "subdivision_2",
+  "name": "Limburg",
+  "url": "data/admin2/47793.geojson"
+ },
+ "47806": {
+  "count": 13,
+  "iso": "NL-ZE",
+  "kind": "subdivision_2",
+  "name": "Zeeland",
+  "url": "data/admin2/47806.geojson"
+ },
+ "47826": {
+  "count": 10,
+  "iso": "NL-GR",
+  "kind": "subdivision_2",
+  "name": "Groningen",
+  "url": "data/admin2/47826.geojson"
+ },
+ "479590605": {
+  "count": 12,
+  "iso": "VN-61",
+  "kind": "subdivision_2",
+  "name": "H\u1ea3i D\u01b0\u01a1ng",
+  "url": "data/admin2/479590605.geojson"
+ },
+ "4875183": {
+  "count": 18,
+  "iso": "PT-06",
+  "kind": "subdivision_2",
+  "name": "Coimbra",
+  "url": "data/admin2/4875183.geojson"
+ },
+ "492601497": {
+  "count": 11,
+  "iso": "KZ-ZAP",
+  "kind": "subdivision_2",
+  "name": "West Kazakhstan",
+  "url": "data/admin2/492601497.geojson"
+ },
+ "5011694": {
+  "count": 15,
+  "iso": "PT-10",
+  "kind": "subdivision_2",
+  "name": "Leiria",
+  "url": "data/admin2/5011694.geojson"
+ },
+ "5122644": {
+  "count": 22,
+  "iso": "PT-14",
+  "kind": "subdivision_2",
+  "name": "Santar\u00e9m",
+  "url": "data/admin2/5122644.geojson"
+ },
+ "5123448": {
+  "count": 16,
+  "iso": "PT-12",
+  "kind": "subdivision_2",
+  "name": "Portalegre",
+  "url": "data/admin2/5123448.geojson"
+ },
+ "512910894": {
+  "count": 10,
+  "iso": "VN-70",
+  "kind": "subdivision_2",
+  "name": "V\u0129nh Ph\u00fac",
+  "url": "data/admin2/512910894.geojson"
+ },
+ "5130767": {
+  "count": 13,
+  "iso": "PT-07",
+  "kind": "subdivision_2",
+  "name": "\u00c9vora",
+  "url": "data/admin2/5130767.geojson"
+ },
+ "5134927": {
+  "count": 14,
+  "iso": "PT-02",
+  "kind": "subdivision_2",
+  "name": "Beja",
+  "url": "data/admin2/5134927.geojson"
+ },
+ "5143590": {
+  "count": 13,
+  "iso": "PT-15",
+  "kind": "subdivision_2",
+  "name": "Set\u00fabal",
+  "url": "data/admin2/5143590.geojson"
+ },
+ "516886091": {
+  "count": 6,
+  "iso": "CZ-MO",
+  "kind": "subdivision_2",
+  "name": "Moravian-Silesian",
+  "url": "data/admin2/516886091.geojson"
+ },
+ "52343": {
+  "count": 9,
+  "iso": "AT-7",
+  "kind": "subdivision_2",
+  "name": "Tyrol",
+  "url": "data/admin2/52343.geojson"
+ },
+ "52345": {
+  "count": 10,
+  "iso": "AT-2",
+  "kind": "subdivision_2",
+  "name": "Carinthia",
+  "url": "data/admin2/52345.geojson"
+ },
+ "52824": {
+  "count": 14,
+  "iso": "SE-BD",
+  "kind": "subdivision_2",
+  "name": "Norrbotten County",
+  "url": "data/admin2/52824.geojson"
+ },
+ "52825": {
+  "count": 15,
+  "iso": "SE-AC",
+  "kind": "subdivision_2",
+  "name": "V\u00e4sterbotten County",
+  "url": "data/admin2/52825.geojson"
+ },
+ "52826": {
+  "count": 8,
+  "iso": "SE-Z",
+  "kind": "subdivision_2",
+  "name": "J\u00e4mtland County",
+  "url": "data/admin2/52826.geojson"
+ },
+ "52827": {
+  "count": 7,
+  "iso": "SE-Y",
+  "kind": "subdivision_2",
+  "name": "V\u00e4sternorrland County",
+  "url": "data/admin2/52827.geojson"
+ },
+ "52832": {
+  "count": 10,
+  "iso": "SE-X",
+  "kind": "subdivision_2",
+  "name": "G\u00e4vleborg County",
+  "url": "data/admin2/52832.geojson"
+ },
+ "52834": {
+  "count": 15,
+  "iso": "SE-W",
+  "kind": "subdivision_2",
+  "name": "Dalarna County",
+  "url": "data/admin2/52834.geojson"
+ },
+ "53060": {
+  "count": 5,
+  "iso": "IT-57",
+  "kind": "subdivision_2",
+  "name": "Marche",
+  "url": "data/admin2/53060.geojson"
+ },
+ "537658": {
+  "count": 8,
+  "iso": "IR-29",
+  "kind": "subdivision_2",
+  "name": "South Khorasan Province",
+  "url": "data/admin2/537658.geojson"
+ },
+ "537693": {
+  "count": 8,
+  "iso": "IR-11",
+  "kind": "subdivision_2",
+  "name": "Sistan and Baluchestan Province",
+  "url": "data/admin2/537693.geojson"
+ },
+ "537701": {
+  "count": 11,
+  "iso": "IR-23",
+  "kind": "subdivision_2",
+  "name": "Tehran Province",
+  "url": "data/admin2/537701.geojson"
+ },
+ "537702": {
+  "count": 10,
+  "iso": "IR-25",
+  "kind": "subdivision_2",
+  "name": "Qom Province",
+  "url": "data/admin2/537702.geojson"
+ },
+ "53937": {
+  "count": 4,
+  "iso": "IT-65",
+  "kind": "subdivision_2",
+  "name": "Abruzzo",
+  "url": "data/admin2/53937.geojson"
+ },
+ "54220": {
+  "count": 7,
+  "iso": "SE-C",
+  "kind": "subdivision_2",
+  "name": "Uppsala County",
+  "url": "data/admin2/54220.geojson"
+ },
+ "54221": {
+  "count": 11,
+  "iso": "SE-U",
+  "kind": "subdivision_2",
+  "name": "V\u00e4stmanland County",
+  "url": "data/admin2/54221.geojson"
+ },
+ "54222": {
+  "count": 12,
+  "iso": "SE-T",
+  "kind": "subdivision_2",
+  "name": "\u00d6rebro County",
+  "url": "data/admin2/54222.geojson"
+ },
+ "54223": {
+  "count": 16,
+  "iso": "SE-S",
+  "kind": "subdivision_2",
+  "name": "V\u00e4rmland County",
+  "url": "data/admin2/54223.geojson"
+ },
+ "54367": {
+  "count": 50,
+  "iso": "SE-O",
+  "kind": "subdivision_2",
+  "name": "V\u00e4stra G\u00f6taland County",
+  "url": "data/admin2/54367.geojson"
+ },
+ "54374": {
+  "count": 11,
+  "iso": "SE-F",
+  "kind": "subdivision_2",
+  "name": "J\u00f6nk\u00f6ping County",
+  "url": "data/admin2/54374.geojson"
+ },
+ "54386": {
+  "count": 9,
+  "iso": "SE-D",
+  "kind": "subdivision_2",
+  "name": "S\u00f6dermanland County",
+  "url": "data/admin2/54386.geojson"
+ },
+ "54391": {
+  "count": 24,
+  "iso": "SE-AB",
+  "kind": "subdivision_2",
+  "name": "Stockholm County",
+  "url": "data/admin2/54391.geojson"
+ },
+ "54403": {
+  "count": 6,
+  "iso": "SE-N",
+  "kind": "subdivision_2",
+  "name": "Halland County",
+  "url": "data/admin2/54403.geojson"
+ },
+ "54409": {
+  "count": 33,
+  "iso": "SE-M",
+  "kind": "subdivision_2",
+  "name": "Sk\u00e5ne County",
+  "url": "data/admin2/54409.geojson"
+ },
+ "54412": {
+  "count": 8,
+  "iso": "SE-G",
+  "kind": "subdivision_2",
+  "name": "Kronoberg County",
+  "url": "data/admin2/54412.geojson"
+ },
+ "54413": {
+  "count": 5,
+  "iso": "SE-K",
+  "kind": "subdivision_2",
+  "name": "Blekinge County",
+  "url": "data/admin2/54413.geojson"
+ },
+ "54417": {
+  "count": 12,
+  "iso": "SE-H",
+  "kind": "subdivision_2",
+  "name": "Kalmar County",
+  "url": "data/admin2/54417.geojson"
+ },
+ "5449459": {
+  "count": 12,
+  "iso": "ID-KI",
+  "kind": "subdivision_2",
+  "name": "East Kalimantan",
+  "url": "data/admin2/5449459.geojson"
+ },
+ "54882": {
+  "count": 76,
+  "iso": "BR-ES",
+  "kind": "subdivision_2",
+  "name": "Esp\u00edrito Santo",
+  "url": "data/admin2/54882.geojson"
+ },
+ "5515045": {
+  "count": 2,
+  "iso": "IN-LA",
+  "kind": "subdivision_2",
+  "name": "Ladakh",
+  "url": "data/admin2/5515045.geojson"
+ },
+ "5522596": {
+  "count": 11,
+  "iso": "VN-09",
+  "kind": "subdivision_2",
+  "name": "L\u1ea1ng S\u01a1n Province",
+  "url": "data/admin2/5522596.geojson"
+ },
+ "553302": {
+  "count": 73,
+  "iso": "CN-ZJ",
+  "kind": "subdivision_2",
+  "name": "Zhejiang",
+  "url": "data/admin2/553302.geojson"
+ },
+ "553303": {
+  "count": 66,
+  "iso": "CN-FJ",
+  "kind": "subdivision_2",
+  "name": "Fujian",
+  "url": "data/admin2/553303.geojson"
+ },
+ "554424": {
+  "count": 2,
+  "iso": "GR-D",
+  "kind": "subdivision_2",
+  "name": "Epirus",
+  "url": "data/admin2/554424.geojson"
+ },
+ "55466": {
+  "count": 61,
+  "iso": "RO-BN",
+  "kind": "subdivision_2",
+  "name": "Bistri\u021ba-N\u0103s\u0103ud",
+  "url": "data/admin2/55466.geojson"
+ },
+ "5616105": {
+  "count": 5,
+  "iso": "ID-YO",
+  "kind": "subdivision_2",
+  "name": "Special Region of Yogyakarta",
+  "url": "data/admin2/5616105.geojson"
+ },
+ "567297366": {
+  "count": 5,
+  "iso": "CZ-KR",
+  "kind": "subdivision_2",
+  "name": "Hradec Kr\u00e1lov\u00e9",
+  "url": "data/admin2/567297366.geojson"
+ },
+ "572143108": {
+  "count": 4,
+  "iso": "KZ-MAN",
+  "kind": "subdivision_2",
+  "name": "Mangystau",
+  "url": "data/admin2/572143108.geojson"
+ },
+ "575029245": {
+  "count": 30,
+  "iso": "IN-OR",
+  "kind": "subdivision_2",
+  "name": "Odisha",
+  "url": "data/admin2/575029245.geojson"
+ },
+ "57963": {
+  "count": 88,
+  "iso": "BR-RJ",
+  "kind": "subdivision_2",
+  "name": "Rio de Janeiro",
+  "url": "data/admin2/57963.geojson"
+ },
+ "582839305": {
+  "count": 8,
+  "iso": "VN-51",
+  "kind": "subdivision_2",
+  "name": "Tr\u00e0 Vinh",
+  "url": "data/admin2/582839305.geojson"
+ },
+ "583196181": {
+  "count": 11,
+  "iso": "NO-07",
+  "kind": "subdivision_2",
+  "name": "Vestfold",
+  "url": "data/admin2/583196181.geojson"
+ },
+ "58437": {
+  "count": 22,
+  "iso": "",
+  "kind": "subdivision_2",
+  "name": "Wales",
+  "url": "data/admin2/58437.geojson"
+ },
+ "58446": {
+  "count": 29,
+  "iso": "",
+  "kind": "subdivision_2",
+  "name": "Scotland",
+  "url": "data/admin2/58446.geojson"
+ },
+ "58447": {
+  "count": 149,
+  "iso": "",
+  "kind": "subdivision_2",
+  "name": "England",
+  "url": "data/admin2/58447.geojson"
+ },
+ "60759": {
+  "count": 14,
+  "iso": "US-VT",
+  "kind": "subdivision_2",
+  "name": "Vermont",
+  "url": "data/admin2/60759.geojson"
+ },
+ "61315": {
+  "count": 12,
+  "iso": "US-MA",
+  "kind": "subdivision_2",
+  "name": "Massachusetts",
+  "url": "data/admin2/61315.geojson"
+ },
+ "61320": {
+  "count": 62,
+  "iso": "US-NY",
+  "kind": "subdivision_2",
+  "name": "New York",
+  "url": "data/admin2/61320.geojson"
+ },
+ "614762265": {
+  "count": 5,
+  "iso": "CZ-OL",
+  "kind": "subdivision_2",
+  "name": "Olomouc",
+  "url": "data/admin2/614762265.geojson"
+ },
+ "615134391": {
+  "count": 4,
+  "iso": "CZ-LI",
+  "kind": "subdivision_2",
+  "name": "Liberec",
+  "url": "data/admin2/615134391.geojson"
+ },
+ "61549": {
+  "count": 98,
+  "iso": "CA-QC",
+  "kind": "subdivision_2",
+  "name": "Quebec",
+  "url": "data/admin2/61549.geojson"
+ },
+ "62341": {
+  "count": 3,
+  "iso": "DE-RP",
+  "kind": "subdivision_2",
+  "name": "Rhineland-Palatinate",
+  "url": "data/admin2/62341.geojson"
+ },
+ "62422": {
+  "count": 2,
+  "iso": "DE-BE",
+  "kind": "subdivision_2",
+  "name": "Berlin",
+  "url": "data/admin2/62422.geojson"
+ },
+ "62467": {
+  "count": 3,
+  "iso": "DE-SN",
+  "kind": "subdivision_2",
+  "name": "Saxony",
+  "url": "data/admin2/62467.geojson"
+ },
+ "625360542": {
+  "count": 19,
+  "iso": "NO-14",
+  "kind": "subdivision_2",
+  "name": "Sogn og Fjordane",
+  "url": "data/admin2/625360542.geojson"
+ },
+ "625407004": {
+  "count": 77,
+  "iso": "KE-700",
+  "kind": "subdivision_2",
+  "name": "Rift Valley",
+  "url": "data/admin2/625407004.geojson"
+ },
+ "62611": {
+  "count": 4,
+  "iso": "DE-BW",
+  "kind": "subdivision_2",
+  "name": "Baden-W\u00fcrttemberg",
+  "url": "data/admin2/62611.geojson"
+ },
+ "62650": {
+  "count": 3,
+  "iso": "DE-HE",
+  "kind": "subdivision_2",
+  "name": "Hesse",
+  "url": "data/admin2/62650.geojson"
+ },
+ "62761": {
+  "count": 5,
+  "iso": "DE-NW",
+  "kind": "subdivision_2",
+  "name": "North Rhine-Westphalia",
+  "url": "data/admin2/62761.geojson"
+ },
+ "62771": {
+  "count": 5,
+  "iso": "DE-NI",
+  "kind": "subdivision_2",
+  "name": "Lower Saxony",
+  "url": "data/admin2/62771.geojson"
+ },
+ "630674992": {
+  "count": 24,
+  "iso": "KE-300",
+  "kind": "subdivision_2",
+  "name": "Coast",
+  "url": "data/admin2/630674992.geojson"
+ },
+ "630714010": {
+  "count": 8,
+  "iso": "KZ-KZY",
+  "kind": "subdivision_2",
+  "name": "Kyzylorda",
+  "url": "data/admin2/630714010.geojson"
+ },
+ "63512": {
+  "count": 14,
+  "iso": "US-ME",
+  "kind": "subdivision_2",
+  "name": "Maine",
+  "url": "data/admin2/63512.geojson"
+ },
+ "6362934": {
+  "count": 5,
+  "iso": "ID-JK",
+  "kind": "subdivision_2",
+  "name": "Special Capital Region of Jakarta",
+  "url": "data/admin2/6362934.geojson"
+ },
+ "651527647": {
+  "count": 4,
+  "iso": "CZ-ZL",
+  "kind": "subdivision_2",
+  "name": "Zl\u00edn",
+  "url": "data/admin2/651527647.geojson"
+ },
+ "654180201": {
+  "count": 12,
+  "iso": "VN-73",
+  "kind": "subdivision_2",
+  "name": "H\u1eadu Giang",
+  "url": "data/admin2/654180201.geojson"
+ },
+ "654390826": {
+  "count": 18,
+  "iso": "NO-08",
+  "kind": "subdivision_2",
+  "name": "Telemark",
+  "url": "data/admin2/654390826.geojson"
+ },
+ "655947966": {
+  "count": 3,
+  "iso": "",
+  "kind": "subdivision_2",
+  "name": "Peloponisos-W. Greece & Ionian",
+  "url": "data/admin2/655947966.geojson"
+ },
+ "67213": {
+  "count": 10,
+  "iso": "US-NH",
+  "kind": "subdivision_2",
+  "name": "New Hampshire",
+  "url": "data/admin2/67213.geojson"
+ },
+ "676384264": {
+  "count": 17,
+  "iso": "PL-PD",
+  "kind": "subdivision_2",
+  "name": "Podlaskie Voivodeship",
+  "url": "data/admin2/676384264.geojson"
+ },
+ "678795246": {
+  "count": 24,
+  "iso": "NO-16",
+  "kind": "subdivision_2",
+  "name": "S\u00f8r-Tr\u00f8ndelag",
+  "url": "data/admin2/678795246.geojson"
+ },
+ "679578791": {
+  "count": 18,
+  "iso": "KR-46",
+  "kind": "subdivision_2",
+  "name": "South Jeolla",
+  "url": "data/admin2/679578791.geojson"
+ },
+ "680067638": {
+  "count": 22,
+  "iso": "NO-04",
+  "kind": "subdivision_2",
+  "name": "Hedmark",
+  "url": "data/admin2/680067638.geojson"
+ },
+ "68841": {
+  "count": 49,
+  "iso": "CA-ON",
+  "kind": "subdivision_2",
+  "name": "Ontario",
+  "url": "data/admin2/68841.geojson"
+ },
+ "68942": {
+  "count": 15,
+  "iso": "CA-NB",
+  "kind": "subdivision_2",
+  "name": "New Brunswick",
+  "url": "data/admin2/68942.geojson"
+ },
+ "694736698": {
+  "count": 4,
+  "iso": "IQ-TS",
+  "kind": "subdivision_2",
+  "name": "Kirkuk",
+  "url": "data/admin2/694736698.geojson"
+ },
+ "706139715": {
+  "count": 7,
+  "iso": "IR-31",
+  "kind": "subdivision_2",
+  "name": "North Khorasan",
+  "url": "data/admin2/706139715.geojson"
+ },
+ "709972840": {
+  "count": 21,
+  "iso": "NO-17",
+  "kind": "subdivision_2",
+  "name": "Nord-Tr\u00f8ndelag",
+  "url": "data/admin2/709972840.geojson"
+ },
+ "71022": {
+  "count": 18,
+  "iso": "UA-65",
+  "kind": "subdivision_2",
+  "name": "Kherson Oblast",
+  "url": "data/admin2/71022.geojson"
+ },
+ "71064": {
+  "count": 16,
+  "iso": "UA-07",
+  "kind": "subdivision_2",
+  "name": "Volyn Oblast",
+  "url": "data/admin2/71064.geojson"
+ },
+ "71236": {
+  "count": 16,
+  "iso": "UA-56",
+  "kind": "subdivision_2",
+  "name": "Rivne Oblast",
+  "url": "data/admin2/71236.geojson"
+ },
+ "71245": {
+  "count": 22,
+  "iso": "UA-18",
+  "kind": "subdivision_2",
+  "name": "Zhytomyr Oblast",
+  "url": "data/admin2/71245.geojson"
+ },
+ "71248": {
+  "count": 23,
+  "iso": "UA-32",
+  "kind": "subdivision_2",
+  "name": "Kyiv Oblast",
+  "url": "data/admin2/71248.geojson"
+ },
+ "71249": {
+  "count": 22,
+  "iso": "UA-74",
+  "kind": "subdivision_2",
+  "name": "Chernihiv Oblast",
+  "url": "data/admin2/71249.geojson"
+ },
+ "71250": {
+  "count": 18,
+  "iso": "UA-59",
+  "kind": "subdivision_2",
+  "name": "Sumy Oblast",
+  "url": "data/admin2/71250.geojson"
+ },
+ "71254": {
+  "count": 28,
+  "iso": "UA-63",
+  "kind": "subdivision_2",
+  "name": "Kharkiv Oblast",
+  "url": "data/admin2/71254.geojson"
+ },
+ "715623930": {
+  "count": 10,
+  "iso": "VN-54",
+  "kind": "subdivision_2",
+  "name": "B\u1eafc Giang",
+  "url": "data/admin2/715623930.geojson"
+ },
+ "71950": {
+  "count": 29,
+  "iso": "RU-RYA",
+  "kind": "subdivision_2",
+  "name": "Ryazan Oblast",
+  "url": "data/admin2/71950.geojson"
+ },
+ "71971": {
+  "count": 18,
+  "iso": "UA-09",
+  "kind": "subdivision_2",
+  "name": "Luhansk Oblast",
+  "url": "data/admin2/71971.geojson"
+ },
+ "71973": {
+  "count": 18,
+  "iso": "UA-14",
+  "kind": "subdivision_2",
+  "name": "Donetsk Oblast",
+  "url": "data/admin2/71973.geojson"
+ },
+ "71980": {
+  "count": 20,
+  "iso": "UA-23",
+  "kind": "subdivision_2",
+  "name": "Zaporizhia Oblast",
+  "url": "data/admin2/71980.geojson"
+ },
+ "720637822": {
+  "count": 12,
+  "iso": "KZ-ZHA",
+  "kind": "subdivision_2",
+  "name": "Jambyl",
+  "url": "data/admin2/720637822.geojson"
+ },
+ "72169": {
+  "count": 20,
+  "iso": "RU-LIP",
+  "kind": "subdivision_2",
+  "name": "Lipetsk Oblast",
+  "url": "data/admin2/72169.geojson"
+ },
+ "72180": {
+  "count": 30,
+  "iso": "RU-TAM",
+  "kind": "subdivision_2",
+  "name": "Tambov Oblast",
+  "url": "data/admin2/72180.geojson"
+ },
+ "72181": {
+  "count": 34,
+  "iso": "RU-VOR",
+  "kind": "subdivision_2",
+  "name": "Voronezh Oblast",
+  "url": "data/admin2/72181.geojson"
+ },
+ "72182": {
+  "count": 30,
+  "iso": "RU-PNZ",
+  "kind": "subdivision_2",
+  "name": "Penza Oblast",
+  "url": "data/admin2/72182.geojson"
+ },
+ "72192": {
+  "count": 24,
+  "iso": "RU-ULY",
+  "kind": "subdivision_2",
+  "name": "Ulyanovsk Oblast",
+  "url": "data/admin2/72192.geojson"
+ },
+ "72193": {
+  "count": 42,
+  "iso": "RU-SAR",
+  "kind": "subdivision_2",
+  "name": "Saratov Oblast",
+  "url": "data/admin2/72193.geojson"
+ },
+ "72194": {
+  "count": 37,
+  "iso": "RU-SAM",
+  "kind": "subdivision_2",
+  "name": "Samara Oblast",
+  "url": "data/admin2/72194.geojson"
+ },
+ "72195": {
+  "count": 49,
+  "iso": "RU-NIZ",
+  "kind": "subdivision_2",
+  "name": "Nizhny Novgorod Oblast",
+  "url": "data/admin2/72195.geojson"
+ },
+ "72196": {
+  "count": 24,
+  "iso": "RU-MO",
+  "kind": "subdivision_2",
+  "name": "Republic of Mordovia",
+  "url": "data/admin2/72196.geojson"
+ },
+ "72197": {
+  "count": 21,
+  "iso": "RU-VLA",
+  "kind": "subdivision_2",
+  "name": "Vladimir Oblast",
+  "url": "data/admin2/72197.geojson"
+ },
+ "72223": {
+  "count": 33,
+  "iso": "RU-KRS",
+  "kind": "subdivision_2",
+  "name": "Kursk Oblast",
+  "url": "data/admin2/72223.geojson"
+ },
+ "72224": {
+  "count": 27,
+  "iso": "RU-ORL",
+  "kind": "subdivision_2",
+  "name": "Oryol Oblast",
+  "url": "data/admin2/72224.geojson"
+ },
+ "72380": {
+  "count": 20,
+  "iso": "UA-46",
+  "kind": "subdivision_2",
+  "name": "Lviv Oblast",
+  "url": "data/admin2/72380.geojson"
+ },
+ "72481": {
+  "count": 75,
+  "iso": "RO-MM",
+  "kind": "subdivision_2",
+  "name": "Maramure\u0219",
+  "url": "data/admin2/72481.geojson"
+ },
+ "72482": {
+  "count": 71,
+  "iso": "RO-SM",
+  "kind": "subdivision_2",
+  "name": "Satu Mare",
+  "url": "data/admin2/72482.geojson"
+ },
+ "72488": {
+  "count": 14,
+  "iso": "UA-26",
+  "kind": "subdivision_2",
+  "name": "Ivano-Frankivsk Oblast",
+  "url": "data/admin2/72488.geojson"
+ },
+ "72489": {
+  "count": 13,
+  "iso": "UA-21",
+  "kind": "subdivision_2",
+  "name": "Zakarpattia Oblast",
+  "url": "data/admin2/72489.geojson"
+ },
+ "72525": {
+  "count": 17,
+  "iso": "UA-61",
+  "kind": "subdivision_2",
+  "name": "Ternopil Oblast",
+  "url": "data/admin2/72525.geojson"
+ },
+ "72526": {
+  "count": 11,
+  "iso": "UA-77",
+  "kind": "subdivision_2",
+  "name": "Chernivtsi Oblast",
+  "url": "data/admin2/72526.geojson"
+ },
+ "725529524": {
+  "count": 2,
+  "iso": "",
+  "kind": "subdivision_2",
+  "name": "Macedonia-Thrace",
+  "url": "data/admin2/725529524.geojson"
+ },
+ "72634": {
+  "count": 26,
+  "iso": "UA-51",
+  "kind": "subdivision_2",
+  "name": "Odesa Oblast",
+  "url": "data/admin2/72634.geojson"
+ },
+ "72635": {
+  "count": 19,
+  "iso": "UA-48",
+  "kind": "subdivision_2",
+  "name": "Mykolaiv Oblast",
+  "url": "data/admin2/72635.geojson"
+ },
+ "72639": {
+  "count": 15,
+  "iso": "UA-43",
+  "kind": "subdivision_2",
+  "name": "Autonomous Republic of Crimea",
+  "url": "data/admin2/72639.geojson"
+ },
+ "729693407": {
+  "count": 21,
+  "iso": "NO-02",
+  "kind": "subdivision_2",
+  "name": "Akershus",
+  "url": "data/admin2/729693407.geojson"
+ },
+ "730848509": {
+  "count": 5,
+  "iso": "",
+  "kind": "subdivision_2",
+  "name": "Vlaams Gewest",
+  "url": "data/admin2/730848509.geojson"
+ },
+ "733091980": {
+  "count": 9,
+  "iso": "KZ-KAR",
+  "kind": "subdivision_2",
+  "name": "Karaganda",
+  "url": "data/admin2/733091980.geojson"
+ },
+ "7361997": {
+  "count": 4,
+  "iso": "IT-88",
+  "kind": "subdivision_2",
+  "name": "Sardinia",
+  "url": "data/admin2/7361997.geojson"
+ },
+ "7421025": {
+  "count": 3,
+  "iso": "CL-NB",
+  "kind": "subdivision_2",
+  "name": "Nuble Region",
+  "url": "data/admin2/7421025.geojson"
+ },
+ "74942": {
+  "count": 4,
+  "iso": "AT-8",
+  "kind": "subdivision_2",
+  "name": "Vorarlberg",
+  "url": "data/admin2/74942.geojson"
+ },
+ "750691471": {
+  "count": 11,
+  "iso": "NO-20",
+  "kind": "subdivision_2",
+  "name": "Finnmark",
+  "url": "data/admin2/750691471.geojson"
+ },
+ "751343889": {
+  "count": 10,
+  "iso": "VN-40",
+  "kind": "subdivision_2",
+  "name": "B\u00ecnh Thu\u1eadn",
+  "url": "data/admin2/751343889.geojson"
+ },
+ "760746": {
+  "count": 42,
+  "iso": "JP-21",
+  "kind": "subdivision_2",
+  "name": "Gifu Prefecture",
+  "url": "data/admin2/760746.geojson"
+ },
+ "76909": {
+  "count": 9,
+  "iso": "AT-1",
+  "kind": "subdivision_2",
+  "name": "Burgenland",
+  "url": "data/admin2/76909.geojson"
+ },
+ "76910": {
+  "count": 2,
+  "iso": "FR-20R",
+  "kind": "subdivision_2",
+  "name": "Corsica",
+  "url": "data/admin2/76910.geojson"
+ },
+ "77189": {
+  "count": 24,
+  "iso": "AT-3",
+  "kind": "subdivision_2",
+  "name": "Lower Austria",
+  "url": "data/admin2/77189.geojson"
+ },
+ "77665": {
+  "count": 38,
+  "iso": "RU-VGG",
+  "kind": "subdivision_2",
+  "name": "Volgograd Oblast",
+  "url": "data/admin2/77665.geojson"
+ },
+ "77669": {
+  "count": 42,
+  "iso": "RU-ORE",
+  "kind": "subdivision_2",
+  "name": "Orenburg Oblast",
+  "url": "data/admin2/77669.geojson"
+ },
+ "77677": {
+  "count": 62,
+  "iso": "RU-BA",
+  "kind": "subdivision_2",
+  "name": "Bashkortostan",
+  "url": "data/admin2/77677.geojson"
+ },
+ "77687": {
+  "count": 42,
+  "iso": "RU-CHE",
+  "kind": "subdivision_2",
+  "name": "Chelyabinsk Oblast",
+  "url": "data/admin2/77687.geojson"
+ },
+ "777958441": {
+  "count": 13,
+  "iso": "IN-UT",
+  "kind": "subdivision_2",
+  "name": "Uttarakhand",
+  "url": "data/admin2/777958441.geojson"
+ },
+ "786460875": {
+  "count": 11,
+  "iso": "VN-03",
+  "kind": "subdivision_2",
+  "name": "H\u00e0 Giang",
+  "url": "data/admin2/786460875.geojson"
+ },
+ "786699961": {
+  "count": 16,
+  "iso": "NO-01",
+  "kind": "subdivision_2",
+  "name": "\u00d8stfold",
+  "url": "data/admin2/786699961.geojson"
+ },
+ "789952462": {
+  "count": 6,
+  "iso": "VN-43",
+  "kind": "subdivision_2",
+  "name": "B\u00e0 R\u1ecba-V\u0169ng T\u00e0u",
+  "url": "data/admin2/789952462.geojson"
+ },
+ "792877500": {
+  "count": 7,
+  "iso": "CZ-PL",
+  "kind": "subdivision_2",
+  "name": "Plze\u0148-",
+  "url": "data/admin2/792877500.geojson"
+ },
+ "79374": {
+  "count": 45,
+  "iso": "RU-TA",
+  "kind": "subdivision_2",
+  "name": "Tatarstan",
+  "url": "data/admin2/79374.geojson"
+ },
+ "79379": {
+  "count": 73,
+  "iso": "RU-SVE",
+  "kind": "subdivision_2",
+  "name": "Sverdlovsk Oblast",
+  "url": "data/admin2/79379.geojson"
+ },
+ "802001670": {
+  "count": 15,
+  "iso": "VN-41",
+  "kind": "subdivision_2",
+  "name": "Long An",
+  "url": "data/admin2/802001670.geojson"
+ },
+ "80501": {
+  "count": 6,
+  "iso": "ZA-WC",
+  "kind": "subdivision_2",
+  "name": "Western Cape",
+  "url": "data/admin2/80501.geojson"
+ },
+ "80513": {
+  "count": 26,
+  "iso": "RU-CU",
+  "kind": "subdivision_2",
+  "name": "Chuvashia",
+  "url": "data/admin2/80513.geojson"
+ },
+ "812190": {
+  "count": 27,
+  "iso": "JP-24",
+  "kind": "subdivision_2",
+  "name": "Mie Prefecture",
+  "url": "data/admin2/812190.geojson"
+ },
+ "81993": {
+  "count": 26,
+  "iso": "RU-TUL",
+  "kind": "subdivision_2",
+  "name": "Tula Oblast",
+  "url": "data/admin2/81993.geojson"
+ },
+ "81994": {
+  "count": 20,
+  "iso": "RU-YAR",
+  "kind": "subdivision_2",
+  "name": "Yaroslavl Oblast",
+  "url": "data/admin2/81994.geojson"
+ },
+ "81995": {
+  "count": 26,
+  "iso": "RU-KLU",
+  "kind": "subdivision_2",
+  "name": "Kaluga Oblast",
+  "url": "data/admin2/81995.geojson"
+ },
+ "81996": {
+  "count": 27,
+  "iso": "RU-SMO",
+  "kind": "subdivision_2",
+  "name": "Smolensk Oblast",
+  "url": "data/admin2/81996.geojson"
+ },
+ "81997": {
+  "count": 33,
+  "iso": "RU-BRY",
+  "kind": "subdivision_2",
+  "name": "Bryansk Oblast",
+  "url": "data/admin2/81997.geojson"
+ },
+ "822680944": {
+  "count": 11,
+  "iso": "VN-46",
+  "kind": "subdivision_2",
+  "name": "Ti\u1ec1n Giang",
+  "url": "data/admin2/822680944.geojson"
+ },
+ "83184": {
+  "count": 22,
+  "iso": "RU-BEL",
+  "kind": "subdivision_2",
+  "name": "Belgorod Oblast",
+  "url": "data/admin2/83184.geojson"
+ },
+ "842367359": {
+  "count": 5,
+  "iso": "CZ-VY",
+  "kind": "subdivision_2",
+  "name": "Vyso\u010dina",
+  "url": "data/admin2/842367359.geojson"
+ },
+ "848208898": {
+  "count": 8,
+  "iso": "VN-20",
+  "kind": "subdivision_2",
+  "name": "Th\u00e1i B\u00ecnh",
+  "url": "data/admin2/848208898.geojson"
+ },
+ "85606": {
+  "count": 55,
+  "iso": "RU-ROS",
+  "kind": "subdivision_2",
+  "name": "Rostov Oblast",
+  "url": "data/admin2/85606.geojson"
+ },
+ "85617": {
+  "count": 28,
+  "iso": "RU-IVA",
+  "kind": "subdivision_2",
+  "name": "Ivanovo Oblast",
+  "url": "data/admin2/85617.geojson"
+ },
+ "85963": {
+  "count": 30,
+  "iso": "RU-KOS",
+  "kind": "subdivision_2",
+  "name": "Kostroma Oblast",
+  "url": "data/admin2/85963.geojson"
+ },
+ "8640": {
+  "count": 6,
+  "iso": "FR-CVL",
+  "kind": "subdivision_2",
+  "name": "Centre-Val de Loire",
+  "url": "data/admin2/8640.geojson"
+ },
+ "8649": {
+  "count": 8,
+  "iso": "FR-IDF",
+  "kind": "subdivision_2",
+  "name": "Ile-de-France",
+  "url": "data/admin2/8649.geojson"
+ },
+ "8650": {
+  "count": 5,
+  "iso": "FR-PDL",
+  "kind": "subdivision_2",
+  "name": "Pays de la Loire",
+  "url": "data/admin2/8650.geojson"
+ },
+ "86539": {
+  "count": 6,
+  "iso": "AT-5",
+  "kind": "subdivision_2",
+  "name": "Salzburg",
+  "url": "data/admin2/86539.geojson"
+ },
+ "8654": {
+  "count": 6,
+  "iso": "FR-PAC",
+  "kind": "subdivision_2",
+  "name": "Provence-Alpes-C\u00f4te d'Azur",
+  "url": "data/admin2/8654.geojson"
+ },
+ "86720": {
+  "count": 5,
+  "iso": "ZA-NC",
+  "kind": "subdivision_2",
+  "name": "Northern Cape",
+  "url": "data/admin2/86720.geojson"
+ },
+ "870327353": {
+  "count": 28,
+  "iso": "IN-CT",
+  "kind": "subdivision_2",
+  "name": "Chhattisgarh",
+  "url": "data/admin2/870327353.geojson"
+ },
+ "88574": {
+  "count": 8,
+  "iso": "ZA-EC",
+  "kind": "subdivision_2",
+  "name": "Eastern Cape",
+  "url": "data/admin2/88574.geojson"
+ },
+ "89331": {
+  "count": 22,
+  "iso": "RU-NGR",
+  "kind": "subdivision_2",
+  "name": "Novgorod Oblast",
+  "url": "data/admin2/89331.geojson"
+ },
+ "902522194": {
+  "count": 17,
+  "iso": "NO-19",
+  "kind": "subdivision_2",
+  "name": "Troms",
+  "url": "data/admin2/902522194.geojson"
+ },
+ "90726": {
+  "count": 27,
+  "iso": "UA-05",
+  "kind": "subdivision_2",
+  "name": "Vinnytsia Oblast",
+  "url": "data/admin2/90726.geojson"
+ },
+ "90742": {
+  "count": 20,
+  "iso": "UA-68",
+  "kind": "subdivision_2",
+  "name": "Khmelnytskyi Oblast",
+  "url": "data/admin2/90742.geojson"
+ },
+ "908959": {
+  "count": 29,
+  "iso": "JP-30",
+  "kind": "subdivision_2",
+  "name": "Wakayama Prefecture",
+  "url": "data/admin2/908959.geojson"
+ },
+ "910915": {
+  "count": 2,
+  "iso": "GR-H",
+  "kind": "subdivision_2",
+  "name": "Central Greece",
+  "url": "data/admin2/910915.geojson"
+ },
+ "911844": {
+  "count": 89,
+  "iso": "CN-GD",
+  "kind": "subdivision_2",
+  "name": "Guangdong",
+  "url": "data/admin2/911844.geojson"
+ },
+ "91278": {
+  "count": 21,
+  "iso": "UA-71",
+  "kind": "subdivision_2",
+  "name": "Cherkasy Oblast",
+  "url": "data/admin2/91278.geojson"
+ },
+ "91294": {
+  "count": 24,
+  "iso": "UA-53",
+  "kind": "subdivision_2",
+  "name": "Poltava Oblast",
+  "url": "data/admin2/91294.geojson"
+ },
+ "912940": {
+  "count": 9,
+  "iso": "CN-BJ",
+  "kind": "subdivision_2",
+  "name": "Beijing",
+  "url": "data/admin2/912940.geojson"
+ },
+ "912942": {
+  "count": 60,
+  "iso": "CN-LN",
+  "kind": "subdivision_2",
+  "name": "Liaoning",
+  "url": "data/admin2/912942.geojson"
+ },
+ "912998": {
+  "count": 150,
+  "iso": "CN-HE",
+  "kind": "subdivision_2",
+  "name": "Hebei",
+  "url": "data/admin2/912998.geojson"
+ },
+ "912999": {
+  "count": 6,
+  "iso": "CN-TJ",
+  "kind": "subdivision_2",
+  "name": "Tianjin",
+  "url": "data/admin2/912999.geojson"
+ },
+ "913006": {
+  "count": 111,
+  "iso": "CN-SD",
+  "kind": "subdivision_2",
+  "name": "Shandong",
+  "url": "data/admin2/913006.geojson"
+ },
+ "913011": {
+  "count": 82,
+  "iso": "CN-AH",
+  "kind": "subdivision_2",
+  "name": "Anhui",
+  "url": "data/admin2/913011.geojson"
+ },
+ "913012": {
+  "count": 74,
+  "iso": "CN-JS",
+  "kind": "subdivision_2",
+  "name": "Jiangsu",
+  "url": "data/admin2/913012.geojson"
+ },
+ "913067": {
+  "count": 8,
+  "iso": "CN-SH",
+  "kind": "subdivision_2",
+  "name": "Shanghai",
+  "url": "data/admin2/913067.geojson"
+ },
+ "913068": {
+  "count": 158,
+  "iso": "CN-SC",
+  "kind": "subdivision_2",
+  "name": "Sichuan",
+  "url": "data/admin2/913068.geojson"
+ },
+ "913069": {
+  "count": 33,
+  "iso": "CN-CQ",
+  "kind": "subdivision_2",
+  "name": "Chongqing",
+  "url": "data/admin2/913069.geojson"
+ },
+ "913073": {
+  "count": 101,
+  "iso": "CN-HN",
+  "kind": "subdivision_2",
+  "name": "Hunan",
+  "url": "data/admin2/913073.geojson"
+ },
+ "913094": {
+  "count": 125,
+  "iso": "CN-YN",
+  "kind": "subdivision_2",
+  "name": "Yunnan",
+  "url": "data/admin2/913094.geojson"
+ },
+ "913100": {
+  "count": 97,
+  "iso": "CN-SN",
+  "kind": "subdivision_2",
+  "name": "Shaanxi",
+  "url": "data/admin2/913100.geojson"
+ },
+ "913101": {
+  "count": 21,
+  "iso": "CN-NX",
+  "kind": "subdivision_2",
+  "name": "Ningxia",
+  "url": "data/admin2/913101.geojson"
+ },
+ "913105": {
+  "count": 107,
+  "iso": "CN-SX",
+  "kind": "subdivision_2",
+  "name": "Shanxi",
+  "url": "data/admin2/913105.geojson"
+ },
+ "913106": {
+  "count": 77,
+  "iso": "CN-HB",
+  "kind": "subdivision_2",
+  "name": "Hubei",
+  "url": "data/admin2/913106.geojson"
+ },
+ "913109": {
+  "count": 91,
+  "iso": "CN-JX",
+  "kind": "subdivision_2",
+  "name": "Jiangxi",
+  "url": "data/admin2/913109.geojson"
+ },
+ "91685": {
+  "count": 62,
+  "iso": "RO-SJ",
+  "kind": "subdivision_2",
+  "name": "S\u0103laj",
+  "url": "data/admin2/91685.geojson"
+ },
+ "91731": {
+  "count": 100,
+  "iso": "RO-BH",
+  "kind": "subdivision_2",
+  "name": "Bihor",
+  "url": "data/admin2/91731.geojson"
+ },
+ "91733": {
+  "count": 79,
+  "iso": "RO-CJ",
+  "kind": "subdivision_2",
+  "name": "Cluj",
+  "url": "data/admin2/91733.geojson"
+ },
+ "918897": {
+  "count": 3,
+  "iso": "FI-04",
+  "kind": "subdivision_2",
+  "name": "South Savo",
+  "url": "data/admin2/918897.geojson"
+ },
+ "918898": {
+  "count": 5,
+  "iso": "FI-15",
+  "kind": "subdivision_2",
+  "name": "North Savo",
+  "url": "data/admin2/918898.geojson"
+ },
+ "92277": {
+  "count": 50,
+  "iso": "TH-10",
+  "kind": "subdivision_2",
+  "name": "Bangkok",
+  "url": "data/admin2/92277.geojson"
+ },
+ "92417": {
+  "count": 5,
+  "iso": "ZA-FS",
+  "kind": "subdivision_2",
+  "name": "Free State",
+  "url": "data/admin2/92417.geojson"
+ },
+ "938553995": {
+  "count": 10,
+  "iso": "VN-14",
+  "kind": "subdivision_2",
+  "name": "H\u00f2a B\u00ecnh",
+  "url": "data/admin2/938553995.geojson"
+ },
+ "940675": {
+  "count": 12,
+  "iso": "SE-E",
+  "kind": "subdivision_2",
+  "name": "\u00d6sterg\u00f6tland County",
+  "url": "data/admin2/940675.geojson"
+ },
+ "958517": {
+  "count": 2,
+  "iso": "GR-K",
+  "kind": "subdivision_2",
+  "name": "Northern Aegean",
+  "url": "data/admin2/958517.geojson"
+ },
+ "965030827": {
+  "count": 18,
+  "iso": "ET-SN",
+  "kind": "subdivision_2",
+  "name": "Southern Nations",
+  "url": "data/admin2/965030827.geojson"
+ },
+ "965079081": {
+  "count": 6,
+  "iso": "PK-TA",
+  "kind": "subdivision_2",
+  "name": "Federally Administered Tribal Areas",
+  "url": "data/admin2/965079081.geojson"
+ },
+ "965235514": {
+  "count": 5,
+  "iso": "MA-14",
+  "kind": "subdivision_2",
+  "name": "Guelmim-Es Semara",
+  "url": "data/admin2/965235514.geojson"
+ },
+ "967238673": {
+  "count": 12,
+  "iso": "KZ-PAV",
+  "kind": "subdivision_2",
+  "name": "Pavlodar",
+  "url": "data/admin2/967238673.geojson"
+ },
+ "96905": {
+  "count": 39,
+  "iso": "IN-TN",
+  "kind": "subdivision_2",
+  "name": "Tamil Nadu",
+  "url": "data/admin2/96905.geojson"
+ },
+ "976819509": {
+  "count": 3,
+  "iso": "CZ-KA",
+  "kind": "subdivision_2",
+  "name": "Karlovy Vary",
+  "url": "data/admin2/976819509.geojson"
+ },
+ "980204287": {
+  "count": 11,
+  "iso": "VN-47",
+  "kind": "subdivision_2",
+  "name": "Ki\u00ean Giang",
+  "url": "data/admin2/980204287.geojson"
+ },
+ "985206559": {
+  "count": 14,
+  "iso": "PL-SK",
+  "kind": "subdivision_2",
+  "name": "\u015awi\u0119tokrzyskie Voivodeship",
+  "url": "data/admin2/985206559.geojson"
+ }
+}

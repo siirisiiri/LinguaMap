@@ -1,133 +1,171 @@
 #!/usr/bin/env python3
 """Prebuild subdivision-2 outlines into data/admin2/.
 
-Subdivision 1 (states, provinces, oblasts) is already on disk. Clicking into
-one of those used to fan out live OSM geometry requests, which is why Quebec
-felt slow and why its 17 administrative regions showed up as huge blocky
-shapes. This bakes the next OSM admin level — counties, MRCs, raions — with
-the same simplification used for admin1.
-
-One GeoJSON per parent area, keyed by OSM relation id. Default is the
-countries that have language datasets (CA, GB, UA); pass --iso to add more.
+Subdivision 1 is already on disk from Natural Earth. Subdivision 2 used to
+hit live OSM/Overpass for every county, which was slow and, for Quebec,
+fell back to 17 huge administrative regions. This bakes the next level from
+geoBoundaries (open license, already simplified): raions in Ukraine, local
+authorities in the UK, US counties. Canada uses Statistics Canada census
+divisions — counties, MRCs, regional districts — instead of the 5,000
+municipalities (too fine) or 76 economic regions (too coarse).
 
   python3 fetch_admin2.py
-  python3 fetch_admin2.py --iso CA,UA
-  python3 fetch_admin2.py --osm-id 61549
+  python3 fetch_admin2.py --iso major
+  python3 fetch_admin2.py --iso CA,UA,GB
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
-import re
 import sys
 import time
 from pathlib import Path
 
 import requests
 
-from fetch_admin1 import HEADERS, simplify_geometry
+from fetch_admin1 import (
+    HEADERS,
+    fetch_overpass,
+    iso_code,
+    normalize_name,
+    simplify_geometry,
+)
 
 COUNTRIES_PATH = Path("data/countries.geojson")
 ADMIN1_DIR = Path("data/admin1")
 OUT_DIR = Path("data/admin2")
-# Counties are smaller than provinces; keep a bit more coastline detail.
 SIMPLIFY_TOLERANCE = 0.003
-OVERPASS_MIRRORS = [
-    "https://overpass.kumi.systems/api/interpreter",
-    "https://overpass.private.coffee/api/interpreter",
-    "https://overpass-api.de/api/interpreter",
-    "https://lz4.overpass-api.de/api/interpreter",
+GB_API = "https://www.geoboundaries.org/api/current/gbOpen/{iso3}/{level}/"
+
+ISO3 = {
+    "AE": "ARE", "AF": "AFG", "AL": "ALB", "AM": "ARM", "AO": "AGO", "AR": "ARG",
+    "AT": "AUT", "AU": "AUS", "AZ": "AZE", "BA": "BIH", "BD": "BGD", "BE": "BEL",
+    "BF": "BFA", "BG": "BGR", "BH": "BHR", "BI": "BDI", "BJ": "BEN", "BN": "BRN",
+    "BO": "BOL", "BR": "BRA", "BS": "BHS", "BT": "BTN", "BW": "BWA", "BY": "BLR",
+    "BZ": "BLZ", "CA": "CAN", "CD": "COD", "CF": "CAF", "CG": "COG", "CH": "CHE",
+    "CI": "CIV", "CL": "CHL", "CM": "CMR", "CN": "CHN", "CO": "COL", "CR": "CRI",
+    "CU": "CUB", "CY": "CYP", "CZ": "CZE", "DE": "DEU", "DJ": "DJI", "DK": "DNK",
+    "DO": "DOM", "DZ": "DZA", "EC": "ECU", "EE": "EST", "EG": "EGY", "ER": "ERI",
+    "ES": "ESP", "ET": "ETH", "FI": "FIN", "FJ": "FJI", "FR": "FRA", "GA": "GAB",
+    "GB": "GBR", "GE": "GEO", "GH": "GHA", "GL": "GRL", "GM": "GMB", "GN": "GIN",
+    "GQ": "GNQ", "GR": "GRC", "GT": "GTM", "GW": "GNB", "GY": "GUY", "HN": "HND",
+    "HR": "HRV", "HT": "HTI", "HU": "HUN", "ID": "IDN", "IE": "IRL", "IL": "ISR",
+    "IN": "IND", "IQ": "IRQ", "IR": "IRN", "IS": "ISL", "IT": "ITA", "JM": "JAM",
+    "JO": "JOR", "JP": "JPN", "KE": "KEN", "KG": "KGZ", "KH": "KHM", "KP": "PRK",
+    "KR": "KOR", "KW": "KWT", "KZ": "KAZ", "LA": "LAO", "LB": "LBN", "LK": "LKA",
+    "LR": "LBR", "LS": "LSO", "LT": "LTU", "LU": "LUX", "LV": "LVA", "LY": "LBY",
+    "MA": "MAR", "MD": "MDA", "ME": "MNE", "MG": "MDG", "MK": "MKD", "ML": "MLI",
+    "MM": "MMR", "MN": "MNG", "MR": "MRT", "MW": "MWI", "MX": "MEX", "MY": "MYS",
+    "MZ": "MOZ", "NA": "NAM", "NE": "NER", "NG": "NGA", "NI": "NIC", "NL": "NLD",
+    "NO": "NOR", "NP": "NPL", "NZ": "NZL", "OM": "OMN", "PA": "PAN", "PE": "PER",
+    "PG": "PNG", "PH": "PHL", "PK": "PAK", "PL": "POL", "PT": "PRT", "PY": "PRY",
+    "QA": "QAT", "RO": "ROU", "RS": "SRB", "RU": "RUS", "RW": "RWA", "SA": "SAU",
+    "SD": "SDN", "SE": "SWE", "SI": "SVN", "SK": "SVK", "SL": "SLE", "SN": "SEN",
+    "SO": "SOM", "SR": "SUR", "SS": "SSD", "SV": "SLV", "SY": "SYR", "SZ": "SWZ",
+    "TD": "TCD", "TG": "TGO", "TH": "THA", "TJ": "TJK", "TL": "TLS", "TM": "TKM",
+    "TN": "TUN", "TR": "TUR", "TT": "TTO", "TZ": "TZA", "UA": "UKR", "UG": "UGA",
+    "US": "USA", "UY": "URY", "UZ": "UZB", "VE": "VEN", "VN": "VNM", "VU": "VUT",
+    "XK": "XKK", "YE": "YEM", "ZA": "ZAF", "ZM": "ZMB", "ZW": "ZWE",
+    "GF": "GUF",
+}
+
+# Overseas regions that belong on a sovereign country's subdivision-1 map
+# (French Guiana is part of France on the 110m overview). Each entry is an
+# extra geoBoundaries download assigned to that parent.
+OVERSEAS_ADM2 = {
+    "FR": [
+        {
+            "iso3": "GUF",
+            "osm_id": 1260551,
+            "name": "French Guiana",
+            "iso": "FR-GF",
+            "names": {"frenchguiana", "guyane"},
+        },
+    ],
+}
+
+# Size, population, or diplomatic weight — the countries people actually open.
+MAJOR_ISO = [
+    "US", "CA", "MX", "BR", "AR", "CO", "CL", "PE", "VE",
+    "GB", "FR", "DE", "IT", "ES", "PT", "NL", "BE", "AT", "CH",
+    "SE", "NO", "FI", "PL", "RO", "CZ", "HU", "IE", "GR",
+    "UA", "RU", "TR",
+    "SA", "AE", "IL", "IR", "IQ", "EG", "DZ", "MA", "NG", "ZA", "KE", "ET", "GH",
+    "IN", "PK", "BD", "CN", "JP", "KR", "ID", "TH", "VN", "PH", "MY", "AU", "NZ",
+    "KZ",
 ]
 
+# Natural Earth admin1 is counties/departments here. Use geoBoundaries instead.
+# Italy's ADM1 is 5 macro-areas; the 20 regions are ADM2.
+PROMOTE_ADMIN1 = {
+    "GB": "ADM1",
+    "FR": "ADM1",
+    "ES": "ADM1",
+    "IT": "ADM2",
+    "BE": "ADM1",
+    "IE": "ADM1",
+    "GR": "ADM1",
+}
 
-def fetch_overpass(query):
-    last_error = None
-    for url in OVERPASS_MIRRORS:
-        try:
-            print(f"    {url}", flush=True)
-            resp = requests.post(
-                url, data={"data": query}, headers=HEADERS, timeout=(12, 180)
-            )
-            if resp.status_code in {429, 502, 503, 504}:
-                last_error = RuntimeError(f"{resp.status_code} from {url}")
-                print(f"    {last_error}", flush=True)
-                time.sleep(2)
-                continue
-            resp.raise_for_status()
-            data = resp.json()
-            remark = str(data.get("remark") or "")
-            if "error" in remark.lower():
-                last_error = RuntimeError(remark[:160])
-                print(f"    {last_error}", flush=True)
-                continue
-            return data
-        except (requests.Timeout, requests.ConnectionError, ValueError) as e:
-            last_error = e
-            print(f"    {e}", flush=True)
-            time.sleep(2)
-    raise last_error or RuntimeError("All Overpass endpoints failed")
+# After promoting Italy's regions to subdivision 1, try provinces as level 2.
+ADMIN2_LEVEL = {"IT": "ADM3", "CA": "STATCAN"}
 
+# Natural Earth admin1 for the UK is counties, so the viewer uses OSM nations
+# as subdivision 1. Pin those relation ids so admin2 files key the same way.
+OSM_NATIONS = {
+    "Wales": 58437,
+    "Cymru": 58437,
+    "Scotland": 58446,
+    "England": 58447,
+    "Northern Ireland": 192732,
+}
 
-def preferred_child_level(parent_level: int) -> int:
-    if not parent_level or parent_level <= 2:
-        return 4
-    if parent_level <= 4:
-        return 6
-    return 8
-
-
-def child_levels_to_try(parent_level: int) -> list[int]:
-    preferred = preferred_child_level(parent_level)
-    ordered = [preferred, preferred + 2, preferred - 1, preferred + 1]
-    out: list[int] = []
-    for level in ordered:
-        if parent_level and level <= parent_level:
-            continue
-        if level < 3 or level > 10:
-            continue
-        if level not in out:
-            out.append(level)
-    return out
+STATCAN_CD_URL = (
+    "https://geo.statcan.gc.ca/geo_wa/rest/services/2021/"
+    "Cartographic_boundary_files/MapServer/4/query"
+)
+# StatCan province codes -> Natural Earth / OSM ISO3166-2 on admin1.
+PRUID_TO_ISO = {
+    "10": "CA-NL",
+    "11": "CA-PE",
+    "12": "CA-NS",
+    "13": "CA-NB",
+    "24": "CA-QC",
+    "35": "CA-ON",
+    "46": "CA-MB",
+    "47": "CA-SK",
+    "48": "CA-AB",
+    "59": "CA-BC",
+    "60": "CA-YT",
+    "61": "CA-NT",
+    "62": "CA-NU",
+}
 
 
-def coords_equal(a, b) -> bool:
-    return abs(a[0] - b[0]) < 1e-9 and abs(a[1] - b[1]) < 1e-9
+def centroid(geom: dict):
+    coords = []
+
+    def walk(coord):
+        if not coord:
+            return
+        if isinstance(coord[0], (int, float)):
+            coords.append(coord)
+            return
+        for item in coord:
+            walk(item)
+
+    walk((geom or {}).get("coordinates"))
+    if not coords:
+        return None
+    return (
+        sum(p[0] for p in coords) / len(coords),
+        sum(p[1] for p in coords) / len(coords),
+    )
 
 
-def merge_ways(ways: list[list[list[float]]]) -> list[list[list[float]]]:
-    segs = [way[:] for way in ways if len(way) >= 2]
-    rings: list[list[list[float]]] = []
-    while segs:
-        ring = segs.pop()
-        closed = coords_equal(ring[0], ring[-1])
-        grew = True
-        while not closed and grew:
-            grew = False
-            for i in range(len(segs) - 1, -1, -1):
-                seg = segs[i]
-                if coords_equal(ring[-1], seg[0]):
-                    ring.extend(seg[1:])
-                elif coords_equal(ring[-1], seg[-1]):
-                    ring.extend(reversed(seg[:-1]))
-                elif coords_equal(ring[0], seg[-1]):
-                    ring[0:0] = seg[:-1]
-                elif coords_equal(ring[0], seg[0]):
-                    ring[0:0] = list(reversed(seg[1:]))
-                else:
-                    continue
-                segs.pop(i)
-                grew = True
-                closed = coords_equal(ring[0], ring[-1])
-                break
-        if len(ring) >= 4:
-            if not coords_equal(ring[0], ring[-1]):
-                ring.append(ring[0])
-            rings.append(ring)
-    return rings
-
-
-def point_in_ring(lon: float, lat: float, ring: list[list[float]]) -> bool:
+def point_in_ring(lon: float, lat: float, ring: list) -> bool:
     inside = False
     j = len(ring) - 1
     for i, (xi, yi) in enumerate(ring):
@@ -138,139 +176,18 @@ def point_in_ring(lon: float, lat: float, ring: list[list[float]]) -> bool:
     return inside
 
 
-def overpass_element_geometry(el: dict):
-    outers: list[list[list[float]]] = []
-    inners: list[list[list[float]]] = []
-    for member in el.get("members") or []:
-        geom = member.get("geometry") or []
-        if len(geom) < 2:
-            continue
-        line = [[float(pt["lon"]), float(pt["lat"])] for pt in geom if "lon" in pt and "lat" in pt]
-        if len(line) < 2:
-            continue
-        (inners if member.get("role") == "inner" else outers).append(line)
-    outer_rings = merge_ways(outers)
-    if not outer_rings:
-        return None
-    leftover = merge_ways(inners)
-    polygons = []
-    for outer in outer_rings:
-        holes = [hole for hole in leftover if hole and point_in_ring(hole[0][0], hole[0][1], outer)]
-        for hole in holes:
-            leftover.remove(hole)
-        polygons.append([outer, *holes])
-    if len(polygons) == 1:
-        return {"type": "Polygon", "coordinates": polygons[0]}
-    return {"type": "MultiPolygon", "coordinates": polygons}
-
-
-def element_to_feature(el: dict, parent: dict, level: int) -> dict | None:
-    tags = el.get("tags") or {}
-    if tags.get("end_date") or tags.get("historic"):
-        return None
-    name = tags.get("name:en") or tags.get("name")
-    if not name:
-        return None
-    geom = overpass_element_geometry(el)
+def contains(geom: dict, lon: float, lat: float) -> bool:
     if not geom:
-        return None
-    simple = simplify_geometry(geom, SIMPLIFY_TOLERANCE)
-    if not simple:
-        return None
-    return {
-        "type": "Feature",
-        "properties": {
-            "osm_type": "relation",
-            "osm_id": int(el["id"]),
-            "name": name,
-            "admin_level": str(tags.get("admin_level") or level),
-            "kind": "subdivision_2",
-            "parent_osm_id": int(parent["osm_id"]),
-            "parent_name": parent.get("name") or "",
-            "parent_iso": parent.get("iso") or "",
-        },
-        "geometry": simple,
-    }
-
-
-def overpass_child_ids(parent: dict, level: int) -> list[dict]:
-    parent_id = int(parent["osm_id"])
-    iso = parent.get("iso") or ""
-    parent_level = int(str(parent.get("admin_level") or "4"))
-    if iso and re.fullmatch(r"[A-Z]{2}-[A-Z0-9]{1,3}", iso):
-        query = f"""
-        [out:json][timeout:60];
-        area["ISO3166-2"="{iso}"]["admin_level"="{parent_level}"];
-        rel(area)["type"="boundary"]["boundary"="administrative"]["admin_level"="{level}"]["name"];
-        out tags;
-        """
-    else:
-        query = f"""
-        [out:json][timeout:60];
-        rel({parent_id});
-        map_to_area -> .parent;
-        rel(area.parent)["type"="boundary"]["boundary"="administrative"]["admin_level"="{level}"]["name"];
-        out tags;
-        """
-    data = fetch_overpass(query)
-    recs = []
-    seen = set()
-    for el in data.get("elements") or []:
-        if el.get("type") != "relation" or int(el.get("id") or 0) == parent_id:
+        return False
+    polys = geom["coordinates"] if geom["type"] == "MultiPolygon" else [geom["coordinates"]]
+    for poly in polys:
+        if not poly:
             continue
-        tags = el.get("tags") or {}
-        if tags.get("end_date") or tags.get("historic"):
-            continue
-        name = tags.get("name:en") or tags.get("name")
-        if not name:
-            continue
-        osm_id = int(el["id"])
-        if osm_id in seen:
-            continue
-        seen.add(osm_id)
-        recs.append({"osm_id": osm_id, "name": name, "admin_level": str(tags.get("admin_level") or level)})
-    return recs
-
-
-def overpass_children_geom(parent: dict, level: int) -> list[dict]:
-    recs = overpass_child_ids(parent, level)
-    print(f"    {len(recs)} tagged relations", flush=True)
-    if not recs:
-        return []
-    recs = recs[:400]
-    from concurrent.futures import ThreadPoolExecutor
-
-    from serve import cached_relation_feature
-
-    by_id = {}
-    with ThreadPoolExecutor(max_workers=6) as pool:
-        for feat in pool.map(cached_relation_feature, [rec["osm_id"] for rec in recs]):
-            if not feat or not feat.get("properties"):
-                continue
-            osm_id = int(feat["properties"]["osm_id"])
-            geom = simplify_geometry(feat.get("geometry") or {}, SIMPLIFY_TOLERANCE)
-            if not geom:
-                continue
-            feat = dict(feat)
-            feat["geometry"] = geom
-            feat["properties"] = dict(feat["properties"])
-            feat["properties"]["kind"] = "subdivision_2"
-            feat["properties"]["parent_osm_id"] = int(parent["osm_id"])
-            feat["properties"]["parent_name"] = parent.get("name") or ""
-            feat["properties"]["parent_iso"] = parent.get("iso") or ""
-            by_id[osm_id] = feat
-            if len(by_id) % 20 == 0:
-                print(f"    geom {len(by_id)}/{len(recs)}", flush=True)
-    features = []
-    for rec in recs:
-        feat = by_id.get(rec["osm_id"])
-        if not feat:
-            continue
-        feat["properties"]["name"] = rec["name"] or feat["properties"].get("name")
-        feat["properties"]["admin_level"] = rec.get("admin_level") or feat["properties"].get("admin_level")
-        features.append(feat)
-    print(f"    geom {len(features)}/{len(recs)}", flush=True)
-    return features
+        if point_in_ring(lon, lat, poly[0]) and not any(
+            point_in_ring(lon, lat, hole) for hole in poly[1:]
+        ):
+            return True
+    return False
 
 
 def admin1_too_deep(features: list[dict]) -> bool:
@@ -282,44 +199,6 @@ def admin1_too_deep(features: list[dict]) -> bool:
         if raw.isdigit() and int(raw) > 4:
             deeper += 1
     return deeper > len(features) / 2
-
-
-def osm_nations(country_osm_id: int, iso: str) -> list[dict]:
-    """UK-style: Natural Earth admin1 is counties, so take OSM nations instead."""
-    query = f"""
-    [out:json][timeout:90];
-    rel({country_osm_id});
-    map_to_area -> .parent;
-    rel(area.parent)["type"="boundary"]["boundary"="administrative"]["admin_level"="4"]["name"];
-    out tags;
-    """
-    data = fetch_overpass(query)
-    out = []
-    seen = set()
-    for el in data.get("elements") or []:
-        if el.get("type") != "relation" or int(el.get("id") or 0) == country_osm_id:
-            continue
-        tags = el.get("tags") or {}
-        if tags.get("end_date") or tags.get("historic"):
-            continue
-        name = tags.get("name:en") or tags.get("name")
-        if not name:
-            continue
-        osm_id = int(el["id"])
-        if osm_id in seen:
-            continue
-        seen.add(osm_id)
-        code = (tags.get("ISO3166-2") or "").upper()
-        out.append(
-            {
-                "osm_id": osm_id,
-                "name": name,
-                "admin_level": tags.get("admin_level") or "4",
-                "iso": code if re.fullmatch(r"[A-Z]{2}-[A-Z0-9]{1,3}", code) else "",
-                "parent_iso": iso,
-            }
-        )
-    return out
 
 
 def country_osm_ids() -> dict[str, dict]:
@@ -336,66 +215,369 @@ def country_osm_ids() -> dict[str, dict]:
     return out
 
 
-def parents_for_iso(iso: str, country: dict) -> list[dict]:
-    path = ADMIN1_DIR / f"{iso}.geojson"
-    features = []
-    if path.exists():
-        features = json.loads(path.read_bytes()).get("features") or []
-    if features and not admin1_too_deep(features):
-        parents = []
-        for feat in features:
-            props = feat.get("properties") or {}
-            osm_id = props.get("osm_id")
-            if not osm_id:
-                continue
-            raw = str(props.get("admin_level") or "4")
-            level = int(raw) if raw.isdigit() else 4
-            if level > 4:
-                continue
-            parents.append(
-                {
-                    "osm_id": int(osm_id),
-                    "name": props.get("name") or f"relation/{osm_id}",
-                    "admin_level": str(level),
-                    "iso": props.get("iso") or "",
-                    "parent_iso": iso,
-                }
-            )
-        if parents:
-            return parents
-    print(f"  {iso}: admin1 is too local; using OSM nation/region relations")
-    return osm_nations(country["osm_id"], iso)
-
-
-def lookup_parent(osm_id: int) -> dict:
-    """Fill name/iso from the admin1 files when only an OSM id was given."""
-    parent = {
-        "osm_id": osm_id,
-        "name": f"relation/{osm_id}",
-        "admin_level": "4",
-        "iso": "",
-        "parent_iso": "",
-    }
-    if not ADMIN1_DIR.exists():
-        return parent
-    for path in ADMIN1_DIR.glob("*.geojson"):
+def fill_admin1_ids() -> int:
+    """Give every subdivision-1 polygon a stable id so drill-down never stalls."""
+    filled = 0
+    for path in sorted(ADMIN1_DIR.glob("*.geojson")):
         try:
             payload = json.loads(path.read_bytes())
-        except (OSError, json.JSONDecodeError):
+        except json.JSONDecodeError:
             continue
+        changed = False
         for feat in payload.get("features") or []:
-            props = feat.get("properties") or {}
-            if props.get("osm_id") == osm_id:
-                parent.update(
-                    {
-                        "name": props.get("name") or parent["name"],
-                        "admin_level": str(props.get("admin_level") or "4"),
-                        "iso": props.get("iso") or "",
-                        "parent_iso": props.get("parent_iso") or path.stem,
-                    }
+            props = feat.setdefault("properties", {})
+            if props.get("osm_id"):
+                continue
+            props["osm_id"] = stable_id(str(props.get("iso") or ""), props.get("name") or path.stem)
+            changed = True
+            filled += 1
+        if changed:
+            path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    return filled
+
+
+def osm_codes_for_country(iso: str) -> tuple[dict, dict]:
+    """ISO3166-2 and name indexes for one country's OSM subdivision relations."""
+    query = f"""
+    [out:json][timeout:90];
+    rel["boundary"="administrative"]["ISO3166-2"~"^{iso}-"]["name"];
+    out tags;
+    """
+    try:
+        osm = fetch_overpass(query)
+    except Exception as e:
+        print(f"    overpass failed: {e}", flush=True)
+        return {}, {}
+    by_iso: dict[str, dict] = {}
+    by_name: dict[str, dict] = {}
+    for el in osm.get("elements") or []:
+        tags = el.get("tags") or {}
+        if el.get("type") != "relation":
+            continue
+        rec = {
+            "osm_id": el["id"],
+            "name": tags.get("name:en") or tags.get("name") or "",
+            "admin_level": tags.get("admin_level") or "4",
+            "iso": iso_code(tags.get("ISO3166-2")),
+        }
+        if rec["iso"]:
+            by_iso[rec["iso"]] = rec
+        for label in (tags.get("name"), tags.get("name:en"), tags.get("official_name")):
+            key = normalize_name(label)
+            if key and key not in by_name:
+                by_name[key] = rec
+    return by_iso, by_name
+
+
+def match_osm_parent(name: str, shape_iso: str, by_iso: dict, by_name: dict) -> dict | None:
+    if name in OSM_NATIONS:
+        return {"osm_id": OSM_NATIONS[name], "name": name, "admin_level": "4", "iso": ""}
+    key = normalize_name(name)
+    if key in OSM_NATIONS:
+        return {"osm_id": OSM_NATIONS[key], "name": name, "admin_level": "4", "iso": ""}
+    for raw in (shape_iso, shape_iso.replace(".", "-"), shape_iso.replace("_", "-")):
+        code = iso_code(raw)
+        if code and code in by_iso:
+            return by_iso[code]
+        parts = (raw or "").upper().split("-")
+        if len(parts) >= 2 and len(parts[0]) == 3:
+            guess = iso_code(f"{parts[0][:2]}-{parts[1]}")
+            if guess and guess in by_iso:
+                return by_iso[guess]
+    key = normalize_name(name)
+    if key in by_name:
+        return by_name[key]
+    if key in OSM_NATIONS:
+        return {"osm_id": OSM_NATIONS[key], "name": name, "admin_level": "4", "iso": ""}
+    for other, rec in by_name.items():
+        if key and other and (key in other or other in key) and min(len(key), len(other)) >= 5:
+            return rec
+    if name in OSM_NATIONS:
+        return {"osm_id": OSM_NATIONS[name], "name": name, "admin_level": "4", "iso": ""}
+    return None
+
+
+def write_admin1(iso: str, parent_osm_id: int, features: list[dict]) -> None:
+    ADMIN1_DIR.mkdir(parents=True, exist_ok=True)
+    path = ADMIN1_DIR / f"{iso}.geojson"
+    path.write_text(
+        json.dumps({"type": "FeatureCollection", "features": features}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    index_path = ADMIN1_DIR / "index.json"
+    try:
+        index = json.loads(index_path.read_bytes()) if index_path.exists() else {}
+    except json.JSONDecodeError:
+        index = {}
+    index[str(parent_osm_id)] = {
+        "iso": iso,
+        "url": f"data/admin1/{path.name}",
+        "count": len(features),
+    }
+    index_path.write_text(json.dumps(index, indent=1, sort_keys=True), encoding="utf-8")
+    print(f"  wrote admin1 {iso}: {len(features)} areas -> {path}", flush=True)
+
+
+def promote_admin1(iso: str, iso3: str, level: str, country_osm_id: int) -> list[dict]:
+    """Replace too-local Natural Earth admin1 with geoBoundaries regions/nations."""
+    print(f"  promoting {iso} subdivision 1 from geoBoundaries {level}…", flush=True)
+    raw = download_geoboundaries(iso3, level)
+    by_iso, by_name = osm_codes_for_country(iso)
+    parents = []
+    features = []
+    for feat in raw:
+        props = feat.get("properties") or {}
+        name = fix_mojibake(props.get("shapeName") or props.get("name") or "")
+        if not name:
+            continue
+        geom = simplify_geometry(feat.get("geometry") or {}, 0.005)
+        if not geom:
+            continue
+        rec = match_osm_parent(name, props.get("shapeISO") or "", by_iso, by_name)
+        osm_id = int(rec["osm_id"]) if rec else stable_id(str(props.get("shapeID") or ""), name)
+        parent = {
+            "osm_id": osm_id,
+            "name": (rec.get("name") if rec and rec.get("name") else name),
+            "admin_level": str((rec or {}).get("admin_level") or "4"),
+            "iso": (rec or {}).get("iso") or "",
+            "geometry": geom,
+        }
+        parents.append(parent)
+        features.append(
+            {
+                "type": "Feature",
+                "properties": {
+                    "osm_type": "relation",
+                    "osm_id": osm_id,
+                    "name": parent["name"],
+                    "admin_level": parent["admin_level"],
+                    "iso": parent["iso"],
+                    "parent_iso": iso,
+                    "parent_osm_id": country_osm_id,
+                    "kind": "subdivision_1",
+                },
+                "geometry": geom,
+            }
+        )
+    if len(features) < 2:
+        print(f"  promote {iso}: only {len(features)} areas, keeping existing admin1", flush=True)
+        return []
+    write_admin1(iso, country_osm_id, features)
+    return parents
+
+
+def admin2_mostly_ready(parents: list[dict]) -> bool:
+    if len(parents) < 2:
+        return False
+    have = sum(1 for p in parents if (OUT_DIR / f"{p['osm_id']}.geojson").exists())
+    return have >= max(2, int(len(parents) * 0.9))
+
+
+def download_statcan_census_divisions() -> list[dict]:
+    """Counties, MRCs, and regional districts (~293), not towns."""
+    print("  Statistics Canada 2021 census divisions…", flush=True)
+    meta = requests.get(
+        STATCAN_CD_URL,
+        params={
+            "where": "1=1",
+            "outFields": "OBJECTID,CDUID,CDNAME,CDTYPE,PRUID",
+            "returnGeometry": "false",
+            "f": "json",
+            "resultRecordCount": 6000,
+        },
+        headers=HEADERS,
+        timeout=(20, 60),
+    )
+    meta.raise_for_status()
+    rows = meta.json().get("features") or []
+    oids = [row["attributes"]["OBJECTID"] for row in rows]
+    print(f"  {len(oids)} divisions", flush=True)
+    features: list[dict] = []
+    batch_size = 5
+    for i in range(0, len(oids), batch_size):
+        batch = oids[i : i + batch_size]
+        oid_list = ",".join(str(oid) for oid in batch)
+        last_error: Exception | None = None
+        for attempt in range(5):
+            try:
+                resp = requests.get(
+                    STATCAN_CD_URL,
+                    params={
+                        "where": f"OBJECTID IN ({oid_list})",
+                        "outFields": "CDUID,CDNAME,CDTYPE,PRUID",
+                        "outSR": "4326",
+                        "f": "geojson",
+                        "returnGeometry": "true",
+                        "maxAllowableOffset": "0.005",
+                        "geometryPrecision": "4",
+                    },
+                    headers=HEADERS,
+                    timeout=(20, 90),
                 )
-                return parent
-    return parent
+                if resp.status_code != 200:
+                    raise RuntimeError(f"HTTP {resp.status_code}")
+                chunk = resp.json().get("features") or []
+                if len(chunk) < len(batch):
+                    raise RuntimeError(f"got {len(chunk)} of {len(batch)}")
+                features.extend(chunk)
+                print(f"    {len(features)}/{len(oids)}", flush=True)
+                last_error = None
+                break
+            except Exception as e:
+                last_error = e
+                time.sleep(1.5 * (attempt + 1))
+        if last_error:
+            raise RuntimeError(f"census division batch {batch[0]}-{batch[-1]}: {last_error}")
+    return features
+
+
+def download_geoboundaries(iso3: str, level: str) -> list[dict]:
+    meta_url = GB_API.format(iso3=iso3, level=level)
+    print(f"  {meta_url}", flush=True)
+    meta = requests.get(meta_url, headers=HEADERS, timeout=(20, 60))
+    meta.raise_for_status()
+    info = meta.json()
+    if isinstance(info, list):
+        info = info[0] if info else {}
+    url = info.get("simplifiedGeometryGeoJSON") or info.get("gjDownloadURL")
+    if not url:
+        raise RuntimeError(f"No geoBoundaries download for {iso3} {level}")
+    print(f"  {url} ({info.get('admUnitCount', '?')} units)", flush=True)
+    resp = requests.get(url, headers=HEADERS, timeout=(20, 180))
+    resp.raise_for_status()
+    return (json.loads(resp.content.decode("utf-8")).get("features") or [])
+
+
+def parents_from_admin1(iso: str) -> list[dict]:
+    path = ADMIN1_DIR / f"{iso}.geojson"
+    if not path.exists():
+        return []
+    features = json.loads(path.read_bytes()).get("features") or []
+    parents = []
+    for feat in features:
+        props = feat.get("properties") or {}
+        osm_id = props.get("osm_id")
+        if not osm_id:
+            continue
+        raw = str(props.get("admin_level") or "4")
+        level = int(raw) if raw.isdigit() else 4
+        parents.append(
+            {
+                "osm_id": int(osm_id),
+                "name": props.get("name") or f"relation/{osm_id}",
+                "admin_level": str(level),
+                "iso": props.get("iso") or "",
+                "geometry": feat.get("geometry"),
+            }
+        )
+    return parents
+
+
+def parents_from_geoboundaries_adm1(iso: str, iso3: str) -> list[dict]:
+    """UK-style: use geoBoundaries ADM1 (nations) as the subdivision-1 parents."""
+    features = download_geoboundaries(iso3, "ADM1")
+    parents = []
+    for feat in features:
+        name = fix_mojibake((feat.get("properties") or {}).get("shapeName") or "")
+        osm_id = OSM_NATIONS.get(name)
+        if not osm_id:
+            print(f"    skip ADM1 {name}: no OSM id")
+            continue
+        parents.append(
+            {
+                "osm_id": int(osm_id),
+                "name": name,
+                "admin_level": "4",
+                "iso": "",
+                "geometry": feat.get("geometry"),
+            }
+        )
+    return parents
+
+
+def stable_id(shape_id: str, name: str) -> int:
+    raw = (shape_id or name or "").encode("utf-8")
+    return int(hashlib.sha1(raw).hexdigest()[:8], 16) % 900_000_000 + 100_000_000
+
+
+def fix_mojibake(value: str) -> str:
+    """geoBoundaries simplified files often store UTF-8 names as Latin-1."""
+    if not value or ("Ã" not in value and "Â" not in value):
+        return value
+    try:
+        return value.encode("latin-1").decode("utf-8")
+    except UnicodeError:
+        return value
+
+
+def child_feature(feat: dict, parent: dict) -> dict | None:
+    props = feat.get("properties") or {}
+    name = fix_mojibake(
+        props.get("shapeName") or props.get("CDNAME") or props.get("name") or ""
+    )
+    if not name:
+        return None
+    geom = simplify_geometry(feat.get("geometry") or {}, SIMPLIFY_TOLERANCE)
+    if not geom:
+        return None
+    return {
+        "type": "Feature",
+        "properties": {
+            "osm_type": "relation",
+            "osm_id": stable_id(str(props.get("shapeID") or props.get("CDUID") or ""), name),
+            "name": name,
+            "admin_level": "6",
+            "kind": "subdivision_2",
+            "parent_osm_id": parent["osm_id"],
+            "parent_name": parent.get("name") or "",
+            "parent_iso": parent.get("iso") or "",
+        },
+        "geometry": geom,
+    }
+
+
+def assign_canada(children: list[dict], parents: list[dict]) -> dict[int, list[dict]]:
+    by_iso = {p.get("iso"): p for p in parents if p.get("iso")}
+    by_parent: dict[int, list[dict]] = {p["osm_id"]: [] for p in parents}
+    for feat in children:
+        pruid = str((feat.get("properties") or {}).get("PRUID") or "")
+        parent = by_iso.get(PRUID_TO_ISO.get(pruid, ""))
+        if not parent:
+            continue
+        child = child_feature(feat, parent)
+        if child:
+            by_parent[parent["osm_id"]].append(child)
+    return by_parent
+
+
+def assign_children(children: list[dict], parents: list[dict]) -> dict[int, list[dict]]:
+    by_parent: dict[int, list[dict]] = {p["osm_id"]: [] for p in parents}
+    for feat in children:
+        point = centroid(feat.get("geometry") or {})
+        if not point:
+            continue
+        lon, lat = point
+        hit = None
+        for parent in parents:
+            if contains(parent.get("geometry") or {}, lon, lat):
+                hit = parent
+                break
+        if not hit:
+            best, best_d = None, 25.0  # degrees²; ~5° is still the same country
+            for parent in parents:
+                pc = centroid(parent.get("geometry") or {})
+                if not pc:
+                    continue
+                dist = (pc[0] - lon) ** 2 + (pc[1] - lat) ** 2
+                if dist < best_d:
+                    best, best_d = parent, dist
+            hit = best
+        if not hit:
+            continue
+        child = child_feature(feat, hit)
+        if child:
+            by_parent[hit["osm_id"]].append(child)
+    return by_parent
 
 
 def write_parent(parent: dict, features: list[dict], index: dict) -> None:
@@ -413,7 +595,7 @@ def write_parent(parent: dict, features: list[dict], index: dict) -> None:
         },
         "features": features,
     }
-    path.write_text(json.dumps(payload), encoding="utf-8")
+    path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
     index[str(osm_id)] = {
         "url": f"data/admin2/{path.name}",
         "count": len(features),
@@ -421,30 +603,28 @@ def write_parent(parent: dict, features: list[dict], index: dict) -> None:
         "iso": parent.get("iso") or "",
         "kind": "subdivision_2",
     }
-    print(f"  {parent.get('name')}: {len(features)} areas -> {path}", flush=True)
+    kb = path.stat().st_size / 1000
+    print(f"  {parent.get('name')}: {len(features)} areas, {kb:.0f} KB -> {path}", flush=True)
 
 
-def fetch_parent(parent: dict) -> list[dict]:
-    parent_level = int(str(parent.get("admin_level") or "4"))
-    last: list[dict] = []
-    for level in child_levels_to_try(parent_level):
-        print(f"  {parent.get('name')} admin_level={level}…", flush=True)
-        features: list[dict] = []
-        for attempt in range(2):
-            try:
-                features = overpass_children_geom(parent, level)
-                break
-            except Exception as e:
-                print(f"    failed ({attempt + 1}/2): {e}", flush=True)
-                time.sleep(3)
-        print(f"    {len(features)} relations", flush=True)
-        # County/MRC/raion scale is typically tens to low hundreds. A thousand
-        # municipalities is a last resort — it paints slowly and looks noisy.
-        if 3 <= len(features) <= 400:
-            return features
-        if len(features) > len(last):
-            last = features
-    return last
+def rebuild_index() -> dict:
+    index = {}
+    for path in sorted(OUT_DIR.glob("*.geojson")):
+        try:
+            payload = json.loads(path.read_bytes())
+        except json.JSONDecodeError:
+            continue
+        parent = payload.get("parent") or {}
+        features = payload.get("features") or []
+        osm_id = parent.get("osm_id") or path.stem
+        index[str(osm_id)] = {
+            "url": f"data/admin2/{path.name}",
+            "count": len(features),
+            "name": parent.get("name") or "",
+            "iso": parent.get("iso") or "",
+            "kind": "subdivision_2",
+        }
+    return index
 
 
 def load_index() -> dict:
@@ -457,87 +637,238 @@ def load_index() -> dict:
         return {}
 
 
+def parse_iso_list(raw: str) -> list[str]:
+    if raw.strip().lower() in {"major", "majors"}:
+        return list(MAJOR_ISO)
+    return [part.strip().upper() for part in raw.split(",") if part.strip()]
+
+
+def overseas_geometry(iso3: str) -> dict | None:
+    """Whole-territory outline for an overseas region (ADM1, else ADM0)."""
+    for level in ("ADM1", "ADM0"):
+        try:
+            raw = download_geoboundaries(iso3, level)
+        except Exception as e:
+            print(f"    {iso3} {level}: {e}", flush=True)
+            continue
+        best = None
+        best_n = 0
+        for feat in raw:
+            geom = simplify_geometry(feat.get("geometry") or {}, 0.005)
+            if not geom:
+                continue
+            n = len(json.dumps(geom, separators=(",", ":")))
+            if n > best_n:
+                best, best_n = geom, n
+        if best:
+            return best
+    return None
+
+
+def ensure_overseas_admin1(iso: str, country_osm_id: int, parents: list[dict]) -> list[dict]:
+    """Keep overseas regions on the sovereign country's subdivision-1 map."""
+    extras = OVERSEAS_ADM2.get(iso) or []
+    if not extras:
+        return parents
+    have_ids = {int(p["osm_id"]) for p in parents}
+    have_names = {normalize_name(p.get("name") or "") for p in parents}
+    added = []
+    for extra in extras:
+        names = extra.get("names") or {normalize_name(extra["name"])}
+        if int(extra["osm_id"]) in have_ids or have_names & names:
+            continue
+        print(f"  adding overseas admin1 {extra['name']}…", flush=True)
+        geom = overseas_geometry(extra["iso3"])
+        if not geom:
+            print(f"    no geometry for {extra['iso3']}", flush=True)
+            continue
+        parent = {
+            "osm_id": int(extra["osm_id"]),
+            "name": extra["name"],
+            "admin_level": "4",
+            "iso": extra.get("iso") or "",
+            "geometry": geom,
+        }
+        parents.append(parent)
+        added.append(parent)
+    if not added:
+        return parents
+    path = ADMIN1_DIR / f"{iso}.geojson"
+    try:
+        payload = json.loads(path.read_bytes()) if path.exists() else {"features": []}
+    except json.JSONDecodeError:
+        payload = {"features": []}
+    features = list(payload.get("features") or [])
+    for parent in added:
+        features.append(
+            {
+                "type": "Feature",
+                "properties": {
+                    "osm_type": "relation",
+                    "osm_id": parent["osm_id"],
+                    "name": parent["name"],
+                    "admin_level": parent["admin_level"],
+                    "iso": parent.get("iso") or "",
+                    "parent_iso": iso,
+                    "parent_osm_id": country_osm_id,
+                    "kind": "subdivision_1",
+                },
+                "geometry": parent["geometry"],
+            }
+        )
+    write_admin1(iso, country_osm_id, features)
+    return parents
+
+
+def fill_overseas_admin2(iso: str, parents: list[dict], index: dict) -> None:
+    extras = OVERSEAS_ADM2.get(iso) or []
+    if not extras:
+        return
+    by_id = {int(p["osm_id"]): p for p in parents}
+    by_name = {normalize_name(p.get("name") or ""): p for p in parents}
+    for extra in extras:
+        parent = by_id.get(int(extra["osm_id"]))
+        if not parent:
+            for name in extra.get("names") or []:
+                parent = by_name.get(name)
+                if parent:
+                    break
+        if not parent:
+            print(f"  overseas {extra['name']}: no subdivision-1 parent", flush=True)
+            continue
+        path = OUT_DIR / f"{parent['osm_id']}.geojson"
+        if path.exists():
+            try:
+                n = len(json.loads(path.read_bytes()).get("features") or [])
+            except json.JSONDecodeError:
+                n = 0
+            if n >= 2:
+                print(f"  {parent['name']}: subdivision 2 already on disk", flush=True)
+                continue
+        children = []
+        for level in ("ADM2", "ADM3"):
+            try:
+                raw = download_geoboundaries(extra["iso3"], level)
+            except Exception as e:
+                print(f"    {extra['iso3']} {level}: {e}", flush=True)
+                continue
+            if len(raw) < 2:
+                continue
+            if len(raw) > 8000:
+                print(f"    {extra['iso3']} {level} has {len(raw)} units — too local")
+                continue
+            grouped = assign_children(raw, [parent])
+            children = grouped.get(parent["osm_id"]) or []
+            if len(children) >= 2:
+                break
+        if len(children) < 2:
+            print(f"  {parent['name']}: only {len(children)} areas, skipping", flush=True)
+            continue
+        write_parent(parent, children, index)
+
+
+def build_country_admin2(iso: str, parents: list[dict], index: dict) -> None:
+    level = ADMIN2_LEVEL.get(iso, "ADM2")
+    try:
+        if level == "STATCAN":
+            raw_children = download_statcan_census_divisions()
+            grouped = assign_canada(raw_children, parents)
+            label = "census divisions"
+        else:
+            iso3 = ISO3[iso]
+            raw_children = download_geoboundaries(iso3, level)
+            if len(raw_children) > 8000:
+                print(f"  {level} has {len(raw_children)} units — too local, skipping")
+                return
+            print(
+                f"  assigning {len(raw_children)} {level} areas to {len(parents)} parents…",
+                flush=True,
+            )
+            grouped = assign_children(raw_children, parents)
+            label = level
+    except Exception as e:
+        print(f"  download failed: {e}")
+        return
+    if level == "STATCAN":
+        print(f"  assigning {len(raw_children)} {label} to {len(parents)} parents…", flush=True)
+    wrote = 0
+    for parent in parents:
+        features = grouped.get(parent["osm_id"]) or []
+        path = OUT_DIR / f"{parent['osm_id']}.geojson"
+        if len(features) < 2:
+            if path.exists() and iso not in {"US", "CA", "UA", "GB"}:
+                path.unlink()
+                print(
+                    f"  {parent.get('name')}: only {len(features)} areas, removed old file",
+                    flush=True,
+                )
+            else:
+                print(f"  {parent.get('name')}: only {len(features)} areas, skipping", flush=True)
+            continue
+        write_parent(parent, features, index)
+        wrote += 1
+    print(f"  {iso}: wrote {wrote}/{len(parents)} subdivision-2 files", flush=True)
+    index.update(rebuild_index())
+    (OUT_DIR / "index.json").write_text(
+        json.dumps(index, indent=1, sort_keys=True), encoding="utf-8"
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--iso",
-        default="CA,GB,UA",
-        help="Comma-separated ISO2 countries to prebuild (default: CA,GB,UA).",
-    )
-    parser.add_argument(
-        "--osm-id",
-        default="",
-        help="Comma-separated parent OSM relation ids to fetch instead of --iso.",
-    )
-    parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Re-fetch parents that already have a file.",
+        default="major",
+        help="Comma-separated ISO2 countries, or 'major' (default).",
     )
     args = parser.parse_args()
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+    filled = fill_admin1_ids()
+    if filled:
+        print(f"Filled {filled} missing subdivision-1 ids", flush=True)
     index = load_index()
     countries = country_osm_ids()
-    parents: list[dict] = []
 
-    if args.osm_id:
-        for raw in args.osm_id.split(","):
-            raw = raw.strip()
-            if not raw:
+    for iso in parse_iso_list(args.iso):
+        iso3 = ISO3.get(iso)
+        if not iso3:
+            print(f"Skipping {iso}: no ISO3 mapping")
+            continue
+        if iso not in countries:
+            print(f"Skipping {iso}: no country outline")
+            continue
+        print(f"{iso} ({countries[iso]['name']})…", flush=True)
+        country_osm_id = int(countries[iso]["osm_id"])
+        promote_level = PROMOTE_ADMIN1.get(iso)
+        parents = []
+        if promote_level:
+            try:
+                parents = promote_admin1(iso, iso3, promote_level, country_osm_id)
+            except Exception as e:
+                print(f"  promote failed: {e}", flush=True)
+                parents = []
+        if not parents:
+            parents = parents_from_admin1(iso)
+        if not parents:
+            print(f"  no subdivision-1 parents for {iso}")
+            if iso not in OVERSEAS_ADM2:
                 continue
-            parents.append(lookup_parent(int(raw)))
-    else:
-        for iso in [part.strip().upper() for part in args.iso.split(",") if part.strip()]:
-            country = countries.get(iso)
-            if not country:
-                print(f"Skipping {iso}: no country outline")
-                continue
-            print(f"Parents in {iso} ({country['name']})…", flush=True)
-            found = parents_for_iso(iso, country)
-            print(f"  {len(found)} subdivision 1 areas", flush=True)
-            parents.extend(found)
+        parents = ensure_overseas_admin1(iso, country_osm_id, parents)
+        if not parents:
+            continue
+        if admin2_mostly_ready(parents):
+            print(f"  subdivision 2 already on disk ({len(parents)} parents), skipping", flush=True)
+        else:
+            build_country_admin2(iso, parents, index)
+        fill_overseas_admin2(iso, parents, index)
 
-    fetched = skipped = failed = 0
-    for parent in parents:
-        osm_id = str(parent["osm_id"])
-        if not args.force and (OUT_DIR / f"{osm_id}.geojson").exists():
-            skipped += 1
-            if osm_id not in index:
-                existing = json.loads((OUT_DIR / f"{osm_id}.geojson").read_bytes())
-                index[osm_id] = {
-                    "url": f"data/admin2/{osm_id}.geojson",
-                    "count": len(existing.get("features") or []),
-                    "name": parent.get("name") or "",
-                    "iso": parent.get("iso") or "",
-                    "kind": "subdivision_2",
-                }
-            continue
-        try:
-            features = fetch_parent(parent)
-        except Exception as e:
-            print(f"  {parent.get('name')} failed: {e}", flush=True)
-            failed += 1
-            time.sleep(2)
-            continue
-        if len(features) < 2:
-            print(f"  {parent.get('name')}: only {len(features)} areas, skipping")
-            failed += 1
-            continue
-        write_parent(parent, features, index)
-        fetched += 1
-        (OUT_DIR / "index.json").write_text(
-            json.dumps(index, indent=1, sort_keys=True), encoding="utf-8"
-        )
-
+    index = rebuild_index()
     (OUT_DIR / "index.json").write_text(
         json.dumps(index, indent=1, sort_keys=True), encoding="utf-8"
     )
     total = sum(v.get("count", 0) for v in index.values())
-    print(
-        f"Admin2 index: {len(index)} parents, {total} areas "
-        f"(fetched {fetched}, skipped {skipped}, failed {failed})"
-    )
+    print(f"Admin2 index: {len(index)} parents, {total} areas")
 
 
 if __name__ == "__main__":
