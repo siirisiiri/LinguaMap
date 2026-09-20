@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>LinguaMap</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&display=swap"
+      rel="stylesheet"
+    />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
@@ -11,11 +17,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <style>
       :root {
-        --ink: #1c1f26;
-        --paper: #f7f5f0;
-        --line: #d8d3c7;
-        --muted: #6b6558;
-        --accent: #2c6e49;
+        --void: #0c0b0a;
+        --water: #12110f;
+        --land: #2c2924;
+        --ink: #f3eee4;
+        --muted: #8d877b;
+        --faint: rgba(243, 238, 228, 0.1);
+        --line: rgba(243, 238, 228, 0.12);
+        --accent: #d7c4a3;
+        --glass: rgba(14, 13, 11, 0.72);
+        --ui: "Figtree", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        --display: "Fraunces", "Times New Roman", serif;
       }
       * {
         box-sizing: border-box;
@@ -24,92 +36,210 @@
       body {
         height: 100%;
         margin: 0;
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
-          sans-serif;
+        font-family: var(--ui);
+        font-feature-settings: "tnum" 1, "ss01" 1;
+        font-variant-numeric: tabular-nums;
         color: var(--ink);
-        background: var(--paper);
+        background: var(--void);
+        color-scheme: dark;
       }
       #app {
-        display: flex;
-        flex-direction: column;
+        position: relative;
         height: 100%;
+        overflow: hidden;
       }
-      header {
-        padding: 12px 20px;
-        border-bottom: 1px solid var(--line);
+      #map {
+        position: absolute;
+        inset: 0;
+        background: var(--water);
+        z-index: 0;
+      }
+      .leaflet-container {
+        background: var(--water);
+        font-family: var(--ui);
+      }
+      .leaflet-overlay-pane path {
+        transition: fill 480ms ease, stroke 320ms ease, fill-opacity 480ms ease;
+      }
+      .leaflet-control-zoom {
+        border: none !important;
+        margin: 0 0 18px 18px !important;
+      }
+      .leaflet-bar {
+        border: none !important;
+        box-shadow: none !important;
+      }
+      .leaflet-bar a,
+      .leaflet-bar a:hover,
+      .leaflet-bar a:focus {
+        width: 32px;
+        height: 32px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        padding: 0 !important;
+        line-height: 1 !important;
+        font-size: 18px !important;
+        font-weight: 400;
+        text-indent: 0;
+        background: rgba(14, 13, 11, 0.82) !important;
+        color: var(--ink) !important;
+        border: 1px solid var(--line) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+      .leaflet-bar a.leaflet-disabled {
+        opacity: 0.35;
+      }
+      .leaflet-bar a:first-child {
+        border-radius: 8px 8px 0 0;
+      }
+      .leaflet-bar a:last-child {
+        border-radius: 0 0 8px 8px;
+      }
+      .leaflet-control-attribution {
+        background: transparent !important;
+        color: var(--muted);
+        font-size: 10px;
+        font-family: var(--ui);
+        margin: 0 14px 8px 0 !important;
+      }
+      .leaflet-control-attribution a {
+        color: var(--muted);
+      }
+      .hud-top,
+      #sidebar,
+      #breadcrumb,
+      #mapMessage,
+      #timeline,
+      #hoverCard,
+      .panel-toggle {
+        pointer-events: auto;
+      }
+      .hud-top {
+        position: absolute;
+        top: 18px;
+        left: 20px;
+        right: 20px;
+        z-index: 1100;
         display: flex;
         align-items: center;
-        gap: 14px;
-        flex-wrap: wrap;
-        background: var(--paper);
-        z-index: 10;
-        position: relative;
-        padding-right: 150px;
+        gap: 16px;
+        flex-wrap: nowrap;
+        padding: 0;
+        background: none;
+        border: none;
       }
-      header h1 {
-        font-size: 17px;
+      .hud-top h1 {
+        font-family: var(--display);
+        font-size: 22px;
+        font-weight: 550;
+        font-optical-sizing: auto;
+        letter-spacing: -0.03em;
         margin: 0;
-        font-weight: 600;
         white-space: nowrap;
+        line-height: 1;
+        text-shadow: 0 1px 14px rgba(12, 11, 10, 0.9);
+      }
+      .metric-toggle {
+        display: flex;
+        gap: 2px;
+        padding: 3px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        flex-shrink: 0;
+      }
+      .metric-toggle button {
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        font: inherit;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        padding: 6px 11px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .metric-toggle button.active {
+        background: rgba(243, 238, 228, 0.1);
+        color: var(--ink);
       }
       .mapped-count {
-        position: absolute;
-        top: 10px;
-        right: 20px;
+        margin-left: auto;
         text-align: right;
         line-height: 1;
+        flex-shrink: 0;
       }
       .mapped-count[hidden] {
         display: none;
       }
       .mapped-number {
-        font-size: 32px;
-        font-weight: 700;
+        font-family: var(--display);
+        font-optical-sizing: auto;
+        font-size: 28px;
+        font-weight: 600;
         font-variant-numeric: tabular-nums;
         letter-spacing: -0.04em;
+        line-height: 1;
+        text-shadow: 0 1px 14px rgba(12, 11, 10, 0.9);
       }
       .mapped-label {
-        font-size: 11px;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
         color: var(--muted);
-        margin-top: 3px;
+        margin-top: 4px;
+        text-shadow: 0 1px 12px rgba(12, 11, 10, 0.9);
       }
       .area-jump {
         display: flex;
         align-items: center;
-        gap: 6px;
         font-size: 13px;
         color: var(--muted);
-        flex-shrink: 0;
+        flex: 1;
+        min-width: 120px;
+        max-width: 260px;
         position: relative;
       }
       .search-wrap {
         position: relative;
+        width: 100%;
       }
-      .area-jump input,
-      .area-jump button {
-        font: inherit;
-        color: var(--ink);
-        background: #fff;
-        border: 1px solid var(--line);
-        border-radius: 6px;
-        padding: 5px 9px;
+      .area-jump label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
       }
       .area-jump input {
-        width: 240px;
+        font: inherit;
+        color: var(--ink);
+        background: rgba(243, 238, 228, 0.05);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px 12px;
+        width: 100%;
+        outline: none;
       }
-      .area-jump button {
-        cursor: pointer;
+      .area-jump input::placeholder {
+        color: var(--muted);
+      }
+      .area-jump input:focus {
+        border-color: rgba(215, 196, 163, 0.45);
       }
       .search-results {
         position: absolute;
-        top: calc(100% + 4px);
+        top: calc(100% + 6px);
         left: 0;
-        width: min(360px, 70vw);
-        background: #fff;
+        width: 100%;
+        min-width: 280px;
+        background: var(--glass);
         border: 1px solid var(--line);
-        border-radius: 8px;
-        box-shadow: 0 8px 24px rgba(28, 31, 38, 0.12);
+        border-radius: 10px;
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
         z-index: 30;
         max-height: 320px;
         overflow-y: auto;
@@ -126,15 +256,15 @@
         text-align: left;
         border: none;
         background: transparent;
-        border-radius: 6px;
-        padding: 7px 9px;
+        border-radius: 7px;
+        padding: 8px 10px;
         cursor: pointer;
         font: inherit;
         color: var(--ink);
       }
       .search-hit:hover,
       .search-hit.active {
-        background: #eef4ef;
+        background: rgba(243, 238, 228, 0.08);
       }
       .search-hit .name {
         font-size: 13px;
@@ -151,13 +281,17 @@
       }
       #breadcrumb {
         display: none;
-        width: 100%;
-        flex-basis: 100%;
-        font-size: 13px;
+        position: absolute;
+        top: 104px;
+        left: 20px;
+        z-index: 1100;
+        font-size: 12px;
         color: var(--muted);
         gap: 6px;
         flex-wrap: wrap;
         align-items: center;
+        max-width: calc(100% - 340px);
+        text-shadow: 0 1px 10px rgba(12, 11, 10, 0.9);
       }
       #breadcrumb.visible {
         display: flex;
@@ -176,34 +310,35 @@
         font-weight: 600;
       }
       #breadcrumb .sep {
-        color: #c4beb0;
+        color: rgba(243, 238, 228, 0.28);
       }
       #mapMessage {
         display: none;
-        width: 100%;
-        flex-basis: 100%;
-        font-size: 13px;
-        color: #8a3b2b;
-        background: #f3e4dc;
-        border: 1px solid #e2c4b4;
-        border-radius: 6px;
-        padding: 8px 10px;
+        position: absolute;
+        top: 92px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1100;
+        font-size: 12px;
+        color: var(--ink);
+        background: var(--glass);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px 12px;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
       }
       #mapMessage.visible {
         display: block;
       }
-      #mapMessage.info {
-        color: #3d5346;
-        background: #e7efe8;
-        border-color: #c5d6c8;
-      }
       .area-list {
         display: flex;
         flex-direction: column;
-        gap: 1px;
-        max-height: 280px;
+        gap: 0;
         overflow-y: auto;
-        margin: 0 -4px 4px;
+        margin: 0 -4px;
+        flex: 1;
+        min-height: 0;
       }
       .area-list button {
         display: flex;
@@ -215,51 +350,100 @@
         text-align: left;
         font: inherit;
         color: var(--ink);
-        padding: 5px 6px;
-        border-radius: 6px;
+        padding: 6px 8px;
+        border-radius: 7px;
         cursor: pointer;
       }
       .area-list button:hover {
-        background: #ece7dc;
+        background: rgba(243, 238, 228, 0.07);
       }
       .area-list .dot {
-        width: 8px;
-        height: 8px;
+        width: 7px;
+        height: 7px;
         border-radius: 50%;
         flex-shrink: 0;
-        background: #c8c2b6;
+        background: #5a554c;
       }
       .area-list .count {
         margin-left: auto;
-        color: #8a8375;
+        color: var(--muted);
         font-variant-numeric: tabular-nums;
-        font-size: 12px;
+        font-size: 11px;
+        padding-left: 8px;
       }
-      #main {
-        flex: 1;
-        display: flex;
-        min-height: 0;
+      .area-list::-webkit-scrollbar {
+        width: 6px;
       }
-      #map {
-        position: absolute;
-        inset: 0;
-        background: #aad3df;
-      }
-      .leaflet-container {
-        background: var(--paper);
+      .area-list::-webkit-scrollbar-thumb {
+        background: rgba(243, 238, 228, 0.12);
+        border-radius: 3px;
       }
       #sidebar {
-        width: 268px;
-        border-left: 1px solid var(--line);
-        overflow-y: auto;
-        padding: 14px;
+        position: absolute;
+        top: 86px;
+        right: 16px;
+        bottom: 20px;
+        width: 276px;
+        z-index: 1100;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        padding: 14px 12px 12px;
         font-size: 13px;
-        flex-shrink: 0;
+        background: var(--glass);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        transition: transform 280ms ease, opacity 220ms ease;
+      }
+      #app.panel-collapsed #sidebar {
+        transform: translateX(calc(100% + 28px));
+        opacity: 0;
+        pointer-events: none;
+      }
+      .panel-toggle {
+        position: absolute;
+        top: 86px;
+        right: 292px;
+        z-index: 1110;
+        width: 22px;
+        height: 36px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-right: none;
+        border-radius: 8px 0 0 8px;
+        background: var(--glass);
+        color: var(--ink);
+        font-size: 14px;
+        line-height: 1;
+        cursor: pointer;
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        transition: right 280ms ease;
+      }
+      #app.panel-collapsed .panel-toggle {
+        right: 0;
+        border-right: 1px solid var(--line);
+        border-radius: 8px 0 0 8px;
+      }
+      .panel-toggle:hover {
+        color: var(--accent);
+      }
+      #app.panel-collapsed #timeline {
+        right: 16px;
+      }
+      #app.panel-collapsed #breadcrumb {
+        max-width: calc(100% - 48px);
       }
       #sidebar h2 {
-        font-size: 12px;
+        font-size: 10px;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.14em;
         color: var(--muted);
         margin: 0 0 8px;
       }
@@ -275,8 +459,9 @@
       .legend-heading-actions {
         display: flex;
         align-items: baseline;
-        gap: 6px;
+        gap: 8px;
         flex-shrink: 0;
+        margin-left: auto;
       }
       .legend-heading-actions button {
         border: none;
@@ -294,10 +479,25 @@
         cursor: default;
         opacity: 0.55;
       }
+      .legend-section {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+      .legend-section:first-child {
+        flex: 1;
+        min-height: 0;
+      }
       .legend-section + .legend-section {
-        margin-top: 16px;
-        padding-top: 14px;
+        margin-top: 14px;
+        padding-top: 12px;
         border-top: 1px solid var(--line);
+        flex: 0 0 auto;
+      }
+      .legend-section:last-child {
+        flex: 0 1 auto;
+        max-height: 46%;
+        overflow-y: auto;
       }
       .legend-note {
         font-size: 12px;
@@ -309,39 +509,29 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 4px 0;
+        padding: 4px 2px;
         cursor: pointer;
         user-select: none;
       }
       .legend-item.off {
-        opacity: 0.4;
+        opacity: 0.38;
       }
       .legend-item.static {
         cursor: default;
       }
       .swatch {
-        width: 12px;
-        height: 12px;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
         flex-shrink: 0;
-        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18);
       }
       .swatch.missing {
-        border-radius: 3px;
-        background: #c8c2b6;
-        border: 1px dashed #8a8375;
+        border-radius: 2px;
+        background: var(--land);
+        box-shadow: inset 0 0 0 1px rgba(243, 238, 228, 0.16);
       }
       .legend-check {
-        width: 12px;
-        height: 12px;
-        border: 1.5px solid var(--line);
-        border-radius: 3px;
-        flex-shrink: 0;
-        background: #fff;
-      }
-      .legend-item:not(.off) .legend-check {
-        background: var(--accent);
-        border-color: var(--accent);
+        display: none;
       }
       .legend-label {
         overflow: hidden;
@@ -350,13 +540,52 @@
       }
       .legend-count {
         margin-left: auto;
-        color: #8a8375;
+        color: var(--muted);
         font-variant-numeric: tabular-nums;
         padding-left: 6px;
+        font-size: 11px;
+      }
+      .lang-more {
+        border: none;
+        background: none;
+        color: var(--accent);
+        font: inherit;
+        font-size: 11px;
+        padding: 8px 2px 2px;
+        cursor: pointer;
+        text-align: left;
+      }
+      .ramp {
+        height: 4px;
+        border-radius: 2px;
+        background: linear-gradient(
+          90deg,
+          #3d332c 0%,
+          #8a4e32 35%,
+          #c46a3c 65%,
+          #e2b17a 100%
+        );
+        margin: 4px 0 8px;
+      }
+      .ramp-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+        margin-bottom: 10px;
+      }
+      .leaflet-popup-content-wrapper,
+      .leaflet-popup-tip {
+        background: var(--glass);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        box-shadow: none;
       }
       .leaflet-popup-content b {
         display: block;
         margin-bottom: 2px;
+        font-family: var(--display);
       }
       .leaflet-popup-content a {
         color: var(--accent);
@@ -365,28 +594,81 @@
       .leaflet-interactive {
         cursor: pointer;
       }
-      .area-tip b {
-        display: block;
-        margin-bottom: 3px;
+      #hoverCard {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 1400;
+        pointer-events: none;
+        width: 248px;
+        padding: 12px 14px 13px;
+        background: rgba(16, 14, 12, 0.9);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
       }
-      .area-tip .row {
-        display: flex;
-        gap: 10px;
-        justify-content: space-between;
+      #hoverCard[hidden] {
+        display: none;
+      }
+      .hover-name {
+        font-family: var(--display);
+        font-size: 17px;
+        font-weight: 550;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+        margin: 0 0 3px;
+      }
+      .hover-count {
+        font-size: 11px;
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+        margin-bottom: 10px;
+      }
+      .hover-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(52px, 1fr) 32px;
+        gap: 8px;
+        align-items: center;
+        font-size: 11px;
+        margin-top: 5px;
+      }
+      .hover-row span:first-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .hover-row span:last-child {
+        text-align: right;
+        color: var(--muted);
         font-variant-numeric: tabular-nums;
       }
-      .area-tip .meta {
-        color: #6b6558;
-        margin-top: 3px;
+      .hover-track {
+        height: 3px;
+        background: rgba(243, 238, 228, 0.08);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .hover-track i {
+        display: block;
+        height: 100%;
+        border-radius: 2px;
       }
       #timeline {
-        border-top: 1px solid var(--line);
-        background: var(--paper);
-        padding: 4px 16px 5px;
+        position: absolute;
+        left: 16px;
+        right: 308px;
+        bottom: 16px;
+        z-index: 1100;
+        background: var(--glass);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 8px 14px 10px;
         display: flex;
         align-items: center;
         gap: 12px;
-        flex-shrink: 0;
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
       }
       #timeline.hidden {
         display: none;
@@ -400,11 +682,11 @@
       #playBtn {
         font: inherit;
         font-size: 10px;
-        width: 22px;
-        height: 22px;
+        width: 24px;
+        height: 24px;
         border: 1px solid var(--line);
         border-radius: 50%;
-        background: #fff;
+        background: transparent;
         color: var(--muted);
         cursor: pointer;
         line-height: 1;
@@ -439,57 +721,106 @@
         width: 100%;
         height: 14px;
         margin: 0;
-        accent-color: #8a8375;
+        accent-color: var(--accent);
       }
       .time-axis {
         display: flex;
         justify-content: space-between;
         font-size: 10px;
-        color: #8a8375;
+        color: var(--muted);
         font-variant-numeric: tabular-nums;
       }
       #overlay {
         position: absolute;
         inset: 0;
+        z-index: 1000;
         display: flex;
         align-items: center;
         justify-content: center;
         color: var(--muted);
-        font-size: 14px;
+        font-family: var(--display);
+        font-size: 22px;
+        letter-spacing: -0.03em;
         text-align: center;
         padding: 20px;
         pointer-events: none;
+        background: var(--void);
       }
       #overlay.hidden {
         display: none;
       }
       @media (max-width: 720px) {
-        #main {
-          flex-direction: column;
+        .mapped-number {
+          font-size: 22px;
+        }
+        .area-jump {
+          max-width: 180px;
         }
         #sidebar {
-          width: 100%;
-          border-left: none;
-          border-top: 1px solid var(--line);
-          max-height: 45%;
+          width: 240px;
         }
-        .mapped-number {
-          font-size: 24px;
+        .panel-toggle {
+          right: 256px;
+        }
+      }
+      @media (max-width: 560px) {
+        .hud-top {
+          flex-wrap: wrap;
+          padding-bottom: 12px;
+        }
+        .area-jump {
+          max-width: none;
+          flex-basis: 100%;
+        }
+        #sidebar {
+          top: auto;
+          left: 12px;
+          right: 12px;
+          bottom: 12px;
+          width: auto;
+          max-height: 34%;
+        }
+        .panel-toggle {
+          top: auto;
+          bottom: calc(34% + 12px);
+          right: 16px;
+          height: 28px;
+          width: 36px;
+          border-radius: 8px 8px 0 0;
+          border-right: 1px solid var(--line);
+          border-bottom: none;
+        }
+        #app.panel-collapsed .panel-toggle {
+          bottom: 12px;
+          right: 16px;
+        }
+        #app.panel-collapsed #sidebar {
+          transform: translateY(calc(100% + 28px));
+        }
+        #timeline {
+          right: 16px;
+          bottom: calc(34% + 24px);
         }
       }
     </style>
   </head>
   <body>
     <div id="app">
-      <header>
+      <div id="map"></div>
+      <div id="overlay">LinguaMap</div>
+      <header class="hud-top">
         <h1>LinguaMap</h1>
+        <div class="metric-toggle" role="group" aria-label="Map metric">
+          <button type="button" id="metricLead" class="active">Language</button>
+          <button type="button" id="metricMulti">Multilingual</button>
+        </div>
         <form class="area-jump" id="areaJump" autocomplete="off">
           <label for="areaName">Search</label>
           <div class="search-wrap">
             <input
               id="areaName"
               type="search"
-              placeholder="Country or subdivision"
+              placeholder="Search places"
               autocomplete="off"
               spellcheck="false"
             />
@@ -500,16 +831,19 @@
           <div class="mapped-number" id="mappedNumber">0</div>
           <div class="mapped-label">websites mapped</div>
         </div>
-        <nav id="breadcrumb" aria-label="Area hierarchy"></nav>
-        <div id="mapMessage" role="status"></div>
       </header>
-      <div id="main">
-        <div style="position: relative; flex: 1">
-          <div id="map"></div>
-          <div id="overlay">Loading datasets…</div>
-        </div>
-        <div id="sidebar"></div>
-      </div>
+      <nav id="breadcrumb" aria-label="Area hierarchy"></nav>
+      <div id="mapMessage" role="status"></div>
+      <button
+        type="button"
+        id="panelToggle"
+        class="panel-toggle"
+        aria-expanded="true"
+        aria-controls="sidebar"
+        title="Hide panel"
+      >›</button>
+      <aside id="sidebar"></aside>
+      <div id="hoverCard" hidden></div>
       <div id="timeline" class="hidden">
         <div class="time-controls">
           <button type="button" id="playBtn" title="Play through time">▶</button>
@@ -528,53 +862,69 @@
       // ---------------------------------------------------------------- config
 
       const LANGUAGE_COLORS = {
-        // Majors sit on well-spaced hues so neighbouring areas stay distinct.
-        english: "#1a66bc",
-        french: "#ca2159",
-        welsh: "#23953f",
-        spanish: "#e47311",
-        german: "#472768",
-        ukrainian: "#d5a915",
-        russian: "#da281b",
-        polish: "#da2fb8",
-        romanian: "#129185",
+        english: "#d8c4a0",
+        french: "#c45c6a",
+        welsh: "#6a8f4e",
+        spanish: "#d4783c",
+        german: "#8a6b9a",
+        ukrainian: "#c9a035",
+        russian: "#c44a3a",
+        polish: "#b85a8a",
+        romanian: "#7a9a5c",
         hungarian: "#8b3b18",
         belarusian: "#719130",
-        slovak: "#2091b6",
+        slovak: "#8a6848",
         bulgarian: "#765842",
-        greek: "#273268",
-        armenian: "#762519",
+        greek: "#6b5348",
+        armenian: "#a04a3c",
         yiddish: "#814096",
         "crimean tatar": "#22775b",
         rusyn: "#88633a",
-        gagauz: "#584ab5",
-        inuktitut: "#278391",
+        gagauz: "#7a5a9a",
+        inuktitut: "#5a7a62",
         cree: "#742f3b",
         ojibwe: "#476d2c",
         mikmaq: "#6f4020",
-        mohawk: "#4c6876",
+        mohawk: "#6a5344",
         innu: "#753861",
-        dene: "#3f485a",
+        dene: "#4a453c",
         blackfoot: "#216340",
+        japanese: "#e07050",
+        korean: "#c45d72",
+        "mandarin chinese": "#c9a227",
+        arabic: "#6f8a58",
+        portuguese: "#c46b3a",
+        italian: "#a6844c",
+        dutch: "#8a7048",
+        hindi: "#cc7a38",
+        hebrew: "#b8956a",
+        thai: "#c46b58",
+        vietnamese: "#b85f4a",
+        indonesian: "#c4785c",
+        "iranian persian": "#a66b4a",
+        azerbaijani: "#8a6a3c",
+        kazakh: "#7a8a5a",
+        uzbek: "#8a7348",
       };
       const LANGUAGE_PALETTE = [
         "#c45c26",
         "#5c7a0a",
         "#8a4a6b",
-        "#2f5d7c",
         "#a67c32",
         "#4b3d73",
         "#1f7a5c",
         "#7a3b2e",
+        "#8a6840",
       ];
       const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const MISSING_FILL = "#c8c2b6";
-      const UNCLASSIFIED_COLOR = "#9a948a";
-      // Floor on fill intensity so the leading language's hue stays legible even
-      // where the race is close; above it, intensity is the real lead margin.
-      const LEAD_FLOOR = 0.18;
+      const LAND_RGB = [44, 41, 36];
+      const MISSING_FILL = "#2c2924";
+      const UNCLASSIFIED_COLOR = "#5a554c";
+      const MULTI_RAMP = ["#3d332c", "#8a4e32", "#c46a3c", "#e2b17a"];
+      const LEAD_FLOOR = 0.22;
       const MAX_MARKERS = 12000;
+      const TOP_LANGUAGES = 8;
 
       const paletteAssignments = new Map();
 
@@ -613,14 +963,37 @@
         );
       }
 
-      function mixToWhite(hex, t) {
+      function mixToLand(hex, t) {
         const raw = hex.replace("#", "");
         const r = parseInt(raw.slice(0, 2), 16);
         const g = parseInt(raw.slice(2, 4), 16);
         const b = parseInt(raw.slice(4, 6), 16);
         const clamped = Math.max(0, Math.min(1, t));
-        const mix = (c) => Math.round(255 + (c - 255) * clamped);
-        return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
+        const mix = (c, i) => Math.round(LAND_RGB[i] + (c - LAND_RGB[i]) * clamped);
+        return `rgb(${mix(r, 0)}, ${mix(g, 1)}, ${mix(b, 2)})`;
+      }
+
+      function mixToWhite(hex, t) {
+        return mixToLand(hex, t);
+      }
+
+      function parseHex(hex) {
+        const raw = hex.replace("#", "");
+        return [
+          parseInt(raw.slice(0, 2), 16),
+          parseInt(raw.slice(2, 4), 16),
+          parseInt(raw.slice(4, 6), 16),
+        ];
+      }
+
+      function rampColor(t, stops) {
+        const ramp = stops || MULTI_RAMP;
+        const x = clamp01(t) * (ramp.length - 1);
+        const i = Math.min(ramp.length - 2, Math.floor(x));
+        const f = x - i;
+        const a = parseHex(ramp[i]);
+        const b = parseHex(ramp[i + 1]);
+        return `rgb(${Math.round(a[0] + (b[0] - a[0]) * f)}, ${Math.round(a[1] + (b[1] - a[1]) * f)}, ${Math.round(a[2] + (b[2] - a[2]) * f)})`;
       }
 
       // ------------------------------------------------------- geometry helpers
@@ -812,22 +1185,21 @@
       const WORLD_CENTER = [20, 0];
 
       const map = L.map("map", {
-        zoomControl: true,
-        preferCanvas: true,
+        zoomControl: false,
+        preferCanvas: false,
         worldCopyJump: false,
         minZoom: 1,
         zoomSnap: 0.1,
         zoomDelta: 0.5,
         maxBounds: WORLD_BOUNDS,
         maxBoundsViscosity: 1.0,
+        attributionControl: true,
       }).setView(WORLD_CENTER, 2);
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        noWrap: true,
-        bounds: WORLD_BOUNDS,
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
+      L.control.zoom({ position: "bottomleft" }).addTo(map);
+      map.attributionControl.setPrefix("");
+      map.attributionControl.addAttribution(
+        '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      );
       const markerLayer = L.layerGroup().addTo(map);
 
       function worldFillZoom() {
@@ -867,6 +1239,11 @@
       let points = [];
       let datasets = [];
       let viewMode = "areas";
+      let mapMetric = "lead";
+      let listFilter = "";
+      let showAllLanguages = false;
+      let mappedCountAnimated = false;
+      let panelCollapsed = false;
 
       // User's explicit "off" switches. Everything relevant is on by default, so
       // a language appearing after a drill-down starts visible.
@@ -1006,12 +1383,30 @@
         updateMappedCount();
       }
 
+      function animateNumber(el, to) {
+        const start = performance.now();
+        const dur = 1200;
+        const ease = (t) => 1 - Math.pow(1 - t, 3);
+        const frame = (now) => {
+          const t = Math.min(1, (now - start) / dur);
+          el.textContent = num(Math.round(to * ease(t)));
+          if (t < 1) requestAnimationFrame(frame);
+        };
+        requestAnimationFrame(frame);
+      }
+
       function updateMappedCount() {
         const wrap = document.getElementById("mappedCount");
         const el = document.getElementById("mappedNumber");
         if (!wrap || !el) return;
-        el.textContent = num(points.length);
         wrap.hidden = !points.length;
+        if (!points.length) return;
+        if (!mappedCountAnimated) {
+          mappedCountAnimated = true;
+          animateNumber(el, points.length);
+        } else {
+          el.textContent = num(points.length);
+        }
       }
 
       // ------------------------------------------------------------- timeline
@@ -1468,6 +1863,8 @@
             counts: new Map(),
             classified: 0,
             total: 0,
+            multilingual: 0,
+            pairs: new Map(),
           });
         });
         points.forEach((p) => {
@@ -1477,6 +1874,11 @@
           rec.total += 1;
           if (!p.langs.length) return;
           rec.classified += 1;
+          if (p.langs.length >= 2) {
+            rec.multilingual += 1;
+            const pair = [...p.langs].sort().slice(0, 2).join(" + ");
+            rec.pairs.set(pair, (rec.pairs.get(pair) || 0) + 1);
+          }
           p.langs.forEach((l) => rec.counts.set(l, (rec.counts.get(l) || 0) + 1));
         });
         areaStatsCache = byId;
@@ -1585,7 +1987,7 @@
           let lo = Infinity;
           let hi = -Infinity;
           row.slots.forEach((s) => {
-            if (s.classified < 12 || !s.stable.has(lang)) return;
+            if (!s.stable.has(lang)) return;
             const share = s.stable.get(lang);
             if (share < lo) lo = share;
             if (share > hi) hi = share;
@@ -1617,6 +2019,18 @@
        * as Welsh grows there instead of washing out when the rest of Wales catches up.
        */
       function areaFill(rec) {
+        if (mapMetric === "multilingual") {
+          if (!rec || !rec.classified) return null;
+          const share = rec.multilingual / rec.classified;
+          return {
+            lang: null,
+            color: rampColor(share),
+            intensity: 1,
+            share,
+            multilingual: rec.multilingual,
+            lead: null,
+          };
+        }
         if (!rec || !rec.classified || !activeLanguages.length) return null;
         const timedLang = timeEnabled && !viewingPresent() ? timelineFillLanguage() : null;
         if (timedLang) {
@@ -1673,7 +2087,7 @@
         const total = ranked.reduce((sum, [, c]) => sum + c, 0);
         // Classified, but none of the selected languages: white rather than the
         // hatched "no data" fill, since 0% is a real answer.
-        if (!total) return { lang: null, color: "#ffffff", intensity: 0, share: 0, lead: 0 };
+        if (!total) return { lang: null, color: MISSING_FILL, intensity: 1, share: 0, lead: 0 };
         const lead = (ranked[0][1] - ranked[1][1]) / total;
         return {
           lang: ranked[0][0],
@@ -1684,38 +2098,99 @@
         };
       }
 
-      function websiteCountLine(total) {
-        if (!total) return `<div class="meta">No websites here</div>`;
-        return `<div class="meta">${num(total)} website${total === 1 ? "" : "s"}</div>`;
+      function hoverBars(rows) {
+        if (!rows.length) return "";
+        const max = Math.max(...rows.map((r) => r.share), 0.001);
+        return rows
+          .map(
+            (r) =>
+              `<div class="hover-row"><span>${escapeHtml(r.label)}</span>` +
+              `<div class="hover-track"><i style="width:${Math.max(4, (r.share / max) * 100)}%;background:${r.color}"></i></div>` +
+              `<span>${Math.round(r.share * 100)}%</span></div>`,
+          )
+          .join("");
       }
 
       function areaTooltip(feature, rec) {
         const name = escapeHtml(feature.properties.name);
-        const countLine = websiteCountLine(rec ? rec.total : 0);
-        if (!rec || !rec.classified) {
-          return `<div class="area-tip"><b>${name}</b>${countLine}</div>`;
+        const total = rec ? rec.total : 0;
+        const count = total
+          ? `${num(total)} website${total === 1 ? "" : "s"}`
+          : "No websites here";
+        if (mapMetric === "multilingual") {
+          if (!rec || !rec.classified) {
+            return `<div class="hover-name">${name}</div><div class="hover-count">${count}</div>`;
+          }
+          const share = rec.multilingual / rec.classified;
+          const pairs = [...rec.pairs.entries()]
+            .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+            .filter(([, c]) => c / rec.classified >= 0.02)
+            .slice(0, 4)
+            .map(([label, c]) => ({
+              label: titleCase(label),
+              share: c / rec.classified,
+              color: rampColor(Math.min(1, c / rec.classified + 0.25)),
+            }));
+          return (
+            `<div class="hover-name">${name}</div>` +
+            `<div class="hover-count">${count} · ${Math.round(share * 100)}% multilingual</div>` +
+            hoverBars(pairs)
+          );
         }
-        const fill = areaFill(rec);
+        if (!rec || !rec.classified) {
+          return `<div class="hover-name">${name}</div><div class="hover-count">${count}</div>`;
+        }
         const rows = activeLanguages
           .map((l) => [l, rec.counts.get(l) || 0])
           .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-          .slice(0, 6)
-          .map(
-            ([l, c]) =>
-              `<div class="row"><span>${escapeHtml(titleCase(l))}</span><span>${pct(c / rec.classified)}</span></div>`,
-          )
-          .join("");
-        const leadLine =
-          fill && fill.lang && fill.lead !== null
-            ? `<div class="meta">${escapeHtml(titleCase(fill.lang))} leads by ${ptsLabel(fill.lead)}</div>`
-            : "";
+          .slice(0, 5)
+          .filter(([, c]) => c)
+          .map(([l, c]) => ({
+            label: titleCase(l),
+            share: c / rec.classified,
+            color: colorForLanguage(l),
+          }));
         const changeLine =
-          fill && fill.localLo != null && fill.share != null
-            ? `<div class="meta">${escapeHtml(titleCase(fill.lang))} ${
-                fill.share - fill.localLo >= 0 ? "+" : ""
-              }${ptsLabel(fill.share - fill.localLo)} vs this area's low on the timeline</div>`
+          timeEnabled && !viewingPresent()
+            ? (() => {
+                const fill = areaFill(rec);
+                if (!fill || fill.localLo == null || fill.share == null || !fill.lang) return "";
+                const delta = fill.share - fill.localLo;
+                return `<div class="hover-count" style="margin:8px 0 0">${escapeHtml(titleCase(fill.lang))} ${
+                  delta >= 0 ? "+" : ""
+                }${ptsLabel(delta)} vs this area's low</div>`;
+              })()
             : "";
-        return `<div class="area-tip"><b>${name}</b>${countLine}${rows}${leadLine}${changeLine}</div>`;
+        return (
+          `<div class="hover-name">${name}</div>` +
+          `<div class="hover-count">${count}</div>` +
+          hoverBars(rows) +
+          changeLine
+        );
+      }
+
+      function placeHover(x, y) {
+        const card = document.getElementById("hoverCard");
+        if (card.hidden) return;
+        const pad = 14;
+        const w = card.offsetWidth || 228;
+        const h = card.offsetHeight || 120;
+        let left = x + 18;
+        let top = y + 16;
+        if (left + w > window.innerWidth - pad) left = x - w - 12;
+        if (top + h > window.innerHeight - pad) top = y - h - 12;
+        card.style.transform = `translate(${Math.max(pad, left)}px, ${Math.max(pad, top)}px)`;
+      }
+
+      function showHover(html, x, y) {
+        const card = document.getElementById("hoverCard");
+        card.innerHTML = html;
+        card.hidden = false;
+        placeHover(x, y);
+      }
+
+      function hideHover() {
+        document.getElementById("hoverCard").hidden = true;
       }
 
       // ------------------------------------------------------------- map drawing
@@ -1855,6 +2330,7 @@
 
       function renderChoropleth() {
         clearChoropleth();
+        hideHover();
         if (!authorityFeatures.length) return;
         const stats = authorityStats();
         choroplethLayer = L.geoJSON(
@@ -1864,25 +2340,41 @@
               const fill = areaFill(stats.get(featureId(feature)));
               if (!fill) {
                 return {
-                  color: "#8a8375",
-                  weight: 1,
-                  dashArray: "4 3",
+                  color: "#1a1814",
+                  weight: 0.7,
                   fillColor: MISSING_FILL,
-                  fillOpacity: 0.55,
+                  fillOpacity: 1,
                 };
               }
               return {
-                color: "#ffffff",
-                weight: 1.2,
-                fillColor: mixToWhite(fill.color, fill.intensity),
-                fillOpacity: 0.9,
+                color: "#1a1814",
+                weight: 0.7,
+                fillColor:
+                  mapMetric === "multilingual" || fill.lang == null
+                    ? fill.color
+                    : mixToLand(fill.color, Math.max(0.22, fill.intensity)),
+                fillOpacity: 1,
               };
             },
             onEachFeature(feature, layer) {
-              layer.bindTooltip(areaTooltip(feature, stats.get(featureId(feature))), {
-                sticky: true,
+              const rec = stats.get(featureId(feature));
+              layer.on("mouseover", (e) => {
+                layer.setStyle({ weight: 1.15, color: "#f3eee4" });
+                layer.bringToFront();
+                const ev = e.originalEvent;
+                showHover(areaTooltip(feature, rec), ev.clientX, ev.clientY);
+                prefetchChildren(feature);
+              });
+              layer.on("mousemove", (e) => {
+                const ev = e.originalEvent;
+                placeHover(ev.clientX, ev.clientY);
+              });
+              layer.on("mouseout", () => {
+                choroplethLayer.resetStyle(layer);
+                hideHover();
               });
               layer.on("click", () => {
+                hideHover();
                 if (viewingKind() === "subdivision_2") {
                   focusFeature(feature);
                   return;
@@ -1891,7 +2383,6 @@
                   showMapMessage(err.message || `Could not open ${feature.properties.name}.`),
                 );
               });
-              layer.on("mouseover", () => prefetchChildren(feature));
             },
           },
         ).addTo(map);
@@ -1959,6 +2450,13 @@
       function renderLanguageSection() {
         const el = document.createElement("div");
         el.className = "legend-section";
+        if (mapMetric === "multilingual") {
+          el.innerHTML =
+            "<h2>Multilingual</h2>" +
+            '<div class="ramp"></div>' +
+            '<div class="ramp-labels"><span>Monolingual</span><span>Multilingual</span></div>';
+          return el;
+        }
         const heading = document.createElement("div");
         heading.className = "legend-heading";
         heading.innerHTML = "<h2>Languages</h2>";
@@ -1969,7 +2467,7 @@
           actions.className = "legend-heading-actions";
           const selectAll = document.createElement("button");
           selectAll.type = "button";
-          selectAll.textContent = "Select all";
+          selectAll.textContent = "All";
           selectAll.disabled = allOn;
           selectAll.addEventListener("click", () => {
             disabledLanguages.clear();
@@ -1977,7 +2475,7 @@
           });
           const deselectAll = document.createElement("button");
           deselectAll.type = "button";
-          deselectAll.textContent = "Deselect all";
+          deselectAll.textContent = "None";
           deselectAll.disabled = noneOn;
           deselectAll.addEventListener("click", () => {
             scopedLanguages.forEach(([lang]) => disabledLanguages.add(lang));
@@ -1991,12 +2489,15 @@
         if (!scopedLanguages.length) {
           const note = document.createElement("p");
           note.className = "legend-note";
-          note.textContent = "No detected languages in this view.";
+          note.textContent = "No languages in this view.";
           el.appendChild(note);
           return el;
         }
 
-        scopedLanguages.forEach(([lang, count]) => {
+        const visible = showAllLanguages
+          ? scopedLanguages
+          : scopedLanguages.slice(0, TOP_LANGUAGES);
+        visible.forEach(([lang, count]) => {
           const color = colorForLanguage(lang);
           const on = !disabledLanguages.has(lang);
           const swatch = `<span class="swatch" style="background:${color}"></span>`;
@@ -2014,34 +2515,25 @@
             }),
           );
         });
-
-        if (viewMode === "areas") {
-          if (activeLanguages.length === 0) {
-            const note = document.createElement("p");
-            note.className = "legend-note";
-            note.style.margin = "10px 0 0";
-            note.textContent = "Select at least one language to colour the map.";
-            el.appendChild(note);
-          }
-
-          el.appendChild(
-            legendRow({
-              swatch: `<span class="swatch missing"></span>`,
-              label: "No classified sites",
-            }),
-          );
-        } else {
-          el.appendChild(
-            legendRow({
-              swatch: `<span class="swatch" style="background:${UNCLASSIFIED_COLOR}"></span>`,
-              label: "No language detected",
-              off: !showUnclassified,
-              onClick: () => {
-                showUnclassified = !showUnclassified;
-                render();
-              },
-            }),
-          );
+        if (scopedLanguages.length > TOP_LANGUAGES) {
+          const more = document.createElement("button");
+          more.type = "button";
+          more.className = "lang-more";
+          more.textContent = showAllLanguages
+            ? "Top languages"
+            : `All languages · ${scopedLanguages.length}`;
+          more.addEventListener("click", () => {
+            showAllLanguages = !showAllLanguages;
+            renderSidebar();
+          });
+          el.appendChild(more);
+        }
+        if (activeLanguages.length === 0) {
+          const note = document.createElement("p");
+          note.className = "legend-note";
+          note.style.margin = "10px 0 0";
+          note.textContent = "Select a language to colour the map.";
+          el.appendChild(note);
         }
         return el;
       }
@@ -2052,25 +2544,52 @@
         const kind = viewingKind();
         const title = currentParent
           ? `${KIND_LABEL[kind]} · ${currentParent.name}`
-          : "Countries";
+          : "Places";
         wrap.innerHTML = `<h2>${escapeHtml(title)}</h2>`;
         const stats = authorityStats();
-        const rows = [...stats.values()].sort(
-          (a, b) => b.classified - a.classified || a.feature.properties.name.localeCompare(b.feature.properties.name),
-        );
-        const withData = rows.filter((rec) => rec.classified);
-        const empty = rows.filter((rec) => !rec.classified);
+        const q = listFilter.trim().toLowerCase();
+        let rows = [...stats.values()];
+        if (q) {
+          rows = rows.filter((rec) =>
+            rec.feature.properties.name.toLowerCase().includes(q),
+          );
+        }
+        rows.sort((a, b) => {
+          if (mapMetric === "multilingual") {
+            const sa = a.classified ? a.multilingual / a.classified : -1;
+            const sb = b.classified ? b.multilingual / b.classified : -1;
+            return sb - sa || b.total - a.total || a.feature.properties.name.localeCompare(b.feature.properties.name);
+          }
+          return b.total - a.total || a.feature.properties.name.localeCompare(b.feature.properties.name);
+        });
         const list = document.createElement("div");
         list.className = "area-list";
-        const addRow = (rec) => {
+        if (!rows.length) {
+          const empty = document.createElement("p");
+          empty.className = "legend-note";
+          empty.textContent = q ? "No matching places." : "No places in view.";
+          wrap.appendChild(empty);
+          return wrap;
+        }
+        rows.forEach((rec) => {
           const btn = document.createElement("button");
           btn.type = "button";
           const fill = areaFill(rec);
-          const color = fill ? mixToWhite(fill.color, fill.intensity) : "#c8c2b6";
+          const color = fill
+            ? mapMetric === "multilingual" || fill.lang == null
+              ? fill.color
+              : mixToLand(fill.color, Math.max(0.22, fill.intensity))
+            : MISSING_FILL;
+          const count =
+            mapMetric === "multilingual"
+              ? rec.classified
+                ? `${Math.round((rec.multilingual / rec.classified) * 100)}%`
+                : "—"
+              : num(rec.total);
           btn.innerHTML =
             `<span class="dot" style="background:${color}"></span>` +
             `<span class="legend-label">${escapeHtml(rec.feature.properties.name)}</span>` +
-            `<span class="count">${num(rec.classified)}</span>`;
+            `<span class="count">${count}</span>`;
           btn.addEventListener("click", () => {
             if (kind === "subdivision_2") {
               focusFeature(rec.feature);
@@ -2081,21 +2600,7 @@
             );
           });
           list.appendChild(btn);
-        };
-        withData.forEach(addRow);
-        if (empty.length && withData.length) {
-          const more = document.createElement("button");
-          more.type = "button";
-          more.style.color = "var(--muted)";
-          more.textContent = `${empty.length} more without language data`;
-          more.addEventListener("click", () => {
-            more.remove();
-            empty.forEach(addRow);
-          });
-          list.appendChild(more);
-        } else {
-          empty.forEach(addRow);
-        }
+        });
         wrap.appendChild(list);
         return wrap;
       }
@@ -2116,7 +2621,7 @@
       function renderBreadcrumb() {
         const nav = document.getElementById("breadcrumb");
         nav.innerHTML = "";
-        if (viewMode !== "areas" || !hierarchy.length) {
+        if (viewMode !== "areas" || hierarchy.length <= 1) {
           nav.classList.remove("visible");
           return;
         }
@@ -2141,13 +2646,17 @@
         map.invalidateSize();
         const stats = areaStatsCache;
         const preferred = stats
-          ? authorityFeatures.filter((f) => (stats.get(featureId(f)) || {}).classified)
+          ? authorityFeatures.filter((f) => (stats.get(featureId(f)) || {}).total)
           : [];
         const source = preferred.length ? preferred : authorityFeatures;
         if (!source.length) return;
         const layer = L.geoJSON({ type: "FeatureCollection", features: source });
         if (layer.getBounds().isValid()) {
-          map.fitBounds(layer.getBounds(), { padding: [24, 24], maxZoom: 7 });
+          map.fitBounds(layer.getBounds(), {
+            paddingTopLeft: [28, 96],
+            paddingBottomRight: [panelCollapsed ? 36 : 300, 28],
+            maxZoom: 7,
+          });
         }
       }
 
@@ -2746,6 +3255,8 @@
       const searchInput = document.getElementById("areaName");
       searchInput.addEventListener("input", () => {
         const query = searchInput.value.trim();
+        listFilter = query;
+        renderSidebar();
         clearTimeout(searchTimer);
         if (query.length < 2) {
           hideSearchResults();
@@ -2791,6 +3302,36 @@
         }
       });
 
+      function setMapMetric(metric) {
+        mapMetric = metric;
+        document.getElementById("metricLead").classList.toggle("active", metric === "lead");
+        document.getElementById("metricMulti").classList.toggle("active", metric === "multilingual");
+        render();
+      }
+
+      document.getElementById("metricLead").addEventListener("click", () => setMapMetric("lead"));
+      document.getElementById("metricMulti").addEventListener("click", () => setMapMetric("multilingual"));
+
+      function setPanelCollapsed(on) {
+        panelCollapsed = Boolean(on);
+        document.getElementById("app").classList.toggle("panel-collapsed", panelCollapsed);
+        const btn = document.getElementById("panelToggle");
+        btn.setAttribute("aria-expanded", String(!panelCollapsed));
+        btn.title = panelCollapsed ? "Show panel" : "Hide panel";
+        btn.textContent = panelCollapsed ? "‹" : "›";
+      }
+      document.getElementById("panelToggle").addEventListener("click", () => {
+        setPanelCollapsed(!panelCollapsed);
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "/" && document.activeElement !== searchInput && document.activeElement.tagName !== "INPUT") {
+          e.preventDefault();
+          searchInput.focus();
+        }
+        if (e.key === "Escape") hideHover();
+      });
+
       document.getElementById("playBtn").addEventListener("click", () => {
         setPlaying(!playTimer);
       });
@@ -2800,6 +3341,7 @@
         seekStop(Number(e.target.value));
       });
 
+      map.on("movestart", hideHover);
       map.on("moveend", () => {
         if (viewMode === "points") {
           renderPoints();

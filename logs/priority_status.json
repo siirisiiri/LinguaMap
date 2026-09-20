@@ -1,6 +1,8 @@
 {
-  "started_at": "2026-09-20T13:09:44.071922+00:00",
+  "started_at": "2026-09-20T13:17:14.511041+00:00",
   "overlap": true,
+  "max_crawls": 2,
+  "max_fetches": 1,
   "queue": [
     "Russia",
     "Chile",
@@ -13,9 +15,7 @@
   ],
   "completed": [],
   "failed": [],
-  "prefetch_warnings": [],
-  "current": "Russia",
-  "updated_at": "2026-09-20T13:09:45.043149+00:00",
-  "current_id": "russia",
-  "phase": "crawl+prefetch"
+  "current": "Russia, Chile, Peru",
+  "updated_at": "2026-09-20T13:23:06.567843+00:00",
+  "phase": "crawls=['Russia', 'Chile'] fetches=['Peru']"
 }
