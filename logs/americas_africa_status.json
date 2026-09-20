@@ -1,0 +1,744 @@
+{
+  "started_at": "2026-09-20T06:39:56.539181+00:00",
+  "continents": [
+    "north-america",
+    "central-america",
+    "south-america",
+    "africa",
+    "asia",
+    "australia-oceania"
+  ],
+  "queue": [
+    "Greenland",
+    "Puerto Rico",
+    "US Virgin Islands",
+    "Bahamas",
+    "Belize",
+    "Costa Rica",
+    "Cuba",
+    "El Salvador",
+    "Guatemala",
+    "Haiti and Dominican Republic",
+    "Honduras",
+    "Jamaica",
+    "Nicaragua",
+    "Panama",
+    "Bolivia",
+    "Ecuador",
+    "Guyana",
+    "Paraguay",
+    "Suriname",
+    "Uruguay",
+    "Venezuela",
+    "Angola",
+    "Benin",
+    "Botswana",
+    "Burkina Faso",
+    "Burundi",
+    "Cameroon",
+    "Cape Verde",
+    "Central African Republic",
+    "Chad",
+    "Djibouti",
+    "Equatorial Guinea",
+    "Eritrea",
+    "Eswatini",
+    "Ethiopia",
+    "Gabon",
+    "Ghana",
+    "Guinea",
+    "Guinea-Bissau",
+    "Ivory Coast",
+    "Lesotho",
+    "Liberia",
+    "Libya",
+    "Madagascar",
+    "Malawi",
+    "Mali",
+    "Mauritania",
+    "Mauritius",
+    "Mozambique",
+    "Namibia",
+    "Niger",
+    "Republic of the Congo",
+    "Rwanda",
+    "Saint Helena, Ascension, and Tristan da Cunha",
+    "Sao Tome and Principe",
+    "Senegal and Gambia",
+    "Seychelles",
+    "Sierra Leone",
+    "Somalia",
+    "South Sudan",
+    "Sudan",
+    "Togo",
+    "Tunisia",
+    "Uganda",
+    "Zambia",
+    "Zimbabwe",
+    "Afghanistan",
+    "Armenia",
+    "Azerbaijan",
+    "Bangladesh",
+    "Bhutan",
+    "Cambodia",
+    "East Timor",
+    "GCC States",
+    "Iraq",
+    "Israel and Palestine",
+    "Jordan",
+    "Kazakhstan",
+    "Kyrgyzstan",
+    "Laos",
+    "Lebanon",
+    "Malaysia, Singapore, and Brunei",
+    "Maldives",
+    "Mongolia",
+    "Myanmar",
+    "Nepal",
+    "North Korea",
+    "Philippines",
+    "South Korea",
+    "Sri Lanka",
+    "Syria",
+    "Taiwan",
+    "Tajikistan",
+    "Thailand",
+    "Turkmenistan",
+    "Uzbekistan",
+    "Vietnam",
+    "Yemen",
+    "China",
+    "India",
+    "Indonesia",
+    "Iran",
+    "Japan",
+    "Pakistan",
+    "American Oceania",
+    "Cook Islands",
+    "Fiji",
+    "Kiribati",
+    "Marshall Islands",
+    "Micronesia",
+    "Nauru",
+    "New Caledonia",
+    "Niue",
+    "Palau",
+    "Papua New Guinea",
+    "Pitcairn Islands",
+    "Polyn\u00e9sie fran\u00e7aise",
+    "Samoa",
+    "Solomon Islands",
+    "Tokelau",
+    "Tonga",
+    "Tuvalu",
+    "Vanuatu",
+    "Wallis et Futuna",
+    "\u00cele de Clipperton",
+    "Australia",
+    "New Zealand",
+    "Russia",
+    "Tanzania",
+    "Kenya",
+    "Morocco",
+    "Algeria",
+    "Egypt",
+    "South Africa",
+    "Nigeria",
+    "Democratic Republic of the Congo",
+    "Chile",
+    "Peru",
+    "Colombia",
+    "Argentina",
+    "Mexico",
+    "Brazil",
+    "Canada",
+    "United States"
+  ],
+  "completed": [
+    {
+      "id": "greenland",
+      "name": "Greenland",
+      "result": "crawled"
+    },
+    {
+      "id": "us/puerto-rico",
+      "name": "Puerto Rico",
+      "result": "crawled"
+    },
+    {
+      "id": "us/us-virgin-islands",
+      "name": "US Virgin Islands",
+      "result": "crawled"
+    },
+    {
+      "id": "bahamas",
+      "name": "Bahamas",
+      "result": "crawled"
+    },
+    {
+      "id": "belize",
+      "name": "Belize",
+      "result": "crawled"
+    },
+    {
+      "id": "costa-rica",
+      "name": "Costa Rica",
+      "result": "crawled"
+    },
+    {
+      "id": "cuba",
+      "name": "Cuba",
+      "result": "crawled"
+    },
+    {
+      "id": "el-salvador",
+      "name": "El Salvador",
+      "result": "crawled"
+    },
+    {
+      "id": "guatemala",
+      "name": "Guatemala",
+      "result": "crawled"
+    },
+    {
+      "id": "honduras",
+      "name": "Honduras",
+      "result": "crawled"
+    },
+    {
+      "id": "jamaica",
+      "name": "Jamaica",
+      "result": "crawled"
+    },
+    {
+      "id": "nicaragua",
+      "name": "Nicaragua",
+      "result": "crawled"
+    },
+    {
+      "id": "panama",
+      "name": "Panama",
+      "result": "crawled"
+    },
+    {
+      "id": "bolivia",
+      "name": "Bolivia",
+      "result": "crawled"
+    },
+    {
+      "id": "guyana",
+      "name": "Guyana",
+      "result": "crawled"
+    },
+    {
+      "id": "paraguay",
+      "name": "Paraguay",
+      "result": "crawled"
+    },
+    {
+      "id": "suriname",
+      "name": "Suriname",
+      "result": "crawled"
+    },
+    {
+      "id": "uruguay",
+      "name": "Uruguay",
+      "result": "crawled"
+    },
+    {
+      "id": "venezuela",
+      "name": "Venezuela",
+      "result": "crawled"
+    },
+    {
+      "id": "benin",
+      "name": "Benin",
+      "result": "crawled"
+    },
+    {
+      "id": "botswana",
+      "name": "Botswana",
+      "result": "crawled"
+    },
+    {
+      "id": "burkina-faso",
+      "name": "Burkina Faso",
+      "result": "crawled"
+    },
+    {
+      "id": "burundi",
+      "name": "Burundi",
+      "result": "crawled"
+    },
+    {
+      "id": "cameroon",
+      "name": "Cameroon",
+      "result": "crawled"
+    },
+    {
+      "id": "cape-verde",
+      "name": "Cape Verde",
+      "result": "crawled"
+    },
+    {
+      "id": "central-african-republic",
+      "name": "Central African Republic",
+      "result": "crawled"
+    },
+    {
+      "id": "chad",
+      "name": "Chad",
+      "result": "crawled"
+    },
+    {
+      "id": "djibouti",
+      "name": "Djibouti",
+      "result": "crawled"
+    },
+    {
+      "id": "equatorial-guinea",
+      "name": "Equatorial Guinea",
+      "result": "crawled"
+    },
+    {
+      "id": "eritrea",
+      "name": "Eritrea",
+      "result": "crawled"
+    },
+    {
+      "id": "swaziland",
+      "name": "Eswatini",
+      "result": "crawled"
+    },
+    {
+      "id": "ethiopia",
+      "name": "Ethiopia",
+      "result": "crawled"
+    },
+    {
+      "id": "gabon",
+      "name": "Gabon",
+      "result": "crawled"
+    },
+    {
+      "id": "ghana",
+      "name": "Ghana",
+      "result": "crawled"
+    },
+    {
+      "id": "guinea",
+      "name": "Guinea",
+      "result": "crawled"
+    },
+    {
+      "id": "guinea-bissau",
+      "name": "Guinea-Bissau",
+      "result": "crawled"
+    },
+    {
+      "id": "ivory-coast",
+      "name": "Ivory Coast",
+      "result": "crawled"
+    },
+    {
+      "id": "lesotho",
+      "name": "Lesotho",
+      "result": "crawled"
+    },
+    {
+      "id": "liberia",
+      "name": "Liberia",
+      "result": "crawled"
+    },
+    {
+      "id": "libya",
+      "name": "Libya",
+      "result": "crawled"
+    },
+    {
+      "id": "madagascar",
+      "name": "Madagascar",
+      "result": "crawled"
+    },
+    {
+      "id": "malawi",
+      "name": "Malawi",
+      "result": "crawled"
+    },
+    {
+      "id": "mali",
+      "name": "Mali",
+      "result": "crawled"
+    },
+    {
+      "id": "mauritania",
+      "name": "Mauritania",
+      "result": "crawled"
+    },
+    {
+      "id": "mauritius",
+      "name": "Mauritius",
+      "result": "crawled"
+    },
+    {
+      "id": "mozambique",
+      "name": "Mozambique",
+      "result": "crawled"
+    },
+    {
+      "id": "namibia",
+      "name": "Namibia",
+      "result": "crawled"
+    },
+    {
+      "id": "niger",
+      "name": "Niger",
+      "result": "crawled"
+    },
+    {
+      "id": "congo-brazzaville",
+      "name": "Republic of the Congo",
+      "result": "crawled"
+    },
+    {
+      "id": "rwanda",
+      "name": "Rwanda",
+      "result": "crawled"
+    },
+    {
+      "id": "saint-helena-ascension-and-tristan-da-cunha",
+      "name": "Saint Helena, Ascension, and Tristan da Cunha",
+      "result": "crawled"
+    },
+    {
+      "id": "sao-tome-and-principe",
+      "name": "Sao Tome and Principe",
+      "result": "crawled"
+    },
+    {
+      "id": "seychelles",
+      "name": "Seychelles",
+      "result": "crawled"
+    },
+    {
+      "id": "sierra-leone",
+      "name": "Sierra Leone",
+      "result": "crawled"
+    },
+    {
+      "id": "somalia",
+      "name": "Somalia",
+      "result": "crawled"
+    },
+    {
+      "id": "south-sudan",
+      "name": "South Sudan",
+      "result": "crawled"
+    },
+    {
+      "id": "sudan",
+      "name": "Sudan",
+      "result": "crawled"
+    },
+    {
+      "id": "togo",
+      "name": "Togo",
+      "result": "crawled"
+    },
+    {
+      "id": "tunisia",
+      "name": "Tunisia",
+      "result": "crawled"
+    },
+    {
+      "id": "uganda",
+      "name": "Uganda",
+      "result": "crawled"
+    },
+    {
+      "id": "zambia",
+      "name": "Zambia",
+      "result": "crawled"
+    },
+    {
+      "id": "zimbabwe",
+      "name": "Zimbabwe",
+      "result": "crawled"
+    },
+    {
+      "id": "afghanistan",
+      "name": "Afghanistan",
+      "result": "crawled"
+    },
+    {
+      "id": "armenia",
+      "name": "Armenia",
+      "result": "crawled"
+    },
+    {
+      "id": "azerbaijan",
+      "name": "Azerbaijan",
+      "result": "crawled"
+    },
+    {
+      "id": "bangladesh",
+      "name": "Bangladesh",
+      "result": "crawled"
+    },
+    {
+      "id": "bhutan",
+      "name": "Bhutan",
+      "result": "crawled"
+    },
+    {
+      "id": "cambodia",
+      "name": "Cambodia",
+      "result": "crawled"
+    },
+    {
+      "id": "east-timor",
+      "name": "East Timor",
+      "result": "crawled"
+    },
+    {
+      "id": "israel-and-palestine",
+      "name": "Israel and Palestine",
+      "result": "crawled"
+    },
+    {
+      "id": "jordan",
+      "name": "Jordan",
+      "result": "crawled"
+    },
+    {
+      "id": "kazakhstan",
+      "name": "Kazakhstan",
+      "result": "crawled"
+    },
+    {
+      "id": "kyrgyzstan",
+      "name": "Kyrgyzstan",
+      "result": "crawled"
+    },
+    {
+      "id": "laos",
+      "name": "Laos",
+      "result": "crawled"
+    },
+    {
+      "id": "lebanon",
+      "name": "Lebanon",
+      "result": "crawled"
+    },
+    {
+      "id": "maldives",
+      "name": "Maldives",
+      "result": "crawled"
+    },
+    {
+      "id": "mongolia",
+      "name": "Mongolia",
+      "result": "crawled"
+    },
+    {
+      "id": "myanmar",
+      "name": "Myanmar",
+      "result": "crawled"
+    },
+    {
+      "id": "nepal",
+      "name": "Nepal",
+      "result": "crawled"
+    },
+    {
+      "id": "north-korea",
+      "name": "North Korea",
+      "result": "crawled"
+    },
+    {
+      "id": "philippines",
+      "name": "Philippines",
+      "result": "crawled"
+    },
+    {
+      "id": "south-korea",
+      "name": "South Korea",
+      "result": "crawled"
+    },
+    {
+      "id": "sri-lanka",
+      "name": "Sri Lanka",
+      "result": "crawled"
+    },
+    {
+      "id": "syria",
+      "name": "Syria",
+      "result": "crawled"
+    },
+    {
+      "id": "taiwan",
+      "name": "Taiwan",
+      "result": "crawled"
+    },
+    {
+      "id": "tajikistan",
+      "name": "Tajikistan",
+      "result": "crawled"
+    },
+    {
+      "id": "thailand",
+      "name": "Thailand",
+      "result": "crawled"
+    },
+    {
+      "id": "turkmenistan",
+      "name": "Turkmenistan",
+      "result": "crawled"
+    },
+    {
+      "id": "uzbekistan",
+      "name": "Uzbekistan",
+      "result": "crawled"
+    },
+    {
+      "id": "vietnam",
+      "name": "Vietnam",
+      "result": "crawled"
+    },
+    {
+      "id": "yemen",
+      "name": "Yemen",
+      "result": "crawled"
+    },
+    {
+      "id": "china",
+      "name": "China",
+      "result": "crawled"
+    },
+    {
+      "id": "india",
+      "name": "India",
+      "result": "crawled"
+    },
+    {
+      "id": "indonesia",
+      "name": "Indonesia",
+      "result": "crawled"
+    },
+    {
+      "id": "iran",
+      "name": "Iran",
+      "result": "crawled"
+    },
+    {
+      "id": "japan",
+      "name": "Japan",
+      "result": "crawled"
+    },
+    {
+      "id": "pakistan",
+      "name": "Pakistan",
+      "result": "crawled"
+    },
+    {
+      "id": "cook-islands",
+      "name": "Cook Islands",
+      "result": "crawled"
+    },
+    {
+      "id": "fiji",
+      "name": "Fiji",
+      "result": "crawled"
+    },
+    {
+      "id": "kiribati",
+      "name": "Kiribati",
+      "result": "crawled"
+    },
+    {
+      "id": "marshall-islands",
+      "name": "Marshall Islands",
+      "result": "crawled"
+    },
+    {
+      "id": "micronesia",
+      "name": "Micronesia",
+      "result": "crawled"
+    },
+    {
+      "id": "nauru",
+      "name": "Nauru",
+      "result": "crawled"
+    },
+    {
+      "id": "new-caledonia",
+      "name": "New Caledonia",
+      "result": "crawled"
+    },
+    {
+      "id": "niue",
+      "name": "Niue",
+      "result": "crawled"
+    },
+    {
+      "id": "palau",
+      "name": "Palau",
+      "result": "crawled"
+    },
+    {
+      "id": "papua-new-guinea",
+      "name": "Papua New Guinea",
+      "result": "crawled"
+    },
+    {
+      "id": "pitcairn-islands",
+      "name": "Pitcairn Islands",
+      "result": "empty"
+    }
+  ],
+  "failed": [
+    {
+      "id": "haiti-and-domrep",
+      "name": "Haiti and Dominican Republic",
+      "error": "RuntimeError('OSM fetch Haiti and Dominican Republic failed with exit 1')"
+    },
+    {
+      "id": "ecuador",
+      "name": "Ecuador",
+      "error": "RuntimeError('language crawl Ecuador failed with exit 1')"
+    },
+    {
+      "id": "angola",
+      "name": "Angola",
+      "error": "RuntimeError('language crawl Angola failed with exit 1')"
+    },
+    {
+      "id": "senegal-and-gambia",
+      "name": "Senegal and Gambia",
+      "error": "RuntimeError('OSM fetch Senegal and Gambia failed with exit 1')"
+    },
+    {
+      "id": "gcc-states",
+      "name": "GCC States",
+      "error": "RuntimeError('OSM fetch GCC States failed with exit 1')"
+    },
+    {
+      "id": "iraq",
+      "name": "Iraq",
+      "error": "RuntimeError('language crawl Iraq failed with exit 1')"
+    },
+    {
+      "id": "malaysia-singapore-brunei",
+      "name": "Malaysia, Singapore, and Brunei",
+      "error": "RuntimeError('OSM fetch Malaysia, Singapore, and Brunei failed with exit 1')"
+    },
+    {
+      "id": "american-oceania",
+      "name": "American Oceania",
+      "error": "RuntimeError('OSM fetch American Oceania failed with exit 1')"
+    }
+  ],
+  "current": "Polyn\u00e9sie fran\u00e7aise",
+  "updated_at": "2026-09-20T10:59:18.105305+00:00",
+  "current_id": "polynesie-francaise"
+}

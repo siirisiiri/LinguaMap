@@ -119,9 +119,36 @@ DISPLAY_NAMES = {
     "czech-republic": "Czechia",
     "ireland-and-northern-ireland": "Ireland",
     "macedonia": "North Macedonia",
+    "swaziland": "Eswatini",
     "ukraine": "Ukraine",
     "united-kingdom": "United Kingdom",
+    "us": "United States",
+    "us/puerto-rico": "Puerto Rico",
+    "us/us-virgin-islands": "US Virgin Islands",
 }
+
+# Huge extracts last so a US/Canada/Brazil stall cannot leave Africa empty.
+GLOBAL_LAST = [
+    "tanzania",
+    "kenya",
+    "morocco",
+    "algeria",
+    "egypt",
+    "south-africa",
+    "nigeria",
+    "congo-democratic-republic",
+    "chile",
+    "peru",
+    "colombia",
+    "argentina",
+    "mexico",
+    "brazil",
+    "canada",
+    "us",
+]
+
+STEP_ATTEMPTS = 3
+LARGE_PBF_DELETE_BYTES = 800 * 1024 * 1024
 
 # Reuse datasets that were saved under a different filename.
 EXISTING_ALIASES = {
@@ -210,6 +237,12 @@ def ordered_countries(extracts: list[dict], continents: list[str]) -> list[dict]
                 "query": "Russia",
             }
         )
+    last_ids = [extract_id for extract_id in GLOBAL_LAST if extract_id in seen]
+    if last_ids:
+        last_set = set(last_ids)
+        ordered = [item for item in ordered if item["id"] not in last_set]
+        for extract_id in last_ids:
+            ordered.append(by_id[extract_id])
     return ordered
 
 
@@ -233,7 +266,12 @@ def load_records(path: Path) -> list[dict]:
         return []
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+    except (OSError, json.JSONDecodeError) as exc:
+        log(f"corrupt {path.name} ({exc!r}); removing so it can be re-fetched")
+        try:
+            path.unlink()
+        except OSError:
+            pass
         return []
     return data if isinstance(data, list) else []
 
@@ -257,11 +295,59 @@ def write_status(payload: dict, path: Path | None = None) -> None:
     (path or STATUS_PATH).write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 
-def run_step(title: str, argv: list[str]) -> None:
-    log(f"$ {' '.join(argv)}")
-    result = subprocess.run(argv, cwd=ROOT)
-    if result.returncode != 0:
-        raise RuntimeError(f"{title} failed with exit {result.returncode}")
+def run_step(title: str, argv: list[str], attempts: int = STEP_ATTEMPTS) -> None:
+    last_error: Exception | None = None
+    for attempt in range(1, attempts + 1):
+        log(f"$ {' '.join(argv)}  (attempt {attempt}/{attempts})")
+        result = subprocess.run(argv, cwd=ROOT)
+        if result.returncode == 0:
+            return
+        last_error = RuntimeError(f"{title} failed with exit {result.returncode}")
+        if attempt < attempts:
+            sleep_s = min(30 * (2 ** (attempt - 1)), 180)
+            log(f"{title}: attempt {attempt} failed, retrying in {sleep_s}s")
+            time.sleep(sleep_s)
+    raise last_error or RuntimeError(f"{title} failed")
+
+
+def fetch_queries(extract: dict) -> list[str]:
+    queries: list[str] = []
+    for value in (
+        extract.get("query"),
+        extract.get("display"),
+        extract.get("name"),
+        extract["id"].split("/")[-1].replace("-", " "),
+    ):
+        text = (value or "").strip()
+        if text and text not in queries:
+            queries.append(text)
+    return queries
+
+
+def pbf_path_for(extract: dict) -> Path:
+    leaf = extract["id"].split("/")[-1]
+    return ROOT / ".geofabrik" / f"{leaf}-latest.osm.pbf"
+
+
+def maybe_delete_large_pbf(extract: dict) -> None:
+    path = pbf_path_for(extract)
+    try:
+        size = path.stat().st_size
+    except OSError:
+        return
+    if size < LARGE_PBF_DELETE_BYTES:
+        return
+    log(f"removing {path.name} ({size / 1e9:.1f} GB) to free disk")
+    try:
+        path.unlink()
+    except OSError as exc:
+        log(f"could not remove {path.name}: {exc}")
+    nidx = Path(str(path) + ".nidx")
+    if nidx.exists():
+        try:
+            nidx.unlink()
+        except OSError:
+            pass
 
 
 def process_country(extract: dict, status: dict) -> str:
@@ -273,19 +359,32 @@ def process_country(extract: dict, status: dict) -> str:
     write_status(status)
 
     if not records:
-        log(f"{extract['display']}: fetching OSM websites")
-        run_step(
-            f"OSM fetch {extract['display']}",
-            [
-                PYTHON,
-                str(ROOT / "osm_business_websites.py"),
-                extract["query"],
-                "-o",
-                str(path),
-            ],
-        )
+        last_error: Exception | None = None
+        for query in fetch_queries(extract):
+            log(f"{extract['display']}: fetching OSM websites as {query!r}")
+            try:
+                run_step(
+                    f"OSM fetch {extract['display']}",
+                    [
+                        PYTHON,
+                        str(ROOT / "osm_business_websites.py"),
+                        query,
+                        "-o",
+                        str(path),
+                        "--no-clip",
+                    ],
+                )
+                last_error = None
+                break
+            except Exception as exc:
+                last_error = exc
+                log(f"{extract['display']}: fetch with {query!r} failed: {exc!r}")
+        if last_error:
+            raise last_error
         records = load_records(path)
         unlabeled = unlabeled_count(records)
+        if records:
+            maybe_delete_large_pbf(extract)
     else:
         log(
             f"{extract['display']}: keeping {path.name} "
@@ -393,6 +492,31 @@ def main() -> None:
         status["current"] = None
         write_status(status)
         time.sleep(1)
+
+    if status["failed"]:
+        retry = list(status["failed"])
+        status["failed"] = []
+        log(f"Retrying {len(retry)} failed countries once more")
+        write_status(status)
+        for item in retry:
+            extract = next((c for c in countries if c["id"] == item["id"]), None)
+            if extract is None:
+                status["failed"].append(item)
+                continue
+            log(f"--- retry {extract['display']} ({extract['id']}) ---")
+            try:
+                result = process_country(extract, status)
+                status["completed"].append(
+                    {"id": extract["id"], "name": extract["display"], "result": result}
+                )
+            except Exception as exc:
+                log(f"{extract['display']}: FAILED again {exc!r}")
+                status["failed"].append(
+                    {"id": extract["id"], "name": extract["display"], "error": repr(exc)}
+                )
+            status["current"] = None
+            write_status(status)
+            time.sleep(1)
 
     status["finished_at"] = datetime.now(timezone.utc).isoformat()
     write_status(status)

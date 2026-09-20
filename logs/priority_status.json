@@ -1,0 +1,21 @@
+{
+  "started_at": "2026-09-20T13:09:44.071922+00:00",
+  "overlap": true,
+  "queue": [
+    "Russia",
+    "Chile",
+    "Peru",
+    "Colombia",
+    "Argentina",
+    "Mexico",
+    "Brazil",
+    "Canada"
+  ],
+  "completed": [],
+  "failed": [],
+  "prefetch_warnings": [],
+  "current": "Russia",
+  "updated_at": "2026-09-20T13:09:45.043149+00:00",
+  "current_id": "russia",
+  "phase": "crawl+prefetch"
+}

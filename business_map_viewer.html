@@ -44,6 +44,8 @@
         flex-wrap: wrap;
         background: var(--paper);
         z-index: 10;
+        position: relative;
+        padding-right: 150px;
       }
       header h1 {
         font-size: 17px;
@@ -51,24 +53,26 @@
         font-weight: 600;
         white-space: nowrap;
       }
-      .mode-toggle {
-        display: flex;
-        border: 1px solid var(--line);
-        border-radius: 6px;
-        overflow: hidden;
-        flex-shrink: 0;
+      .mapped-count {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        text-align: right;
+        line-height: 1;
       }
-      .mode-toggle button {
-        border: none;
-        background: transparent;
-        padding: 6px 12px;
-        font-size: 13px;
-        cursor: pointer;
-        color: var(--ink);
+      .mapped-count[hidden] {
+        display: none;
       }
-      .mode-toggle button.active {
-        background: var(--accent);
-        color: #fff;
+      .mapped-number {
+        font-size: 32px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.04em;
+      }
+      .mapped-label {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 3px;
       }
       .area-jump {
         display: flex;
@@ -469,6 +473,9 @@
           border-top: 1px solid var(--line);
           max-height: 45%;
         }
+        .mapped-number {
+          font-size: 24px;
+        }
       }
     </style>
   </head>
@@ -476,10 +483,6 @@
     <div id="app">
       <header>
         <h1>LinguaMap</h1>
-        <div class="mode-toggle" role="group" aria-label="Map view">
-          <button type="button" id="modeAreas" class="active">Areas</button>
-          <button type="button" id="modePoints">Points</button>
-        </div>
         <form class="area-jump" id="areaJump" autocomplete="off">
           <label for="areaName">Search</label>
           <div class="search-wrap">
@@ -493,6 +496,10 @@
             <div id="searchResults" class="search-results" hidden></div>
           </div>
         </form>
+        <div class="mapped-count" id="mappedCount" hidden>
+          <div class="mapped-number" id="mappedNumber">0</div>
+          <div class="mapped-label">websites mapped</div>
+        </div>
         <nav id="breadcrumb" aria-label="Area hierarchy"></nav>
         <div id="mapMessage" role="status"></div>
       </header>
@@ -996,6 +1003,15 @@
         datasets.sort((a, b) => b.count - a.count);
         assignPrimaryLanguages();
         initTimeline();
+        updateMappedCount();
+      }
+
+      function updateMappedCount() {
+        const wrap = document.getElementById("mappedCount");
+        const el = document.getElementById("mappedNumber");
+        if (!wrap || !el) return;
+        el.textContent = num(points.length);
+        wrap.hidden = !points.length;
       }
 
       // ------------------------------------------------------------- timeline
@@ -1668,10 +1684,16 @@
         };
       }
 
+      function websiteCountLine(total) {
+        if (!total) return `<div class="meta">No websites here</div>`;
+        return `<div class="meta">${num(total)} website${total === 1 ? "" : "s"}</div>`;
+      }
+
       function areaTooltip(feature, rec) {
         const name = escapeHtml(feature.properties.name);
+        const countLine = websiteCountLine(rec ? rec.total : 0);
         if (!rec || !rec.classified) {
-          return `<div class="area-tip"><b>${name}</b><div class="meta">No classified sites here</div></div>`;
+          return `<div class="area-tip"><b>${name}</b>${countLine}</div>`;
         }
         const fill = areaFill(rec);
         const rows = activeLanguages
@@ -1693,10 +1715,7 @@
                 fill.share - fill.localLo >= 0 ? "+" : ""
               }${ptsLabel(fill.share - fill.localLo)} vs this area's low on the timeline</div>`
             : "";
-        return (
-          `<div class="area-tip"><b>${name}</b>${rows}${leadLine}${changeLine}` +
-          `<div class="meta">${num(rec.classified)} classified of ${num(rec.total)} sites</div></div>`
-        );
+        return `<div class="area-tip"><b>${name}</b>${countLine}${rows}${leadLine}${changeLine}</div>`;
       }
 
       // ------------------------------------------------------------- map drawing
@@ -2532,21 +2551,17 @@
       }
 
       async function setViewMode(mode) {
-        viewMode = mode;
+        viewMode = "areas";
         invalidateTimeSeries();
-        document.getElementById("modeAreas").classList.toggle("active", mode === "areas");
-        document.getElementById("modePoints").classList.toggle("active", mode === "points");
         showMapMessage("");
-        if (mode === "areas") {
-          try {
-            await enterAreaMode();
-          } catch (err) {
-            showMapMessage(err.message || "Could not load area outlines.");
-          }
+        try {
+          await enterAreaMode();
+        } catch (err) {
+          showMapMessage(err.message || "Could not load area outlines.");
         }
         render();
         if (isWorldView()) showWorld();
-        if (mode === "areas") warmNextLevel();
+        warmNextLevel();
       }
 
       function hideSearchResults() {
@@ -2609,8 +2624,6 @@
 
       async function applySearchHit(hit) {
         viewMode = "areas";
-        document.getElementById("modeAreas").classList.add("active");
-        document.getElementById("modePoints").classList.remove("active");
         const world = await loadWorldCountries();
         const kind = hit.kind || kindFromLevel(hit.admin_level);
         hierarchy = [{ name: "World", osm_id: null, features: world }];
@@ -2729,9 +2742,6 @@
           showMapMessage(err.message || String(err));
         }
       }
-
-      document.getElementById("modeAreas").addEventListener("click", () => setViewMode("areas"));
-      document.getElementById("modePoints").addEventListener("click", () => setViewMode("points"));
 
       const searchInput = document.getElementById("areaName");
       searchInput.addEventListener("input", () => {

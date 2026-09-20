@@ -277,7 +277,10 @@ def normalize_url(url: str) -> str | None:
         return None
     if not url.startswith(("http://", "https://")):
         url = "http://" + url
-    parsed = urlparse(url)
+    try:
+        parsed = urlparse(url)
+    except ValueError:
+        return None
     if not parsed.netloc:
         return None
     path = parsed.path.lower()
@@ -700,9 +703,11 @@ def load_records(path: str) -> list[dict]:
 
 
 def write_records(path: str, records: list[dict]) -> None:
-    with open(path, "w", encoding="utf-8") as f:
+    tmp = f"{path}.tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
         json.dump(records, f, indent=2, ensure_ascii=False)
         f.write("\n")
+    os.replace(tmp, path)
 
 
 def migrate_record_languages(records: list[dict]) -> int:

@@ -20,6 +20,8 @@ Usage:
     python osm_business_websites.py            # will prompt interactively
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import math
@@ -126,57 +128,92 @@ def in_bbox(lat, lon, bbox) -> bool:
     return south <= lat <= north and west <= lon <= east
 
 
+DOWNLOAD_ATTEMPTS = 5
+DOWNLOAD_TIMEOUT = (30, 180)
+
+
+def _tag_dict(tags) -> dict:
+    return {t.k: t.v for t in tags}
+
+
 def extract_from_pbf(path: str, bbox=None):
-    """Read website-tagged nodes/ways from a Geofabrik (or other) OSM PBF."""
+    """Read website-tagged nodes/ways from a Geofabrik (or other) OSM PBF.
+
+    Filter in C++ (KeyFilter / IdFilter) so Python never sees the billions of
+    untagged nodes. Two streaming passes: website objects, then only the node
+    IDs needed for way centroids.
+    """
     try:
         import osmium
     except ImportError:
         sys.exit("Reading a PBF needs pyosmium. Install with: pip install osmium")
 
-    class WebsiteHandler(osmium.SimpleHandler):
-        def __init__(self):
-            super().__init__()
-            self.records = []
+    size_gb = os.path.getsize(path) / 1e9
+    records = []
+    pending_ways = []  # (way_id, tags, node_ids)
+    website_filter = osmium.filter.KeyFilter("website", "contact:website")
 
-        def node(self, n):
-            if not n.location.valid():
-                return
-            if "website" not in n.tags and "contact:website" not in n.tags:
-                return
-            lat, lon = n.location.lat, n.location.lon
+    print(
+        f"Reading {path} ({size_gb:.1f} GB) pass 1/2: C++ filter for website tags...",
+        flush=True,
+    )
+    fp1 = osmium.FileProcessor(
+        path, osmium.osm.NODE | osmium.osm.WAY
+    ).with_filter(website_filter)
+    for obj in fp1:
+        tags = _tag_dict(obj.tags)
+        if obj.is_node():
+            if not obj.location.valid():
+                continue
+            lat, lon = obj.location.lat, obj.location.lon
             if not in_bbox(lat, lon, bbox):
-                return
-            tags = {t.k: t.v for t in n.tags}
-            rec = record_from_tags("node", n.id, tags, lat, lon)
+                continue
+            rec = record_from_tags("node", obj.id, tags, lat, lon)
             if rec:
-                self.records.append(rec)
-
-        def way(self, w):
-            if "website" not in w.tags and "contact:website" not in w.tags:
-                return
-            lats = []
-            lons = []
+                records.append(rec)
+        elif obj.is_way():
             try:
-                for node in w.nodes:
-                    if node.location.valid():
-                        lats.append(node.location.lat)
-                        lons.append(node.location.lon)
+                node_ids = [nd.ref for nd in obj.nodes]
             except Exception:
-                return
-            if not lats:
-                return
-            lat, lon = sum(lats) / len(lats), sum(lons) / len(lons)
-            if not in_bbox(lat, lon, bbox):
-                return
-            tags = {t.k: t.v for t in w.tags}
-            rec = record_from_tags("way", w.id, tags, lat, lon)
-            if rec:
-                self.records.append(rec)
+                continue
+            if node_ids:
+                pending_ways.append((obj.id, tags, node_ids))
 
-    handler = WebsiteHandler()
-    print(f"Reading {path} (this walks the whole extract once)...", flush=True)
-    handler.apply_file(path, locations=True, idx="flex_mem")
-    return handler.records
+    print(
+        f"  pass 1 done: {len(records)} website nodes, {len(pending_ways)} website ways",
+        flush=True,
+    )
+
+    needed = {nid for _wid, _tags, nids in pending_ways for nid in nids}
+    locations: dict[int, tuple[float, float]] = {}
+    if needed:
+        print(
+            f"Reading {path} pass 2/2: C++ IdFilter for {len(needed)} way nodes...",
+            flush=True,
+        )
+        fp2 = osmium.FileProcessor(path, osmium.osm.NODE).with_filter(
+            osmium.filter.IdFilter(list(needed))
+        )
+        for obj in fp2:
+            if obj.location.valid():
+                locations[obj.id] = (obj.location.lat, obj.location.lon)
+        print(f"  pass 2 done: resolved {len(locations)}/{len(needed)} nodes", flush=True)
+
+    way_records = 0
+    for way_id, tags, node_ids in pending_ways:
+        pts = [locations[nid] for nid in node_ids if nid in locations]
+        if not pts:
+            continue
+        lat = sum(p[0] for p in pts) / len(pts)
+        lon = sum(p[1] for p in pts) / len(pts)
+        if not in_bbox(lat, lon, bbox):
+            continue
+        rec = record_from_tags("way", way_id, tags, lat, lon)
+        if rec:
+            records.append(rec)
+            way_records += 1
+    print(f"  kept {way_records} website ways with a usable centroid", flush=True)
+    return records
 
 
 def extract_business(element):
@@ -282,23 +319,35 @@ def resolve_geofabrik_extract(place_name: str, hit: dict) -> dict:
     return best
 
 
-def download_geofabrik_pbf(url: str) -> str:
-    """Download url into .geofabrik/, reusing a complete cached file."""
-    os.makedirs(GEOFABRIK_DIR, exist_ok=True)
-    filename = url.rstrip("/").rsplit("/", 1)[-1]
-    dest = os.path.join(GEOFABRIK_DIR, filename)
-    if os.path.exists(dest) and os.path.getsize(dest) > 0:
-        print(f"Using cached {dest}", flush=True)
-        return dest
-
-    tmp = dest + ".part"
-    print(f"Downloading {url} ...", flush=True)
-    with requests.get(url, headers=HEADERS, stream=True, timeout=60) as resp:
+def _remote_size(url: str) -> int:
+    try:
+        resp = requests.head(url, headers=HEADERS, timeout=30, allow_redirects=True)
         resp.raise_for_status()
-        total = int(resp.headers.get("content-length") or 0)
-        got = 0
-        last_report = 0
-        with open(tmp, "wb") as f:
+        return int(resp.headers.get("content-length") or 0)
+    except (requests.RequestException, ValueError, TypeError):
+        return 0
+
+
+def _stream_pbf_download(url: str, tmp: str, expected: int) -> None:
+    existing = os.path.getsize(tmp) if os.path.exists(tmp) else 0
+    headers = dict(HEADERS)
+    if existing:
+        headers["Range"] = f"bytes={existing}-"
+        print(f"Resuming {tmp} from {existing / 1e6:.0f} MB", flush=True)
+    with requests.get(url, headers=headers, stream=True, timeout=DOWNLOAD_TIMEOUT) as resp:
+        if existing and resp.status_code == 200:
+            existing = 0
+            mode = "wb"
+        elif existing and resp.status_code == 206:
+            mode = "ab"
+        else:
+            resp.raise_for_status()
+            mode = "wb"
+        total = expected or (existing + int(resp.headers.get("content-length") or 0))
+        got = existing
+        last_report = existing
+        print(f"Downloading {url} ...", flush=True)
+        with open(tmp, mode) as f:
             for chunk in resp.iter_content(1024 * 1024):
                 if not chunk:
                     continue
@@ -307,18 +356,57 @@ def download_geofabrik_pbf(url: str) -> str:
                 if total and got - last_report >= 8 * 1024 * 1024:
                     print(f"  {got / 1e6:.0f}/{total / 1e6:.0f} MB", flush=True)
                     last_report = got
-    os.replace(tmp, dest)
-    print(f"Saved {dest} ({os.path.getsize(dest) / 1e6:.0f} MB)", flush=True)
-    return dest
+    if expected and os.path.getsize(tmp) != expected:
+        raise IOError(
+            f"incomplete download {os.path.getsize(tmp)} bytes, expected {expected}"
+        )
+
+
+def download_geofabrik_pbf(url: str) -> str:
+    """Download url into .geofabrik/, reusing a complete cached file."""
+    os.makedirs(GEOFABRIK_DIR, exist_ok=True)
+    filename = url.rstrip("/").rsplit("/", 1)[-1]
+    dest = os.path.join(GEOFABRIK_DIR, filename)
+    tmp = dest + ".part"
+    expected = _remote_size(url)
+    if os.path.exists(dest) and os.path.getsize(dest) > 0:
+        if expected and os.path.getsize(dest) != expected:
+            print(
+                f"Cached {dest} is {os.path.getsize(dest)} bytes, "
+                f"expected {expected}; re-downloading",
+                flush=True,
+            )
+            os.remove(dest)
+        else:
+            print(f"Using cached {dest}", flush=True)
+            return dest
+
+    last_err: Exception | None = None
+    for attempt in range(1, DOWNLOAD_ATTEMPTS + 1):
+        try:
+            _stream_pbf_download(url, tmp, expected)
+            os.replace(tmp, dest)
+            print(f"Saved {dest} ({os.path.getsize(dest) / 1e6:.0f} MB)", flush=True)
+            return dest
+        except (requests.RequestException, OSError, IOError) as e:
+            last_err = e
+            print(
+                f"Download attempt {attempt}/{DOWNLOAD_ATTEMPTS} failed: {e!r}",
+                flush=True,
+            )
+            time.sleep(min(30 * attempt, 180))
+    raise last_err or RuntimeError(f"Geofabrik download failed: {url}")
 
 
 def write_businesses(path: str, businesses: list[dict]) -> None:
     out_dir = os.path.dirname(path)
     if out_dir:
         os.makedirs(out_dir, exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
+    tmp = f"{path}.tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
         json.dump(businesses, f, indent=2, ensure_ascii=False)
         f.write("\n")
+    os.replace(tmp, path)
     print(f"Wrote results to {path}")
 
 
@@ -531,6 +619,11 @@ def main():
     parser.add_argument(
         "--workers", type=int, default=3, help="Tiles to fetch in parallel (--by-area)"
     )
+    parser.add_argument(
+        "--no-clip",
+        action="store_true",
+        help="Use the full Geofabrik extract; do not clip to the Nominatim bbox",
+    )
     args = parser.parse_args()
     if args.by_area and not args.overpass:
         print("--by-area only applies to Overpass; implying --overpass.", flush=True)
@@ -602,9 +695,23 @@ def main():
         )
         try:
             pbf_path = download_geofabrik_pbf(pbf_url)
-        except requests.RequestException as e:
+        except (requests.RequestException, OSError, RuntimeError) as e:
             sys.exit(f"Geofabrik download failed: {e}")
-        businesses = extract_from_pbf(pbf_path, bbox=bbox)
+        clip_bbox = None if args.no_clip else bbox
+        if args.no_clip:
+            print("Using full extract without Nominatim bbox clip.", flush=True)
+        try:
+            businesses = extract_from_pbf(pbf_path, bbox=clip_bbox)
+        except Exception as e:
+            print(
+                f"PBF read failed ({e!r}); deleting cached extract so a retry re-downloads.",
+                flush=True,
+            )
+            try:
+                os.remove(pbf_path)
+            except OSError:
+                pass
+            sys.exit(f"Geofabrik PBF read failed: {e}")
         print(f"Kept {len(businesses)} unique elements with a usable website.")
         write_businesses(args.output, businesses)
         return
