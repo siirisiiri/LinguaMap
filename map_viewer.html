@@ -125,7 +125,7 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 88px;
+        height: 108px;
         z-index: 1040;
         pointer-events: none;
         background: linear-gradient(
@@ -163,27 +163,35 @@
       }
       .metric-toggle {
         display: flex;
-        gap: 2px;
-        padding: 3px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
+        gap: 3px;
+        padding: 4px;
+        background: rgba(14, 13, 11, 0.82);
+        border: 1px solid rgba(243, 238, 228, 0.32);
+        border-radius: 10px;
         flex-shrink: 0;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 8px 24px rgba(12, 11, 10, 0.4);
       }
       .metric-toggle button {
         border: none;
         background: transparent;
-        color: var(--muted);
+        color: rgba(243, 238, 228, 0.78);
         font: inherit;
-        font-size: 12px;
-        font-weight: 500;
+        font-size: 14px;
+        font-weight: 600;
         letter-spacing: 0.01em;
-        padding: 6px 11px;
-        border-radius: 6px;
+        padding: 8px 15px;
+        border-radius: 7px;
         cursor: pointer;
       }
-      .metric-toggle button.active {
-        background: rgba(243, 238, 228, 0.1);
+      .metric-toggle button:hover {
         color: var(--ink);
+        background: rgba(243, 238, 228, 0.1);
+      }
+      .metric-toggle button.active {
+        background: var(--ink);
+        color: var(--void);
       }
       .mapped-count {
         margin-left: auto;
@@ -215,16 +223,30 @@
       .area-jump {
         display: flex;
         align-items: center;
-        font-size: 13px;
+        font-size: 14px;
         color: var(--muted);
         flex: 1;
-        min-width: 120px;
-        max-width: 260px;
+        min-width: 180px;
+        max-width: 380px;
         position: relative;
       }
       .search-wrap {
         position: relative;
         width: 100%;
+      }
+      .search-wrap::before {
+        content: "";
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        width: 15px;
+        height: 15px;
+        transform: translateY(-50%);
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.78;
+        background: no-repeat center / 15px 15px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23f3eee4' stroke-width='2' stroke-linecap='round' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E");
       }
       .area-jump label {
         position: absolute;
@@ -235,19 +257,25 @@
       }
       .area-jump input {
         font: inherit;
+        font-weight: 500;
         color: var(--ink);
-        background: rgba(243, 238, 228, 0.05);
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 8px 12px;
+        background: rgba(14, 13, 11, 0.82);
+        border: 1px solid rgba(243, 238, 228, 0.32);
+        border-radius: 10px;
+        padding: 10px 14px 10px 36px;
         width: 100%;
         outline: none;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 8px 24px rgba(12, 11, 10, 0.4);
       }
       .area-jump input::placeholder {
-        color: var(--muted);
+        color: rgba(243, 238, 228, 0.68);
+        font-weight: 500;
       }
       .area-jump input:focus {
-        border-color: rgba(215, 196, 163, 0.45);
+        border-color: rgba(215, 196, 163, 0.7);
+        box-shadow: 0 8px 24px rgba(12, 11, 10, 0.4), 0 0 0 3px rgba(215, 196, 163, 0.18);
       }
       .search-results {
         position: absolute;
@@ -302,7 +330,7 @@
       #breadcrumb {
         display: none;
         position: absolute;
-        top: 64px;
+        top: 76px;
         left: 20px;
         z-index: 1100;
         font-size: 12px;
@@ -335,7 +363,7 @@
       #mapMessage {
         display: none;
         position: absolute;
-        top: 64px;
+        top: 76px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 1100;
@@ -807,7 +835,7 @@
           font-size: 22px;
         }
         .area-jump {
-          max-width: 180px;
+          max-width: 240px;
         }
         #sidebar {
           width: 240px;

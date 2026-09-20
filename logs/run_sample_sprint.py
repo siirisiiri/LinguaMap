@@ -128,6 +128,11 @@ def fetch_country_sample(job: dict) -> int:
         if isinstance(existing, list):
             for rec in existing:
                 merged[(rec.get("osm_type"), rec.get("osm_id"))] = rec
+        if len(merged) >= 500:
+            log(
+                f"{job['display']}: keeping existing {len(merged)} sample records"
+            )
+            return len(merged)
     for city in job["cities"]:
         try:
             for rec in fetch_city_sample(city):

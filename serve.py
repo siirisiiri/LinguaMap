@@ -41,7 +41,7 @@ ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 CACHE_DIR = ROOT / ".cache" / "overpass"
 RELATION_CACHE_DIR = ROOT / ".cache" / "osm_relations"
-VIEWER = "business_map_viewer.html"
+VIEWER = "map_viewer.html"
 
 # Boundary outlines the viewer fetches by name; they are not language datasets.
 NON_DATASET_FILES = {"countries.geojson", "authorities.geojson"}

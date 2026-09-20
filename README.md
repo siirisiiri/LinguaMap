@@ -136,7 +136,7 @@ OSM extract  →  website list  →  homepage classifier  →  Leaflet map
 
 The result is always a list: `["english"]`, `["english", "welsh"]`, or `[]`. Pages that advertise several versions early can stop downloading before the full body arrives.
 
-**3. Draw.** `serve.py` is a small static server plus a few APIs. The viewer (`business_map_viewer.html`) loads every region JSON, point-in-polygon assigns sites to the current admin polygons, and colors each area from the selected languages or from the multilingual share. Hovering an area opens a card with bars. Subdivision 1 comes from `data/admin1/<ISO>.geojson`; subdivision 2 from `data/admin2/<osm_id>.geojson`. Search uses those files first, then Nominatim.
+**3. Draw.** `serve.py` is a small static server plus a few APIs. The viewer (`map_viewer.html`) loads every region JSON, point-in-polygon assigns sites to the current admin polygons, and colors each area from the selected languages or from the multilingual share. Hovering an area opens a card with bars. Subdivision 1 comes from `data/admin1/<ISO>.geojson`; subdivision 2 from `data/admin2/<osm_id>.geojson`. Search uses those files first, then Nominatim.
 
 ## Adding a language
 

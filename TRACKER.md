@@ -14,7 +14,7 @@ Pull before you claim a country. Set your cell to 🟡 when you start it and �
 
 ## Aryan current run
 
-Last update: 2026-09-20 10:45 ET
+Last update: 2026-09-20 10:48 ET
 
 | Country | Status |
 | --- | --- |
@@ -25,13 +25,13 @@ Last update: 2026-09-20 10:45 ET
 | Mexico | 🟢 done |
 | Brazil | 🟢 done |
 | Russia | abandoned |
-| Canada | 🟡 paused — Toronto sample written, not crawled |
-| United Kingdom | paused before sample |
-| Australia | paused before sample |
-| New Zealand | paused before sample |
-| Nigeria | paused before sample |
+| Canada | 🟡 crawling Toronto sample (2,500 sites) |
+| United Kingdom | 🟡 city sample then crawl |
+| Australia | 🟡 city sample then crawl |
+| New Zealand | 🟡 city sample then crawl |
+| Nigeria | 🟡 city sample then crawl |
 
-Sample sprint stopped for a git pull/restructure.
+Resumed after pull. Region JSON still lives in `data/`; outlines moved to `tools/` + `data/admin1`.
 
 ## Africa
 
