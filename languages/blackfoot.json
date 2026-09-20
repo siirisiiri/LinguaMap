@@ -1,0 +1,23 @@
+{
+  "name": "blackfoot",
+  "codes": [
+    "bla"
+  ],
+  "switch_labels": [
+    "blackfoot",
+    "niitsitapi",
+    "siksika"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "blackfoot",
+    "kainai",
+    "niitsi'powahsin",
+    "niitsitapi",
+    "piikani",
+    "siksika"
+  ]
+}

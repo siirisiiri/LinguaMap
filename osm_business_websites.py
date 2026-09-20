@@ -4,19 +4,16 @@ osm_business_websites.py
 
 Given an area of interest (place name), this script:
   1. Geocodes the place name to a bounding box using Nominatim.
-  2. Queries the Overpass API for every OSM element in that bounding box
-     that has a `website` or `contact:website` tag (no filtering by type —
-     businesses, government buildings, places of worship, attractions,
-     etc. are all included).
-  3. Writes the results (name, website, category, lat/lon) to a JSON file.
+  2. Downloads the matching Geofabrik OSM PBF (daily extract) if needed.
+  3. Reads every node/way with a `website` or `contact:website` tag.
+  4. Writes the results (name, website, category, lat/lon) to a JSON file.
 
-For a country-sized area, pass --by-area: results are clipped to the real
-OSM boundary instead of its bounding box (a Ukraine box also covers Moldova,
-Romania, Poland, Belarus and western Russia), and the query is split into a
-grid of tiles, since one nationwide Overpass request will time out. Tiles
-that still time out are split into quarters and retried.
+PBF extracts skip OSM relations (routes, some schools/museums mapped as
+multipolygons). Use --overpass for a live tiled Overpass fetch that includes
+them. --by-area only applies to --overpass.
 
 Usage:
+    python osm_business_websites.py "Switzerland" -o data/Switzerland.json
     python osm_business_websites.py "Cambridge, MA"
     python osm_business_websites.py "Ukraine" --by-area -o data/Ukraine.json
     python osm_business_websites.py --from-pbf .geofabrik/ukraine-latest.osm.pbf -o data/Ukraine.json
@@ -27,6 +24,7 @@ import argparse
 import json
 import math
 import os
+import re
 import sys
 import threading
 import time
@@ -35,6 +33,12 @@ from concurrent.futures import ThreadPoolExecutor
 import requests
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
+GEOFABRIK_INDEX_URL = "https://download.geofabrik.de/index-v1.json"
+GEOFABRIK_DIR = ".geofabrik"
+CONTINENT_IDS = {
+    "africa", "antarctica", "asia", "australia-oceania",
+    "central-america", "europe", "north-america", "south-america",
+}
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
 # Rotated through on failure; the first two tolerate heavy queries best.
 OVERPASS_URLS = [
@@ -111,7 +115,18 @@ def record_from_tags(osm_type, osm_id, tags, lat, lon):
     return rec
 
 
-def extract_from_pbf(path: str):
+def _norm_name(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", (value or "").lower())
+
+
+def in_bbox(lat, lon, bbox) -> bool:
+    if bbox is None or lat is None or lon is None:
+        return True
+    south, west, north, east = bbox
+    return south <= lat <= north and west <= lon <= east
+
+
+def extract_from_pbf(path: str, bbox=None):
     """Read website-tagged nodes/ways from a Geofabrik (or other) OSM PBF."""
     try:
         import osmium
@@ -128,8 +143,11 @@ def extract_from_pbf(path: str):
                 return
             if "website" not in n.tags and "contact:website" not in n.tags:
                 return
+            lat, lon = n.location.lat, n.location.lon
+            if not in_bbox(lat, lon, bbox):
+                return
             tags = {t.k: t.v for t in n.tags}
-            rec = record_from_tags("node", n.id, tags, n.location.lat, n.location.lon)
+            rec = record_from_tags("node", n.id, tags, lat, lon)
             if rec:
                 self.records.append(rec)
 
@@ -147,10 +165,11 @@ def extract_from_pbf(path: str):
                 return
             if not lats:
                 return
+            lat, lon = sum(lats) / len(lats), sum(lons) / len(lons)
+            if not in_bbox(lat, lon, bbox):
+                return
             tags = {t.k: t.v for t in w.tags}
-            rec = record_from_tags(
-                "way", w.id, tags, sum(lats) / len(lats), sum(lons) / len(lons)
-            )
+            rec = record_from_tags("way", w.id, tags, lat, lon)
             if rec:
                 self.records.append(rec)
 
@@ -172,8 +191,8 @@ def extract_business(element):
 
 
 def geocode_area(place_name: str):
-    """Turn a place name into a (south, west, north, east) bounding box."""
-    params = {"q": place_name, "format": "json", "limit": 1}
+    """Turn a place name into a bounding box plus the raw Nominatim hit."""
+    params = {"q": place_name, "format": "json", "limit": 1, "addressdetails": 1}
     resp = requests.get(NOMINATIM_URL, params=params, headers=HEADERS, timeout=30)
     resp.raise_for_status()
     results = resp.json()
@@ -182,13 +201,125 @@ def geocode_area(place_name: str):
 
     # Nominatim returns boundingbox as [min_lat, max_lat, min_lon, max_lon]
     min_lat, max_lat, min_lon, max_lon = (float(x) for x in results[0]["boundingbox"])
-    display_name = results[0]["display_name"]
     hit = results[0]
     return (
-        display_name,
+        hit.get("display_name"),
         (min_lat, min_lon, max_lat, max_lon),  # south, west, north, east
         (hit.get("osm_type"), hit.get("osm_id")),
+        hit,
     )
+
+
+def load_geofabrik_index() -> list[dict]:
+    """Geofabrik region list; cached next to the PBF extracts."""
+    os.makedirs(GEOFABRIK_DIR, exist_ok=True)
+    cache_path = os.path.join(GEOFABRIK_DIR, "index-v1.json")
+    try:
+        stale = (not os.path.exists(cache_path)
+                 or time.time() - os.path.getmtime(cache_path) > 86400)
+        if stale:
+            raise FileNotFoundError
+        with open(cache_path, encoding="utf-8") as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        print("Fetching Geofabrik extract index...", flush=True)
+        resp = requests.get(GEOFABRIK_INDEX_URL, headers=HEADERS, timeout=60)
+        resp.raise_for_status()
+        data = resp.json()
+        with open(cache_path, "w", encoding="utf-8") as f:
+            json.dump(data, f)
+    return data.get("features") or []
+
+
+def resolve_geofabrik_extract(place_name: str, hit: dict) -> dict:
+    """Pick the smallest Geofabrik extract that covers this Nominatim result."""
+    address = hit.get("address") or {}
+    country = (address.get("country_code") or "").upper()
+    iso2_codes = {
+        str(value).upper()
+        for key, value in address.items()
+        if key.upper().startswith("ISO3166-2") and value
+    }
+    query_norm = _norm_name(place_name)
+    name_norm = _norm_name(hit.get("name") or "")
+    features = load_geofabrik_index()
+
+    best = None
+    best_score = -1
+    for feat in features:
+        props = feat.get("properties") or {}
+        pbf_url = (props.get("urls") or {}).get("pbf")
+        if not pbf_url:
+            continue
+        extract_id = props.get("id") or ""
+        if extract_id in CONTINENT_IDS:
+            continue
+        extract_name = props.get("name") or ""
+        iso1 = [str(x).upper() for x in (props.get("iso3166-1:alpha2") or [])]
+        iso2 = [str(x).upper() for x in (props.get("iso3166-2") or [])]
+        id_leaf = _norm_name(extract_id.split("/")[-1])
+        named = _norm_name(extract_name)
+        depth = extract_id.count("/") + (1 if props.get("parent") else 0)
+
+        score = 0
+        if iso2 and iso2_codes.intersection(iso2):
+            score = 400 + depth
+        elif query_norm and query_norm in {id_leaf, named}:
+            score = 350 + depth
+        elif name_norm and name_norm in {id_leaf, named}:
+            score = 320 + depth
+        elif country and country in iso1:
+            score = 200 + depth
+        if score > best_score:
+            best = props
+            best_score = score
+
+    if not best:
+        raise ValueError(
+            f"No Geofabrik extract matched '{place_name}'. "
+            "Pass --from-pbf PATH or --overpass."
+        )
+    return best
+
+
+def download_geofabrik_pbf(url: str) -> str:
+    """Download url into .geofabrik/, reusing a complete cached file."""
+    os.makedirs(GEOFABRIK_DIR, exist_ok=True)
+    filename = url.rstrip("/").rsplit("/", 1)[-1]
+    dest = os.path.join(GEOFABRIK_DIR, filename)
+    if os.path.exists(dest) and os.path.getsize(dest) > 0:
+        print(f"Using cached {dest}", flush=True)
+        return dest
+
+    tmp = dest + ".part"
+    print(f"Downloading {url} ...", flush=True)
+    with requests.get(url, headers=HEADERS, stream=True, timeout=60) as resp:
+        resp.raise_for_status()
+        total = int(resp.headers.get("content-length") or 0)
+        got = 0
+        last_report = 0
+        with open(tmp, "wb") as f:
+            for chunk in resp.iter_content(1024 * 1024):
+                if not chunk:
+                    continue
+                f.write(chunk)
+                got += len(chunk)
+                if total and got - last_report >= 8 * 1024 * 1024:
+                    print(f"  {got / 1e6:.0f}/{total / 1e6:.0f} MB", flush=True)
+                    last_report = got
+    os.replace(tmp, dest)
+    print(f"Saved {dest} ({os.path.getsize(dest) / 1e6:.0f} MB)", flush=True)
+    return dest
+
+
+def write_businesses(path: str, businesses: list[dict]) -> None:
+    out_dir = os.path.dirname(path)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(businesses, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+    print(f"Wrote results to {path}")
 
 
 def overpass_area_id(osm_type: str, osm_id) -> int:
@@ -379,7 +510,12 @@ def main():
     parser.add_argument("-o", "--output", default="businesses.json", help="Output JSON file path")
     parser.add_argument(
         "--from-pbf",
-        help="Read website tags from a local OSM PBF (Geofabrik extract) instead of Overpass",
+        help="Read website tags from this local OSM PBF instead of downloading Geofabrik",
+    )
+    parser.add_argument(
+        "--overpass",
+        action="store_true",
+        help="Fetch live via Overpass instead of a Geofabrik PBF",
     )
     parser.add_argument(
         "--merge",
@@ -389,16 +525,28 @@ def main():
     parser.add_argument(
         "--by-area",
         action="store_true",
-        help="Clip to the OSM boundary and fetch in tiles (use for countries)",
+        help="With --overpass, clip to the OSM boundary and fetch in tiles (use for countries)",
     )
     parser.add_argument("--tile-deg", type=float, default=1.0, help="Tile size in degrees")
     parser.add_argument(
         "--workers", type=int, default=3, help="Tiles to fetch in parallel (--by-area)"
     )
     args = parser.parse_args()
+    if args.by_area and not args.overpass:
+        print("--by-area only applies to Overpass; implying --overpass.", flush=True)
+        args.overpass = True
 
+    bbox = None
     if args.from_pbf:
-        businesses = extract_from_pbf(args.from_pbf)
+        if args.area:
+            print(f"Geocoding '{args.area}' to clip the PBF...", flush=True)
+            try:
+                display_name, bbox, _osm, _hit = geocode_area(args.area)
+            except (requests.RequestException, ValueError) as e:
+                sys.exit(f"Geocoding failed: {e}")
+            print(f"Resolved to: {display_name}")
+            print(f"Bounding box (south, west, north, east): {bbox}")
+        businesses = extract_from_pbf(args.from_pbf, bbox=bbox)
         print(f"Kept {len(businesses)} unique elements with a usable website.")
         if args.merge and os.path.exists(args.output):
             with open(args.output, encoding="utf-8") as f:
@@ -435,11 +583,31 @@ def main():
 
     print(f"Geocoding '{area}'...")
     try:
-        display_name, bbox, (osm_type, osm_id) = geocode_area(area)
+        display_name, bbox, (osm_type, osm_id), hit = geocode_area(area)
     except (requests.RequestException, ValueError) as e:
         sys.exit(f"Geocoding failed: {e}")
     print(f"Resolved to: {display_name}")
     print(f"Bounding box (south, west, north, east): {bbox}")
+
+    if not args.overpass:
+        try:
+            extract = resolve_geofabrik_extract(area, hit)
+        except ValueError as e:
+            sys.exit(str(e))
+        pbf_url = extract["urls"]["pbf"]
+        print(
+            f"Using Geofabrik extract {extract.get('id')} "
+            f"({extract.get('name')}) — daily PBF, nodes/ways only.",
+            flush=True,
+        )
+        try:
+            pbf_path = download_geofabrik_pbf(pbf_url)
+        except requests.RequestException as e:
+            sys.exit(f"Geofabrik download failed: {e}")
+        businesses = extract_from_pbf(pbf_path, bbox=bbox)
+        print(f"Kept {len(businesses)} unique elements with a usable website.")
+        write_businesses(args.output, businesses)
+        return
 
     time.sleep(1)  # be polite to Nominatim before hitting Overpass
 
@@ -499,13 +667,7 @@ def main():
             print(f"Dropped {dropped} elements centred outside the bounding box.")
         businesses = inside
 
-    out_dir = os.path.dirname(args.output)
-    if out_dir:
-        os.makedirs(out_dir, exist_ok=True)
-    with open(args.output, "w", encoding="utf-8") as f:
-        json.dump(businesses, f, indent=2, ensure_ascii=False)
-
-    print(f"Wrote results to {args.output}")
+    write_businesses(args.output, businesses)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,21 @@
+{
+  "name": "rusyn",
+  "codes": [
+    "rue"
+  ],
+  "switch_labels": [
+    "rusyn",
+    "русинськый"
+  ],
+  "scripts": [
+    "cyrillic"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "русинська",
+    "русинськый",
+    "русины",
+    "русиньскый",
+    "руснак"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "name": "papiamento",
+  "codes": [
+    "pap"
+  ],
+  "switch_labels": [
+    "papiamento",
+    "papiamentu",
+    "papiamen",
+    "papiaments"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "suppresses": [
+    "dutch"
+  ],
+  "words": [
+    "awor",
+    "ayera",
+    "bini",
+    "boneiru",
+    "bonbini",
+    "danki",
+    "dushi",
+    "hopi",
+    "kiko",
+    "kon",
+    "korsou",
+    "kòrsou",
+    "kumpra",
+    "mañan",
+    "masha",
+    "papiamentu",
+    "papiamento",
+    "pasobra",
+    "porfabor",
+    "promé",
+    "semper",
+    "trese",
+    "turhende",
+    "unda"
+  ]
+}

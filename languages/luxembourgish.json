@@ -1,0 +1,50 @@
+{
+  "name": "luxembourgish",
+  "codes": [
+    "lb",
+    "ltz"
+  ],
+  "switch_labels": [
+    "luxembourgish",
+    "lëtzebuergesch",
+    "letzebuergesch",
+    "luxembourgeois",
+    "luxemburgisch",
+    "люксембурзька"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "suppresses": [
+    "german",
+    "albanian"
+  ],
+  "words": [
+    "benotzer",
+    "doheem",
+    "géif",
+    "ginn",
+    "hutt",
+    "iech",
+    "iwwer",
+    "kënnt",
+    "lëtzebuerg",
+    "lëtzebuergesch",
+    "méi",
+    "mäin",
+    "passwuert",
+    "säit",
+    "sichen",
+    "sidd",
+    "wëllkomm",
+    "wëllt",
+    "är",
+    "dateschutz",
+    "duerno",
+    "heemesäit",
+    "nächst",
+    "ofmellen",
+    "virdrun"
+  ]
+}

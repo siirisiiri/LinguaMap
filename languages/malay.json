@@ -1,0 +1,61 @@
+{
+  "name": "malay",
+  "codes": [
+    "ms",
+    "zsm"
+  ],
+  "switch_labels": [
+    "malay",
+    "bahasa melayu",
+    "bahasa malaysia",
+    "melayu",
+    "malais",
+    "malaisien",
+    "malayo",
+    "malaiisch",
+    "малайська"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "suppresses": [
+    "indonesian"
+  ],
+  "words": [
+    "akaun",
+    "aktiviti",
+    "automatik",
+    "awak",
+    "carian",
+    "disember",
+    "emel",
+    "faham",
+    "hakcipta",
+    "hantar",
+    "iaitu",
+    "ialah",
+    "invois",
+    "katalaluan",
+    "kemaskini",
+    "kualiti",
+    "laman",
+    "lesen",
+    "maklumat",
+    "nombor",
+    "peribadi",
+    "pautan",
+    "perkhidmatan",
+    "perisian",
+    "perlembagaan",
+    "ringgit",
+    "sesawang",
+    "seterusnya",
+    "sila",
+    "syarikat",
+    "telefon",
+    "tetapan",
+    "universiti",
+    "wang"
+  ]
+}

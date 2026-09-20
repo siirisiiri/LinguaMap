@@ -1,0 +1,45 @@
+{
+  "name": "romanian",
+  "codes": [
+    "ro",
+    "ron",
+    "rum",
+    "mo",
+    "mol"
+  ],
+  "switch_labels": [
+    "romanian",
+    "română",
+    "romana",
+    "moldovenească",
+    "румунська"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "acasă",
+    "această",
+    "acest",
+    "contactați",
+    "către",
+    "despre",
+    "este",
+    "informații",
+    "mulțumim",
+    "pagina",
+    "pentru",
+    "românește",
+    "română",
+    "servicii",
+    "sunt",
+    "și"
+  ],
+  "exclusive_letters": {
+    "script": "latin",
+    "letters": "ășț",
+    "min_hits": 4,
+    "min_share": 0.003
+  }
+}

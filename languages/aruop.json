@@ -1,0 +1,53 @@
+{
+  "name": "aruop",
+  "codes": [
+    "lsr"
+  ],
+  "switch_labels": [
+    "aruop",
+    "srenge",
+    "lawu srenge",
+    "lauisaranga",
+    "lau'u",
+    "alatil"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "alatil",
+    "apee",
+    "aruop",
+    "atauka",
+    "eldi",
+    "lau'u",
+    "lauisaranga",
+    "lausurankin",
+    "lawu",
+    "makenti",
+    "mendi",
+    "mkendi",
+    "neeti",
+    "nendi",
+    "nongal",
+    "nuŋku",
+    "rkondung",
+    "sangi",
+    "sanye",
+    "simi",
+    "srenge",
+    "wantu",
+    "wasiye",
+    "wiye",
+    "wusu",
+    "yamata",
+    "yaŋkole",
+    "yimi",
+    "yimpa",
+    "yimpu",
+    "yimá",
+    "ymboyi",
+    "yolta"
+  ]
+}

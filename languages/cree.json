@@ -1,0 +1,30 @@
+{
+  "name": "cree",
+  "codes": [
+    "cr",
+    "cre",
+    "cwd",
+    "csw",
+    "crk"
+  ],
+  "switch_labels": [
+    "cree",
+    "nêhiyawêwin",
+    "nehiyawewin"
+  ],
+  "scripts": [
+    "latin",
+    "syllabics"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "cree",
+    "iyiniw",
+    "nehiyaw",
+    "nehiyawak",
+    "nehiyawewin",
+    "nêhiyaw",
+    "nêhiyawêwin",
+    "ᓀᐦᐃᔭᐍᐏᐣ"
+  ]
+}

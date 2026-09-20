@@ -1,0 +1,39 @@
+{
+  "name": "crimean tatar",
+  "codes": [
+    "crh"
+  ],
+  "switch_labels": [
+    "crimean tatar",
+    "qırımtatarca",
+    "kırımtatarca",
+    "къырымтатарджа",
+    "кримськотатарська"
+  ],
+  "scripts": [
+    "latin",
+    "cyrillic"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "qırım",
+    "qırımtatar",
+    "qırımtatarca",
+    "qırımtatarlar",
+    "къырым",
+    "къырымтатар",
+    "къырымтатарджа"
+  ],
+  "exclusive_letters": {
+    "script": "latin",
+    "letters": "ı",
+    "min_hits": 4,
+    "min_share": 0.002
+  },
+  "cyrillic_sign": {
+    "mode": "digraph",
+    "letter": "ъ",
+    "leaders": "кгн",
+    "min_hits": 3
+  }
+}

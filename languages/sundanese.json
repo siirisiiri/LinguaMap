@@ -1,0 +1,57 @@
+{
+  "name": "sundanese",
+  "codes": [
+    "su",
+    "sun"
+  ],
+  "switch_labels": [
+    "sundanese",
+    "basa sunda",
+    "bahasa sunda",
+    "sunda",
+    "soudanais",
+    "sundanesisch",
+    "сунданська"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "suppresses": [
+    "indonesian"
+  ],
+  "words": [
+    "abdi",
+    "acan",
+    "anjeun",
+    "aya",
+    "ayeuna",
+    "enjing",
+    "hatur",
+    "hayang",
+    "hoyong",
+    "ieu",
+    "imah",
+    "iraha",
+    "isukan",
+    "kamari",
+    "kanggo",
+    "kumaha",
+    "kudu",
+    "lebet",
+    "mangga",
+    "naon",
+    "nuhun",
+    "nyuhunkeun",
+    "punten",
+    "saha",
+    "sareng",
+    "sonten",
+    "sunda",
+    "teu",
+    "tingali",
+    "urang",
+    "wewengkon",
+    "wilujeng"
+  ]
+}

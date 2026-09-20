@@ -1,0 +1,29 @@
+{
+  "name": "dene",
+  "codes": [
+    "chp",
+    "den",
+    "scs"
+  ],
+  "switch_labels": [
+    "dene",
+    "denesuline",
+    "chipewyan"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "chipewyan",
+    "dene",
+    "denesuline",
+    "denesuliné",
+    "denésuliné",
+    "dëne",
+    "sahtu",
+    "sahtú",
+    "tlicho",
+    "tłı̨chǫ"
+  ]
+}

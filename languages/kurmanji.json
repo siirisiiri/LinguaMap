@@ -1,0 +1,62 @@
+{
+  "name": "kurmanji",
+  "codes": [
+    "kmr",
+    "ku"
+  ],
+  "switch_labels": [
+    "kurmanji",
+    "northern kurdish",
+    "kurdî",
+    "kurdi",
+    "kurmancî",
+    "kurmanci",
+    "kurde",
+    "kurdisch",
+    "курдська"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "exclusive_letters": {
+    "script": "latin",
+    "letters": "îû",
+    "min_hits": 4,
+    "min_share": 0.006
+  },
+  "suppresses": [
+    "turkish",
+    "albanian",
+    "romanian"
+  ],
+  "words": [
+    "agahî",
+    "alîkarî",
+    "berhem",
+    "bikarhêner",
+    "daxistin",
+    "derbarê",
+    "dîtin",
+    "heye",
+    "hemû",
+    "kurd",
+    "kurdî",
+    "kurmancî",
+    "lêgerîn",
+    "malper",
+    "mîheng",
+    "navnîşan",
+    "nîne",
+    "seretayî",
+    "şandin",
+    "têketin",
+    "têkilî",
+    "tomarkirin",
+    "veşarî",
+    "xizmet",
+    "xwendin",
+    "zêdetir",
+    "ziman"
+  ]
+}

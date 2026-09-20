@@ -1,0 +1,25 @@
+{
+  "name": "mikmaq",
+  "codes": [
+    "mic"
+  ],
+  "switch_labels": [
+    "mi'kmaq",
+    "mikmaq",
+    "mi'kmaw"
+  ],
+  "scripts": [
+    "latin"
+  ],
+  "script_sufficient": false,
+  "words": [
+    "lnu",
+    "lnuismk",
+    "mi'kmaq",
+    "mi'kmaw",
+    "mikmaq",
+    "mikmaw",
+    "miꞌkmaq",
+    "miꞌkmaw"
+  ]
+}
