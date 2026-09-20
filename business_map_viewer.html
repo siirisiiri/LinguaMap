@@ -51,12 +51,6 @@
         font-weight: 600;
         white-space: nowrap;
       }
-      #stats {
-        font-size: 13px;
-        color: var(--muted);
-        margin-left: auto;
-        text-align: right;
-      }
       .mode-toggle {
         display: flex;
         border: 1px solid var(--line);
@@ -245,6 +239,7 @@
       #map {
         position: absolute;
         inset: 0;
+        background: #aad3df;
       }
       .leaflet-container {
         background: var(--paper);
@@ -263,6 +258,37 @@
         letter-spacing: 0.04em;
         color: var(--muted);
         margin: 0 0 8px;
+      }
+      .legend-heading {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin: 0 0 8px;
+      }
+      .legend-heading h2 {
+        margin: 0;
+      }
+      .legend-heading-actions {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+      .legend-heading-actions button {
+        border: none;
+        background: none;
+        color: var(--accent);
+        cursor: pointer;
+        font: inherit;
+        font-size: 11px;
+        padding: 0;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+      .legend-heading-actions button:disabled {
+        color: var(--muted);
+        cursor: default;
+        opacity: 0.55;
       }
       .legend-section + .legend-section {
         margin-top: 16px;
@@ -324,18 +350,6 @@
         font-variant-numeric: tabular-nums;
         padding-left: 6px;
       }
-      .scale-bar {
-        height: 10px;
-        border-radius: 999px;
-        margin: 10px 0 4px;
-        border: 1px solid var(--line);
-      }
-      .scale-labels {
-        display: flex;
-        justify-content: space-between;
-        font-size: 11px;
-        color: #8a8375;
-      }
       .leaflet-popup-content b {
         display: block;
         margin-bottom: 2px;
@@ -364,10 +378,10 @@
       #timeline {
         border-top: 1px solid var(--line);
         background: var(--paper);
-        padding: 10px 20px 12px;
+        padding: 4px 16px 5px;
         display: flex;
-        align-items: stretch;
-        gap: 16px;
+        align-items: center;
+        gap: 12px;
         flex-shrink: 0;
       }
       #timeline.hidden {
@@ -375,68 +389,58 @@
       }
       .time-controls {
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 4px;
-        width: 150px;
-        flex-shrink: 0;
-      }
-      .time-controls .row {
-        display: flex;
         align-items: center;
         gap: 8px;
+        flex-shrink: 0;
       }
       #playBtn {
         font: inherit;
-        width: 30px;
-        height: 30px;
+        font-size: 10px;
+        width: 22px;
+        height: 22px;
         border: 1px solid var(--line);
         border-radius: 50%;
         background: #fff;
-        color: var(--ink);
+        color: var(--muted);
         cursor: pointer;
         line-height: 1;
         flex-shrink: 0;
+        padding: 0;
       }
       #playBtn:hover {
         border-color: var(--accent);
         color: var(--accent);
       }
       #timeLabel {
-        font-size: 15px;
-        font-weight: 600;
+        font-size: 12px;
+        font-weight: 500;
         font-variant-numeric: tabular-nums;
+        color: var(--ink);
+        min-width: 4.6em;
       }
       #timeSummary {
-        font-size: 11px;
+        font-size: 12px;
         color: var(--muted);
-        line-height: 1.35;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
       }
       .time-track {
         flex: 1;
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 2px;
-      }
-      #timeChart {
-        width: 100%;
-        height: 62px;
-        display: block;
-        cursor: ew-resize;
-        border: 1px solid var(--line);
-        border-radius: 4px;
-        background: #fff;
+        gap: 0;
       }
       #timeSlider {
         width: 100%;
+        height: 14px;
         margin: 0;
-        accent-color: var(--accent);
+        accent-color: #8a8375;
       }
       .time-axis {
         display: flex;
         justify-content: space-between;
-        font-size: 11px;
+        font-size: 10px;
         color: #8a8375;
         font-variant-numeric: tabular-nums;
       }
@@ -489,7 +493,6 @@
             <div id="searchResults" class="search-results" hidden></div>
           </div>
         </form>
-        <div id="stats"></div>
         <nav id="breadcrumb" aria-label="Area hierarchy"></nav>
         <div id="mapMessage" role="status"></div>
       </header>
@@ -502,14 +505,11 @@
       </div>
       <div id="timeline" class="hidden">
         <div class="time-controls">
-          <div class="row">
-            <button type="button" id="playBtn" title="Play through time">▶</button>
-            <span id="timeLabel"></span>
-          </div>
-          <div id="timeSummary"></div>
+          <button type="button" id="playBtn" title="Play through time">▶</button>
+          <span id="timeLabel"></span>
+          <span id="timeSummary"></span>
         </div>
         <div class="time-track">
-          <canvas id="timeChart"></canvas>
           <input type="range" id="timeSlider" min="0" max="0" value="0" step="1"
                  aria-label="Time" />
           <div class="time-axis"><span id="timeStart"></span><span id="timeEnd"></span></div>
@@ -798,14 +798,22 @@
 
       // One world copy only: OSM tiles wrap by default, which repeats unmarked
       // maps beside the coloured overlay when you zoom out.
-      const WORLD_BOUNDS = L.latLngBounds([-85.06, -180], [85.06, 180]);
+      const WORLD_BOUNDS = L.latLngBounds(
+        L.latLng(-85.051128, -180),
+        L.latLng(85.051128, 180),
+      );
+      const WORLD_CENTER = [20, 0];
+
       const map = L.map("map", {
         zoomControl: true,
         preferCanvas: true,
         worldCopyJump: false,
+        minZoom: 1,
+        zoomSnap: 0.1,
+        zoomDelta: 0.5,
         maxBounds: WORLD_BOUNDS,
         maxBoundsViscosity: 1.0,
-      }).setView([20, 0], 2);
+      }).setView(WORLD_CENTER, 2);
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         noWrap: true,
@@ -814,6 +822,40 @@
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
       const markerLayer = L.layerGroup().addTo(map);
+
+      function worldFillZoom() {
+        const { x: width, y: height } = map.getSize();
+        if (!width || !height) return 2;
+        // One Web Mercator world is a 256 × 2^z square. Cover the pane so a
+        // single globe reads edge-to-edge; round up so it never undershoots.
+        const raw = Math.log2(Math.max(width, height) / 256) + 0.05;
+        const snap = map.options.zoomSnap || 0.1;
+        return Math.max(1, Math.min(Math.ceil(raw / snap) * snap, 8));
+      }
+
+      function lockToSingleWorld() {
+        map.setMinZoom(worldFillZoom());
+      }
+
+      function showWorld(animate) {
+        map.invalidateSize({ animate: false });
+        const zoom = worldFillZoom();
+        map.setMinZoom(zoom);
+        map.setView(WORLD_CENTER, zoom, { animate: Boolean(animate) });
+      }
+
+      function isWorldView() {
+        return hierarchy.length <= 1;
+      }
+
+      let worldFitTimer = 0;
+      function scheduleWorldFit() {
+        clearTimeout(worldFitTimer);
+        worldFitTimer = setTimeout(() => {
+          lockToSingleWorld();
+          if (isWorldView()) showWorld();
+        }, 50);
+      }
 
       let points = [];
       let datasets = [];
@@ -872,11 +914,19 @@
         return kind === "country" ? "subdivision_1" : "subdivision_2";
       }
 
-      // Timeline. Months are ints (year * 12 + month - 1) so the slider, the
-      // chart and the interval lookups all share one coordinate.
+      // Timeline. Months are ints (year * 12 + month - 1) so the slider and
+      // interval lookups share one coordinate. Only Ukraine (primary name) and
+      // Wales (Welsh on the name / name:cy) have OSM name history.
+      const TIMED_PLACES = {
+        ukraine: { dataset: "ukraine", useAvailable: false },
+        wales: { dataset: "wales", useAvailable: true },
+      };
+      let timeAvailable = false;
       let timeEnabled = false;
+      let timedPlace = null;
       let timeLo = 0;
       let timeHi = 0;
+      let timeStops = [];
       let currentMonth = 0;
       let playTimer = null;
       let seriesCache = null;
@@ -933,6 +983,7 @@
               langs: normalizeLanguages(b.language),
               staticLangs: normalizeLanguages(b.language),
               hist: parseHistory(b.lang_history),
+              historySource: b.history_source || "",
               dataset: set.name,
               authorityId: null,
               primaryLang: null,
@@ -991,14 +1042,58 @@
         return found;
       }
 
+      function datasetStem(name) {
+        return String(name || "").toLowerCase();
+      }
+
+      function langsAtState(st, place) {
+        if (!st) return [];
+        const spec = TIMED_PLACES[place];
+        if (spec && spec.useAvailable && st.available.length) return st.available.slice();
+        return st.primary ? [st.primary] : [];
+      }
+
+      /**
+       * Ukraine country (and its oblasts) or Wales (including UK › Wales).
+       * United Kingdom as a whole, and every other country, stay untimed.
+       */
+      function placeFromHierarchy() {
+        if (hierarchy.length <= 1) return null;
+        const names = hierarchy.slice(1).map((h) => String(h.name || "").toLowerCase());
+        if (names.includes("ukraine")) return "ukraine";
+        if (names.includes("wales") || names.includes("cymru")) return "wales";
+        const current = hierarchy[hierarchy.length - 1];
+        const isos = (current.features || [])
+          .map((f) => String((f.properties || {}).parent_iso || (f.properties || {}).iso || "").toUpperCase())
+          .filter(Boolean);
+        if (isos.length && isos.every((i) => i === "UA" || i.startsWith("UA-"))) return "ukraine";
+        if (isos.length && isos.every((i) => i === "GB-WLS")) return "wales";
+        return null;
+      }
+
       /** Push the selected month into the fields the rest of the app reads. */
       function applyTime() {
-        if (!timeEnabled) return;
+        if (!timeEnabled || !timedPlace) return;
+        const stem = TIMED_PLACES[timedPlace].dataset;
         points.forEach((p) => {
-          if (!p.hist) return; // datasets without history stay as loaded
-          const st = stateAt(p, currentMonth);
-          p.langs = st ? st.available : [];
-          p.primaryLang = st ? st.primary : null;
+          if (datasetStem(p.dataset) !== stem) return;
+          if (!p.hist) {
+            // Sites in the timed dataset with no name history drop out so
+            // today's website language does not freeze the heatmap.
+            p.langs = [];
+            p.primaryLang = null;
+            if (p.marker) {
+              p.marker.setStyle({ color: UNCLASSIFIED_COLOR, fillColor: UNCLASSIFIED_COLOR });
+            }
+            return;
+          }
+          const langs = langsAtState(stateAt(p, currentMonth), timedPlace);
+          p.langs = langs;
+          p.primaryLang = langs.includes("welsh")
+            ? "welsh"
+            : langs.includes("ukrainian")
+              ? "ukrainian"
+              : langs[0] || null;
           if (p.marker) {
             const color = p.primaryLang ? colorForLanguage(p.primaryLang) : UNCLASSIFIED_COLOR;
             p.marker.setStyle({ color, fillColor: color });
@@ -1006,36 +1101,87 @@
         });
       }
 
-      function initTimeline() {
-        const withHistory = points.filter((p) => p.hist);
-        timeEnabled = withHistory.length > 0;
-        document.getElementById("timeline").classList.toggle("hidden", !timeEnabled);
-        if (!timeEnabled) return;
-
+      function rebuildTimelineRange(place) {
+        const stem = TIMED_PLACES[place].dataset;
+        const withHistory = points.filter((p) => p.hist && datasetStem(p.dataset) === stem);
+        const stopSet = new Set();
         let lo = Infinity;
         let hi = -Infinity;
         withHistory.forEach((p) => {
           lo = Math.min(lo, p.hist[0].from);
           hi = Math.max(hi, p.hist[p.hist.length - 1].to);
+          p.hist.forEach((iv) => {
+            stopSet.add(iv.from);
+            stopSet.add(iv.to);
+          });
         });
         timeLo = lo;
         timeHi = Math.max(hi, lo);
-        currentMonth = timeHi;
+        timeStops = [...stopSet].filter((m) => m >= timeLo && m <= timeHi).sort((a, b) => a - b);
+        if (!timeStops.length) timeStops = [timeLo, timeHi];
+        currentMonth = timeStops[timeStops.length - 1];
 
         const slider = document.getElementById("timeSlider");
         slider.min = "0";
-        slider.max = String(timeHi - timeLo);
-        slider.value = String(currentMonth - timeLo);
+        slider.max = String(Math.max(0, timeStops.length - 1));
+        slider.value = String(timeStops.length - 1);
         document.getElementById("timeStart").textContent = monthLabel(timeLo);
         document.getElementById("timeEnd").textContent = monthLabel(timeHi);
-        applyTime();
+        invalidateTimeSeries();
       }
 
-      function seek(month) {
-        const next = Math.max(timeLo, Math.min(timeHi, month));
-        if (next === currentMonth) return;
+      function initTimeline() {
+        timeAvailable = points.some((p) => p.hist && TIMED_PLACES[datasetStem(p.dataset)]);
+      }
+
+      function historyInView() {
+        if (!timeAvailable) return null;
+        const place = placeFromHierarchy();
+        if (!place) return null;
+        const stem = TIMED_PLACES[place].dataset;
+        let scoped = 0;
+        let hist = 0;
+        points.forEach((p) => {
+          if (!inScope(p)) return;
+          scoped += 1;
+          if (p.hist && datasetStem(p.dataset) === stem) hist += 1;
+        });
+        if (hist >= 20 && hist >= scoped * 0.2) return place;
+        return null;
+      }
+
+      function restoreStaticLanguages() {
+        points.forEach((p) => {
+          p.langs = p.staticLangs.slice();
+          p.primaryLang = null;
+        });
+        assignPrimaryLanguages();
+      }
+
+      function syncTimeline() {
+        const place = historyInView();
+        const show = Boolean(place);
+        const was = timeEnabled;
+        if (place && place !== timedPlace) rebuildTimelineRange(place);
+        timedPlace = place;
+        timeEnabled = show;
+        const el = document.getElementById("timeline");
+        const wasHidden = el.classList.contains("hidden");
+        el.classList.toggle("hidden", !show);
+        if (show) applyTime();
+        else if (was) {
+          setPlaying(false);
+          restoreStaticLanguages();
+        }
+        if (wasHidden === show) map.invalidateSize();
+      }
+
+      function seekStop(index) {
+        const i = Math.max(0, Math.min(timeStops.length - 1, index));
+        const next = timeStops[i];
+        if (next === currentMonth && document.getElementById("timeSlider").value === String(i)) return;
         currentMonth = next;
-        document.getElementById("timeSlider").value = String(currentMonth - timeLo);
+        document.getElementById("timeSlider").value = String(i);
         applyTime();
         render();
       }
@@ -1054,17 +1200,18 @@
 
         points.forEach((p) => {
           if (!p.hist || !datasetEnabled(p) || disabledCategories.has(p.category)) return;
+          if (timedPlace && datasetStem(p.dataset) !== TIMED_PLACES[timedPlace].dataset) return;
           if (viewMode === "areas" && authorityFeatures.length && p.authorityId === null) return;
           for (let i = 0; i < p.hist.length; i++) {
-            const lang = p.hist[i].primary;
-            if (!lang) continue;
+            const langs = langsAtState(p.hist[i], timedPlace);
+            if (!langs.length) continue;
             const from = Math.max(timeLo, p.hist[i].from);
             const until = i + 1 < p.hist.length ? p.hist[i + 1].from - 1 : timeHi;
             for (let m = from; m <= Math.min(timeHi, until); m++) {
               const slot = counts[m - timeLo];
-              slot.set(lang, (slot.get(lang) || 0) + 1);
+              langs.forEach((lang) => slot.set(lang, (slot.get(lang) || 0) + 1));
               totals[m - timeLo] += 1;
-              overall.set(lang, (overall.get(lang) || 0) + 1);
+              langs.forEach((lang) => overall.set(lang, (overall.get(lang) || 0) + 1));
             }
           }
         });
@@ -1076,71 +1223,32 @@
         return seriesCache;
       }
 
-      function drawTimeChart() {
-        if (!timeEnabled) return;
-        const canvas = document.getElementById("timeChart");
-        const ratio = window.devicePixelRatio || 1;
-        const w = canvas.clientWidth;
-        const h = canvas.clientHeight;
-        if (!w || !h) return;
-        canvas.width = w * ratio;
-        canvas.height = h * ratio;
-        const ctx = canvas.getContext("2d");
-        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-        ctx.clearRect(0, 0, w, h);
-
-        const { counts, totals, order, span } = timeSeries();
-        const colWidth = w / span;
-
-        // Stacked shares, drawn as columns: one bar per month is both simpler
-        // and more honest than a smoothed area when coverage is patchy.
-        for (let i = 0; i < span; i++) {
-          const total = totals[i];
-          const x = i * colWidth;
-          if (!total) {
-            ctx.fillStyle = "#f0ede6";
-            ctx.fillRect(x, 0, Math.ceil(colWidth), h);
-            continue;
-          }
-          let y = 0;
-          order.forEach((lang) => {
-            const c = counts[i].get(lang) || 0;
-            if (!c) return;
-            const seg = (c / total) * h;
-            ctx.fillStyle = colorForLanguage(lang);
-            ctx.fillRect(x, y, Math.ceil(colWidth), Math.ceil(seg));
-            y += seg;
-          });
-        }
-
-        const cursorX = (currentMonth - timeLo + 0.5) * colWidth;
-        ctx.strokeStyle = "#1c1f26";
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(cursorX, 0);
-        ctx.lineTo(cursorX, h);
-        ctx.stroke();
-
-        updateTimeSummary();
-      }
-
       function updateTimeSummary() {
+        if (!timeEnabled) return;
+        document.getElementById("timeLabel").textContent = monthLabel(currentMonth);
         const { counts, totals, order } = timeSeries();
         const i = currentMonth - timeLo;
         const total = totals[i] || 0;
-        document.getElementById("timeLabel").textContent = monthLabel(currentMonth);
         if (!total) {
-          document.getElementById("timeSummary").textContent = "No sites observed yet";
+          document.getElementById("timeSummary").textContent = "";
           return;
         }
-        const top = order
+        const preferred = timedPlace === "wales" ? ["welsh", "english"]
+          : timedPlace === "ukraine" ? ["ukrainian", "russian"]
+          : [];
+        const rows = order
           .map((lang) => [lang, counts[i].get(lang) || 0])
           .filter(([, c]) => c)
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 2)
+          .sort((a, b) => {
+            const pa = preferred.indexOf(a[0]);
+            const pb = preferred.indexOf(b[0]);
+            if (pa !== -1 || pb !== -1) return (pa === -1 ? 99 : pa) - (pb === -1 ? 99 : pb);
+            return b[1] - a[1];
+          })
+          .slice(0, 2);
+        document.getElementById("timeSummary").textContent = rows
           .map(([lang, c]) => `${titleCase(lang)} ${pct(c / total)}`)
           .join(" · ");
-        document.getElementById("timeSummary").textContent = `${num(total)} observed — ${top}`;
       }
 
       function setPlaying(on) {
@@ -1148,11 +1256,14 @@
           clearInterval(playTimer);
           playTimer = null;
         }
-        document.getElementById("playBtn").textContent = on ? "❚❚" : "▶";
+        const btn = document.getElementById("playBtn");
+        if (btn) btn.textContent = on ? "❚❚" : "▶";
         if (!on) return;
         playTimer = setInterval(() => {
-          seek(currentMonth >= timeHi ? timeLo : currentMonth + 1);
-        }, 260);
+          const at = timeStops.indexOf(currentMonth);
+          const next = at < 0 || at >= timeStops.length - 1 ? 0 : at + 1;
+          seekStop(next);
+        }, 700);
       }
 
       /**
@@ -1455,7 +1566,7 @@
                 .join("<br>")
             : "";
           return (
-            `<b>${escapeHtml(p.name)}</b>${langLine}${history}<br>` +
+            `<b>${escapeHtml(p.name)}</b><br>${langLine}${history}<br>` +
             `${escapeHtml(p.rawCategory)}<br>${link}`
           );
         });
@@ -1591,6 +1702,7 @@
       function render() {
         areaStatsCache = null;
         shareScaleCache = null;
+        syncTimeline();
         refreshScope();
         if (viewMode === "areas") {
           markerLayer.clearLayers();
@@ -1601,34 +1713,12 @@
         }
         renderSidebar();
         renderBreadcrumb();
-        updateStats();
-        drawTimeChart();
+        updateTimeSummary();
       }
 
       /** Scope changed, so the per-month mix has to be recounted. */
       function invalidateTimeSeries() {
         seriesCache = null;
-      }
-
-      function updateStats() {
-        const el = document.getElementById("stats");
-        if (!points.length) {
-          el.textContent = "";
-          return;
-        }
-        if (viewMode === "areas") {
-          const withData = [...authorityStats().values()].filter((r) => r.classified).length;
-          const level = hierarchy[hierarchy.length - 1];
-          const where = level ? level.name : "world";
-          el.textContent = `${num(authorityFeatures.length)} ${KIND_LABEL[viewingKind()].toLowerCase()} areas in ${where} · ${num(withData)} with language data`;
-          return;
-        }
-        const visible = points.filter(isPointVisible).length;
-        const drawn = markerLayer.getLayers().length;
-        el.textContent =
-          drawn < visible
-            ? `${num(drawn)} drawn · ${num(visible)} of ${num(points.length)} sites match — zoom in for the rest`
-            : `${num(visible)} of ${num(points.length)} sites match`;
       }
 
       function setOverlay(html) {
@@ -1648,10 +1738,6 @@
         el.classList.toggle("info", tone === "info");
       }
 
-      function setProgress(text) {
-        document.getElementById("stats").textContent = text;
-      }
-
       // ----------------------------------------------------------------- sidebar
 
       function legendRow({ swatch, label, count, off, onClick }) {
@@ -1668,15 +1754,38 @@
         return item;
       }
 
-      function section(title) {
+      function renderLanguageSection() {
         const el = document.createElement("div");
         el.className = "legend-section";
-        el.innerHTML = `<h2>${title}</h2>`;
-        return el;
-      }
-
-      function renderLanguageSection() {
-        const el = section("Languages");
+        const heading = document.createElement("div");
+        heading.className = "legend-heading";
+        heading.innerHTML = "<h2>Languages</h2>";
+        if (scopedLanguages.length) {
+          const allOn = scopedLanguages.every(([lang]) => !disabledLanguages.has(lang));
+          const noneOn = scopedLanguages.every(([lang]) => disabledLanguages.has(lang));
+          const actions = document.createElement("div");
+          actions.className = "legend-heading-actions";
+          const selectAll = document.createElement("button");
+          selectAll.type = "button";
+          selectAll.textContent = "Select all";
+          selectAll.disabled = allOn;
+          selectAll.addEventListener("click", () => {
+            disabledLanguages.clear();
+            render();
+          });
+          const deselectAll = document.createElement("button");
+          deselectAll.type = "button";
+          deselectAll.textContent = "Deselect all";
+          deselectAll.disabled = noneOn;
+          deselectAll.addEventListener("click", () => {
+            scopedLanguages.forEach(([lang]) => disabledLanguages.add(lang));
+            render();
+          });
+          actions.appendChild(selectAll);
+          actions.appendChild(deselectAll);
+          heading.appendChild(actions);
+        }
+        el.appendChild(heading);
         if (!scopedLanguages.length) {
           const note = document.createElement("p");
           note.className = "legend-note";
@@ -1705,40 +1814,12 @@
         });
 
         if (viewMode === "areas") {
-          const note = document.createElement("p");
-          note.className = "legend-note";
-          note.style.margin = "10px 0 0";
           if (activeLanguages.length === 0) {
+            const note = document.createElement("p");
+            note.className = "legend-note";
+            note.style.margin = "10px 0 0";
             note.textContent = "Select at least one language to colour the map.";
-          } else if (activeLanguages.length === 1) {
-            note.textContent =
-              `Shade is the share of classified sites in ${titleCase(activeLanguages[0])}, ` +
-              "scaled to the strongest area in view.";
-          } else {
-            note.textContent =
-              "Hue is the leading language; shade is how far ahead it is. Pale areas are closely contested.";
-          }
-          el.appendChild(note);
-
-          if (activeLanguages.length === 1) {
-            const color = colorForLanguage(activeLanguages[0]);
-            const bar = document.createElement("div");
-            bar.className = "scale-bar";
-            bar.style.background = `linear-gradient(to right, ${mixToWhite(color, 0)}, ${color})`;
-            const labels = document.createElement("div");
-            labels.className = "scale-labels";
-            labels.innerHTML = `<span>0.0%</span><span>${pct(singleLanguageScale(activeLanguages[0]))}</span>`;
-            el.appendChild(bar);
-            el.appendChild(labels);
-          } else if (activeLanguages.length > 1) {
-            const bar = document.createElement("div");
-            bar.className = "scale-bar";
-            bar.style.background = `linear-gradient(to right, ${mixToWhite("#555555", LEAD_FLOOR)}, #555555)`;
-            const labels = document.createElement("div");
-            labels.className = "scale-labels";
-            labels.innerHTML = `<span>tied</span><span>uncontested</span>`;
-            el.appendChild(bar);
-            el.appendChild(labels);
+            el.appendChild(note);
           }
 
           el.appendChild(
@@ -1771,16 +1852,6 @@
           ? `${KIND_LABEL[kind]} · ${currentParent.name}`
           : "Countries";
         wrap.innerHTML = `<h2>${escapeHtml(title)}</h2>`;
-        const intro = document.createElement("p");
-        intro.className = "legend-note";
-        if (kind === "country") {
-          intro.textContent = "Click a country to open its subdivision 1 areas.";
-        } else if (kind === "subdivision_1") {
-          intro.textContent = `Click a subdivision 1 area to open subdivision 2.`;
-        } else {
-          intro.textContent = "Subdivision 2 is as far as the map drills.";
-        }
-        wrap.appendChild(intro);
         const stats = authorityStats();
         const rows = [...stats.values()].sort(
           (a, b) => b.classified - a.classified || a.feature.properties.name.localeCompare(b.feature.properties.name),
@@ -1836,48 +1907,6 @@
         }
 
         sidebar.appendChild(renderLanguageSection());
-
-        const cats = section("Categories");
-        scopedCategories.forEach(([category, count]) => {
-          const on = !disabledCategories.has(category);
-          cats.appendChild(
-            legendRow({
-              swatch: `<span class="legend-check"></span>`,
-              label: category,
-              count,
-              off: !on,
-              onClick: () => {
-                if (on) disabledCategories.add(category);
-                else disabledCategories.delete(category);
-                invalidateTimeSeries();
-                render();
-              },
-            }),
-          );
-        });
-        sidebar.appendChild(cats);
-
-        if (datasets.length > 1) {
-          const sets = section("Datasets");
-          datasets.forEach(({ name, count }) => {
-            const on = !disabledDatasets.has(name);
-            sets.appendChild(
-              legendRow({
-                swatch: `<span class="legend-check"></span>`,
-                label: name,
-                count,
-                off: !on,
-                onClick: () => {
-                  if (on) disabledDatasets.add(name);
-                  else disabledDatasets.delete(name);
-                  invalidateTimeSeries();
-                  render();
-                },
-              }),
-            );
-          });
-          sidebar.appendChild(sets);
-        }
       }
 
       // -------------------------------------------------------- area hierarchy
@@ -1907,6 +1936,7 @@
       }
 
       function fitToAreas() {
+        map.invalidateSize();
         const stats = areaStatsCache;
         const preferred = stats
           ? authorityFeatures.filter((f) => (stats.get(featureId(f)) || {}).classified)
@@ -1927,7 +1957,7 @@
         currentParent = level.osm_id ? { name: level.name, osm_id: level.osm_id } : null;
         assignAuthorities();
         render();
-        if (index === 0) map.setView([20, 0], 2);
+        if (index === 0) showWorld();
         else fitToAreas();
         warmNextLevel();
       }
@@ -2052,13 +2082,14 @@
       }
 
       async function fetchChildrenOfRelation(parent, { quiet = false, onPartial = null } = {}) {
+        const childKind = childKindOf(parent.kind || kindFromLevel(parent.admin_level));
+        if (childKind === "subdivision_2") return [];
         const cacheKey = "children:" + parent.osm_id;
         const cachedHit = authorityCache.get(cacheKey);
         if (cachedHit && cachedHit.length) return cachedHit;
         if (childrenRequests.has(cacheKey)) return childrenRequests.get(cacheKey);
         const report = quiet ? () => {} : (msg) => showMapMessage(msg, "info");
         const job = (async () => {
-          const childKind = childKindOf(parent.kind || kindFromLevel(parent.admin_level));
           report(`Listing ${KIND_LABEL[childKind].toLowerCase()} areas of ${parent.name}…`);
           const resp = await fetch("api/subdivisions?id=" + parent.osm_id);
           if (!resp.ok) throw new Error(`Could not list subdivisions of ${parent.name}.`);
@@ -2168,13 +2199,7 @@
           }
           const features = (await resp.json()).features || [];
           const isAdmin1 = (entry.url || "").includes("admin1");
-          const deeper = features.filter(
-            (f) => parseInt((f.properties || {}).admin_level || "4", 10) > 4,
-          ).length;
-          // Natural Earth "admin1" for some countries is really local
-          // authorities (UK counties). Skip those so OSM children become
-          // subdivision 1 instead (Wales, Scotland, England).
-          if (features.length < 2 || (isAdmin1 && deeper > features.length / 2)) {
+          if (features.length < 2) {
             authorityCache.set(cacheKey, []);
             return null;
           }
@@ -2271,23 +2296,10 @@
               (parentId && authorityCache.get("prebuilt:" + parentId));
             if (cached && cached.length) children = cached;
           }
-          if (!children) {
-            const parent = await resolveParent(feature);
-            if (!parent) {
-              showMapMessage(`No administrative area matches ${name}.`);
-              updateStats();
-              return;
-            }
-            parentId = parent.osm_id;
-            children = await fetchChildrenOfRelation(parent, { onPartial: paintPartial });
-            if (pushed && hierarchy[hierarchy.length - 1]) {
-              hierarchy[hierarchy.length - 1].osm_id = parentId;
-              currentParent = { name, osm_id: parentId };
-            }
-          }
-          if (!children.length) {
-            showMapMessage(`${name} has no subdivision areas to show.`);
-            updateStats();
+          if (!children || !children.length) {
+            showMapMessage("");
+            if (viewingKind() === "subdivision_1") focusFeature(feature);
+            else showMapMessage(`${name} has no subdivision areas to show.`);
             return;
           }
           showMapMessage("");
@@ -2350,6 +2362,7 @@
           }
         }
         render();
+        if (isWorldView()) showWorld();
         if (mode === "areas") warmNextLevel();
       }
 
@@ -2438,12 +2451,7 @@
 
         if (kind === "country") {
           let children = await loadPrebuiltChildren(hit.osm_id);
-          if (!children) {
-            children = await fetchChildrenOfRelation(hit, {
-              onPartial: (partial) => paintInto(hit.name, hit.osm_id, partial),
-            });
-          }
-          if (!children.length) throw new Error(`${hit.name} has no subdivision 1 areas.`);
+          if (!children || !children.length) throw new Error(`${hit.name} has no subdivision 1 areas.`);
           hierarchy = [
             { name: "World", osm_id: null, features: world },
             { name: hit.name, osm_id: hit.osm_id, features: children },
@@ -2463,18 +2471,7 @@
             }
           }
           if (parentId) {
-            let countryFeatures = await loadPrebuiltChildren(parentId);
-            if (!countryFeatures) {
-              countryFeatures = await fetchChildrenOfRelation(
-                {
-                  osm_id: parentId,
-                  name: parentName || "Country",
-                  admin_level: "2",
-                  kind: "country",
-                },
-                { quiet: true },
-              );
-            }
+            const countryFeatures = await loadPrebuiltChildren(parentId);
             if (countryFeatures && countryFeatures.length) {
               hierarchy.push({
                 name: parentName || "Country",
@@ -2484,16 +2481,20 @@
             }
           }
           let children = await loadPrebuiltChildren(hit.osm_id);
-          if (!children) {
-            children = await fetchChildrenOfRelation(hit, {
-              onPartial: (partial) => paintInto(hit.name, hit.osm_id, partial),
-            });
+          if (!children || !children.length) {
+            const siblings = hierarchy[hierarchy.length - 1] && hierarchy[hierarchy.length - 1].features;
+            const match = (siblings || []).find((f) => f.properties.osm_id === hit.osm_id);
+            if (match) {
+              currentParent = parentId ? { name: parentName || "Country", osm_id: parentId } : null;
+              authorityFeatures = siblings;
+              assignAuthorities();
+              render();
+              focusFeature(match);
+              showMapMessage("");
+              return;
+            }
+            throw new Error(`${hit.name} has no subdivision 2 areas.`);
           }
-          if (!children.length) {
-            const self = await fetchSelfFeature(hit);
-            children = self ? [self] : [];
-          }
-          if (!children.length) throw new Error(`${hit.name} has no subdivision 2 areas.`);
           if (hierarchy[hierarchy.length - 1].osm_id === hit.osm_id) {
             hierarchy[hierarchy.length - 1].features = children;
           } else {
@@ -2503,16 +2504,8 @@
           authorityFeatures = children;
         } else {
           if (hit.parent_osm_id) {
-            const siblings = await fetchChildrenOfRelation(
-              {
-                osm_id: hit.parent_osm_id,
-                name: hit.parent_name || hit.name,
-                admin_level: "4",
-                kind: "subdivision_1",
-              },
-              { quiet: true },
-            );
-            if (siblings.length) {
+            const siblings = await loadPrebuiltChildren(hit.parent_osm_id);
+            if (siblings && siblings.length) {
               hierarchy.push({
                 name: hit.parent_name || "Subdivision 1",
                 osm_id: hit.parent_osm_id,
@@ -2551,7 +2544,6 @@
           await applySearchHit(hit);
         } catch (err) {
           showMapMessage(err.message || String(err));
-          updateStats();
         }
       }
 
@@ -2603,7 +2595,6 @@
           await openSearchHit(hits[0]);
         } catch (err) {
           showMapMessage(err.message || String(err));
-          updateStats();
         }
       });
 
@@ -2613,36 +2604,8 @@
 
       document.getElementById("timeSlider").addEventListener("input", (e) => {
         setPlaying(false);
-        seek(timeLo + Number(e.target.value));
+        seekStop(Number(e.target.value));
       });
-
-      // Dragging anywhere on the chart scrubs, which is the gesture people try
-      // first once they see a timeline.
-      (() => {
-        const canvas = document.getElementById("timeChart");
-        let scrubbing = false;
-        const monthAt = (event) => {
-          const rect = canvas.getBoundingClientRect();
-          const frac = (event.clientX - rect.left) / rect.width;
-          return timeLo + Math.round(frac * (timeHi - timeLo));
-        };
-        canvas.addEventListener("pointerdown", (e) => {
-          if (!timeEnabled) return;
-          scrubbing = true;
-          canvas.setPointerCapture(e.pointerId);
-          setPlaying(false);
-          seek(monthAt(e));
-        });
-        canvas.addEventListener("pointermove", (e) => {
-          if (scrubbing) seek(monthAt(e));
-        });
-        const stop = (e) => {
-          scrubbing = false;
-          if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
-        };
-        canvas.addEventListener("pointerup", stop);
-        canvas.addEventListener("pointercancel", stop);
-      })();
 
       map.on("moveend", () => {
         if (viewMode === "points") {
@@ -2650,10 +2613,9 @@
           updateStats();
         }
       });
-      window.addEventListener("resize", () => {
-        map.invalidateSize();
-        drawTimeChart();
-      });
+      window.addEventListener("resize", scheduleWorldFit);
+      new ResizeObserver(scheduleWorldFit).observe(document.getElementById("map"));
+      map.whenReady(scheduleWorldFit);
 
       // -------------------------------------------------------------------- boot
 

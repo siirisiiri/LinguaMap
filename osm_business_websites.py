@@ -15,8 +15,9 @@ them. --by-area only applies to --overpass.
 Usage:
     python osm_business_websites.py "Switzerland" -o data/Switzerland.json
     python osm_business_websites.py "Cambridge, MA"
-    python osm_business_websites.py "Ukraine" --overpass --by-area -o data/ukraine.json
-    python osm_business_websites.py --from-pbf .geofabrik/switzerland-latest.osm.pbf -o data/Switzerland.json
+    python osm_business_websites.py "Ukraine" --by-area -o data/Ukraine.json
+    python osm_business_websites.py --from-pbf .geofabrik/ukraine-latest.osm.pbf -o data/Ukraine.json
+    python osm_business_websites.py            # will prompt interactively
 """
 
 import argparse
@@ -75,6 +76,22 @@ CATEGORY_TAG_KEYS = [
 ]
 
 
+def language_from_name_tags(tags):
+    """Ukrainian/Russian from the public OSM name, when the letters decide it."""
+    try:
+        from osm_name_history import classify_tags
+    except ImportError:
+        return None
+    primary, available = classify_tags(tags)
+    if not primary:
+        return None
+    langs = [primary]
+    for lang in available:
+        if lang not in langs:
+            langs.append(lang)
+    return langs
+
+
 def record_from_tags(osm_type, osm_id, tags, lat, lon):
     """Build the output dict from OSM tags + a point. Shared by Overpass and PBF."""
     website = tags.get("website") or tags.get("contact:website")
@@ -82,7 +99,7 @@ def record_from_tags(osm_type, osm_id, tags, lat, lon):
         return None
     matched_key = next((k for k in CATEGORY_TAG_KEYS if k in tags), None)
     category = f"{matched_key}={tags[matched_key]}" if matched_key else "unclassified"
-    return {
+    rec = {
         "name": tags.get("name", "(unnamed)"),
         "website": website,
         "category": category,
@@ -91,6 +108,11 @@ def record_from_tags(osm_type, osm_id, tags, lat, lon):
         "osm_type": osm_type,
         "osm_id": osm_id,
     }
+    langs = language_from_name_tags(tags)
+    if langs:
+        rec["language"] = langs
+        rec["history_source"] = "osm_name"
+    return rec
 
 
 def _norm_name(value: str) -> str:
@@ -496,6 +518,11 @@ def main():
         help="Fetch live via Overpass instead of a Geofabrik PBF",
     )
     parser.add_argument(
+        "--merge",
+        action="store_true",
+        help="Merge PBF records into an existing --output file instead of replacing it",
+    )
+    parser.add_argument(
         "--by-area",
         action="store_true",
         help="With --overpass, clip to the OSM boundary and fetch in tiles (use for countries)",
@@ -521,7 +548,33 @@ def main():
             print(f"Bounding box (south, west, north, east): {bbox}")
         businesses = extract_from_pbf(args.from_pbf, bbox=bbox)
         print(f"Kept {len(businesses)} unique elements with a usable website.")
-        write_businesses(args.output, businesses)
+        if args.merge and os.path.exists(args.output):
+            with open(args.output, encoding="utf-8") as f:
+                existing = json.load(f)
+            by_key = {(r.get("osm_type"), r.get("osm_id")): r for r in existing}
+            added = 0
+            for rec in businesses:
+                key = (rec["osm_type"], rec["osm_id"])
+                old = by_key.get(key)
+                if old:
+                    # Website classifications and time series always win over
+                    # the name-tag guess attached during a PBF backfill.
+                    for field in ("language", "lang_history", "history_source"):
+                        if old.get(field):
+                            rec[field] = old[field]
+                    by_key[key] = rec
+                else:
+                    by_key[key] = rec
+                    added += 1
+            businesses = list(by_key.values())
+            print(f"Merged into {args.output}: +{added} new, {len(businesses)} total.")
+        out_dir = os.path.dirname(args.output)
+        if out_dir:
+            os.makedirs(out_dir, exist_ok=True)
+        with open(args.output, "w", encoding="utf-8") as f:
+            json.dump(businesses, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+        print(f"Wrote results to {args.output}")
         return
 
     area = args.area or input("Enter an area of interest (e.g. 'Cambridge, MA'): ").strip()

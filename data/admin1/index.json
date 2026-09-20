@@ -15,7 +15,7 @@
   "url": "data/admin1/CO.geojson"
  },
  "1311341": {
-  "count": 52,
+  "count": 19,
   "iso": "ES",
   "url": "data/admin1/ES.geojson"
  },
@@ -140,7 +140,7 @@
   "url": "data/admin1/BW.geojson"
  },
  "192307": {
-  "count": 14,
+  "count": 8,
   "iso": "GR",
   "url": "data/admin1/GR.geojson"
  },
@@ -415,7 +415,7 @@
   "url": "data/admin1/SI.geojson"
  },
  "2202162": {
-  "count": 101,
+  "count": 14,
   "iso": "FR",
   "url": "data/admin1/FR.geojson"
  },
@@ -645,7 +645,7 @@
   "url": "data/admin1/AZ.geojson"
  },
  "365331": {
-  "count": 110,
+  "count": 20,
   "iso": "IT",
   "url": "data/admin1/IT.geojson"
  },
@@ -710,7 +710,7 @@
   "url": "data/admin1/CH.geojson"
  },
  "52411": {
-  "count": 11,
+  "count": 3,
   "iso": "BE",
   "url": "data/admin1/BE.geojson"
  },
@@ -795,12 +795,12 @@
   "url": "data/admin1/UA.geojson"
  },
  "62149": {
-  "count": 232,
+  "count": 4,
   "iso": "GB",
   "url": "data/admin1/GB.geojson"
  },
  "62273": {
-  "count": 34,
+  "count": 4,
   "iso": "IE",
   "url": "data/admin1/IE.geojson"
  },

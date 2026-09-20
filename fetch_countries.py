@@ -78,6 +78,68 @@ def natural_earth():
         return json.loads(resp.read().decode("utf-8"))
 
 
+# Natural Earth 110m draws Crimea as its own Russia polygon
+# (~32.5–36.5E, 44.4–46.2N). This project follows OSM: Crimea is Ukraine.
+CRIMEA_BOX = (32.0, 44.0, 37.0, 46.8)  # west, south, east, north
+
+
+def _ring_bbox(ring):
+    xs = [p[0] for p in ring]
+    ys = [p[1] for p in ring]
+    return min(xs), min(ys), max(xs), max(ys)
+
+
+def _geom_polygons(geom):
+    if not geom:
+        return []
+    if geom.get("type") == "Polygon":
+        return [geom["coordinates"]]
+    if geom.get("type") == "MultiPolygon":
+        return list(geom["coordinates"])
+    return []
+
+
+def _polygons_to_geom(polys):
+    if not polys:
+        return None
+    if len(polys) == 1:
+        return {"type": "Polygon", "coordinates": polys[0]}
+    return {"type": "MultiPolygon", "coordinates": polys}
+
+
+def _is_crimea_poly(poly):
+    if not poly or not poly[0]:
+        return False
+    west, south, east, north = _ring_bbox(poly[0])
+    cw, cs, ce, cn = CRIMEA_BOX
+    return west >= cw and east <= ce and south >= cs and north <= cn
+
+
+def apply_crimea_to_ukraine(features):
+    """Move the Crimea 110m polygon from Russia onto Ukraine."""
+    russia = ukraine = None
+    for feat in features:
+        iso = (feat.get("properties") or {}).get("iso")
+        if iso == "RU":
+            russia = feat
+        elif iso == "UA":
+            ukraine = feat
+    if not russia or not ukraine:
+        return False
+    ru_polys = _geom_polygons(russia.get("geometry"))
+    crimea = [poly for poly in ru_polys if _is_crimea_poly(poly)]
+    if not crimea:
+        return False
+    russia["geometry"] = _polygons_to_geom(
+        [poly for poly in ru_polys if not _is_crimea_poly(poly)]
+    )
+    ua_polys = _geom_polygons(ukraine.get("geometry"))
+    already = any(_is_crimea_poly(poly) for poly in ua_polys)
+    if not already:
+        ukraine["geometry"] = _polygons_to_geom(ua_polys + crimea)
+    return True
+
+
 def main():
     by_iso = osm_countries()
     ne = natural_earth()
@@ -99,6 +161,8 @@ def main():
                 "geometry": feat["geometry"],
             }
         )
+    if apply_crimea_to_ukraine(features):
+        print("Moved Crimea from Russia to Ukraine on the world outline")
     print(f"Joined {len(features)} countries; unmatched NE rows: {unmatched[:12]}")
     out = {"type": "FeatureCollection", "features": features}
     path = "data/countries.geojson"
