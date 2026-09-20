@@ -32,6 +32,6 @@
   ],
   "failed": [],
   "current": "Russia, Argentina, Brazil",
-  "updated_at": "2026-09-20T13:37:38.221520+00:00",
+  "updated_at": "2026-09-20T13:41:28.855954+00:00",
   "phase": "crawls=['Russia', 'Argentina'] fetches=['Brazil']"
 }
