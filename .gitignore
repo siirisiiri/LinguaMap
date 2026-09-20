@@ -224,4 +224,10 @@ __marimo__/
 .geofabrik/
 *.osm.pbf
 
-data/
+# Generated datasets — only subdivision outlines are versioned
+/data/*
+!/data/admin1/
+!/data/admin1/**
+!/data/admin2/
+!/data/admin2/**
+
