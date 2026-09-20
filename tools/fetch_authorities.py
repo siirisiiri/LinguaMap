@@ -12,8 +12,11 @@ import argparse
 import json
 import sys
 import time
+from pathlib import Path
 
 import requests
+
+ROOT = Path(__file__).resolve().parent.parent
 
 OVERPASS_URLS = [
     "https://lz4.overpass-api.de/api/interpreter",
@@ -230,9 +233,9 @@ def bbox_from_businesses(path):
 
 def main():
     parser = argparse.ArgumentParser(description="Fetch OSM local-authority polygons.")
-    parser.add_argument("--businesses", default="data/businesses.json")
+    parser.add_argument("--businesses", default=str(ROOT / "data" / "businesses.json"))
     parser.add_argument("--admin-level", default="6")
-    parser.add_argument("-o", "--output", default="data/authorities.geojson")
+    parser.add_argument("-o", "--output", default=str(ROOT / "data" / "authorities.geojson"))
     args = parser.parse_args()
 
     south, west, north, east = bbox_from_businesses(args.businesses)

@@ -11,8 +11,12 @@ import json
 import sys
 import time
 import urllib.request
+from pathlib import Path
 
 import requests
+
+ROOT = Path(__file__).resolve().parent.parent
+COUNTRIES_PATH = ROOT / "data" / "countries.geojson"
 
 OVERPASS_URLS = [
     "https://lz4.overpass-api.de/api/interpreter",
@@ -165,10 +169,10 @@ def main():
         print("Moved Crimea from Russia to Ukraine on the world outline")
     print(f"Joined {len(features)} countries; unmatched NE rows: {unmatched[:12]}")
     out = {"type": "FeatureCollection", "features": features}
-    path = "data/countries.geojson"
-    with open(path, "w", encoding="utf-8") as f:
+    COUNTRIES_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with COUNTRIES_PATH.open("w", encoding="utf-8") as f:
         json.dump(out, f)
-    print(f"Wrote {path}")
+    print(f"Wrote {COUNTRIES_PATH}")
 
 
 if __name__ == "__main__":

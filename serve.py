@@ -6,9 +6,9 @@ Usage: python3 serve.py [--port 8000] [--no-browser]
 The viewer asks /api/datasets which files to load, so dropping a new
 data/<Region>.json in place is enough to make it show up on the next refresh.
 Country and subdivision-1 boundaries are served from data/, prebuilt by
-fetch_countries.py and fetch_admin1.py. Subdivision 2 uses data/admin2 when
-present (fetch_admin2.py); otherwise it lists OSM child areas and draws
-cached OSM geometries.
+tools/fetch_countries.py and tools/fetch_admin1.py. Subdivision 2 uses
+data/admin2 when present (tools/fetch_admin2.py); otherwise it lists OSM
+child areas and draws cached OSM geometries.
 """
 
 from __future__ import annotations

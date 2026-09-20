@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Fetch OSM websites and classify languages, country by country.
 
-Default coverage is Europe, Asia, and Australia/Oceania. Existing data/*.json
+Default coverage is Europe, Asia, Australia/Oceania, then Africa, Central
+America, South America, the United States, and Canada. Existing data/*.json
 files are never overwritten; language crawls resume with --skip-good.
 
 Usage:
     python3 run_world_pipeline.py
     python3 run_world_pipeline.py --continents europe,asia,australia-oceania
-    python3 run_world_pipeline.py --continents asia,australia-oceania
+    python3 run_world_pipeline.py --continents africa,central-america,south-america,north-america
     python3 run_world_pipeline.py --start denmark
 """
 
@@ -15,6 +16,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import signal
 import subprocess
 import sys
 import time
@@ -107,16 +110,29 @@ CONTINENT_ORDER = [
     "central-america",
     "south-america",
 ]
-DEFAULT_CONTINENTS = ("europe", "asia", "australia-oceania")
+DEFAULT_CONTINENTS = (
+    "europe",
+    "asia",
+    "australia-oceania",
+    "africa",
+    "central-america",
+    "south-america",
+    "north-america",
+)
 # Large extracts last so smaller countries show up on the map sooner.
 ASIA_LAST = ["pakistan", "iran", "indonesia", "japan", "india", "china"]
 OCEANIA_LAST = ["new-zealand", "australia"]
+AFRICA_LAST = ["egypt", "nigeria", "south-africa"]
+SOUTH_AMERICA_LAST = ["argentina", "brazil"]
+# User asked for USA and Canada, not Mexico/Greenland.
+NORTH_AMERICA_KEEP = {"canada", "us"}
 
 DISPLAY_NAMES = {
     "bosnia-herzegovina": "Bosnia and Herzegovina",
     "congo-brazzaville": "Republic of the Congo",
     "congo-democratic-republic": "Democratic Republic of the Congo",
     "czech-republic": "Czechia",
+    "haiti-and-domrep": "Haiti and Dominican Republic",
     "ireland-and-northern-ireland": "Ireland",
     "macedonia": "North Macedonia",
     "swaziland": "Eswatini",
@@ -222,6 +238,13 @@ def ordered_countries(extracts: list[dict], continents: list[str]) -> list[dict]
             group.sort(key=lambda item: (item["id"] in ASIA_LAST, item["display"]))
         elif continent == "australia-oceania":
             group.sort(key=lambda item: (item["id"] in OCEANIA_LAST, item["display"]))
+        elif continent == "africa":
+            group.sort(key=lambda item: (item["id"] in AFRICA_LAST, item["display"]))
+        elif continent == "south-america":
+            group.sort(key=lambda item: (item["id"] in SOUTH_AMERICA_LAST, item["display"]))
+        elif continent == "north-america":
+            group = [item for item in group if item["id"] in NORTH_AMERICA_KEEP]
+            group.sort(key=lambda item: (item["id"] == "us", item["display"]))
         else:
             group.sort(key=lambda item: item["display"])
         for item in group:
@@ -423,13 +446,86 @@ def parse_continents(raw: str | None, europe_only: bool) -> list[str]:
     return names
 
 
+def read_status(path: Path) -> dict:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def pid_alive(pid: int) -> bool:
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    return True
+
+
+def europe_names_from_status(status: dict) -> list[str]:
+    queue = status.get("queue") or []
+    if "Algeria" in queue:
+        return queue[: queue.index("Algeria")]
+    return queue
+
+
+def europe_section_done(status: dict) -> bool:
+    europe_names = europe_names_from_status(status)
+    if not europe_names:
+        return False
+    finished = {c.get("name") for c in status.get("completed") or []}
+    finished.update(c.get("name") for c in status.get("failed") or [])
+    return all(name in finished for name in europe_names)
+
+
+def europe_entered_africa(status: dict) -> bool:
+    queue = status.get("queue") or []
+    current = status.get("current")
+    if not current or "Algeria" not in queue:
+        return False
+    return current in queue[queue.index("Algeria") :]
+
+
+def stop_process_tree(pid: int) -> None:
+    log(f"Stopping Europe pipeline pid {pid} before it starts Africa")
+    subprocess.run(["pkill", "-P", str(pid)], check=False)
+    try:
+        os.kill(pid, signal.SIGTERM)
+    except ProcessLookupError:
+        pass
+
+
+def wait_for_europe_and_oceania(
+    europe_status: Path,
+    oceania_status: Path,
+    stop_europe_pid: int | None,
+) -> None:
+    log(
+        f"Waiting until Europe finishes ({europe_status}) "
+        f"and Oceania finishes ({oceania_status})"
+    )
+    stopped_europe = False
+    while True:
+        eu = read_status(europe_status)
+        oc = read_status(oceania_status)
+        if stop_europe_pid and not stopped_europe and europe_entered_africa(eu):
+            stop_process_tree(stop_europe_pid)
+            stopped_europe = True
+        europe_done = europe_section_done(eu)
+        oceania_done = bool(oc.get("finished_at"))
+        if europe_done and oceania_done:
+            log("Europe and Oceania are done; continuing with the next continents")
+            return
+        time.sleep(30)
+
+
 def main() -> None:
     global STATUS_PATH
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--continents",
         default=",".join(DEFAULT_CONTINENTS),
-        help="Comma-separated Geofabrik parents (default: europe,asia,australia-oceania)",
+        help="Comma-separated Geofabrik parents "
+        "(default: europe,asia,australia-oceania,africa,central-america,south-america,north-america)",
     )
     parser.add_argument("--europe-only", action="store_true")
     parser.add_argument("--start", default=None, help="Geofabrik id or country name to begin at")
@@ -438,6 +534,25 @@ def main() -> None:
         "--status-file",
         default=None,
         help="Status JSON path (default: logs/world_pipeline_status.json)",
+    )
+    parser.add_argument(
+        "--wait-for-europe-and-oceania",
+        action="store_true",
+        help="Delay this run until the Europe and Asia/Oceania jobs have finished those continents",
+    )
+    parser.add_argument(
+        "--europe-status",
+        default=str(LOG_DIR / "world_pipeline_status.json"),
+    )
+    parser.add_argument(
+        "--oceania-status",
+        default=str(LOG_DIR / "asia_oceania_pipeline_status.json"),
+    )
+    parser.add_argument(
+        "--stop-europe-pid",
+        type=int,
+        default=None,
+        help="If the old Europe job starts Africa early, stop that pid and wait for Oceania",
     )
     args = parser.parse_args()
     if args.status_file:
@@ -470,8 +585,19 @@ def main() -> None:
         "completed": [],
         "failed": [],
         "current": None,
+        "waiting_for": ["europe", "oceania"] if args.wait_for_europe_and_oceania else [],
     }
     write_status(status)
+
+    if args.wait_for_europe_and_oceania:
+        wait_for_europe_and_oceania(
+            Path(args.europe_status),
+            Path(args.oceania_status),
+            args.stop_europe_pid,
+        )
+        status["waiting_for"] = []
+        write_status(status)
+
     log(
         f"Pipeline starting: {len(countries)} countries "
         f"({', '.join(continents)})"

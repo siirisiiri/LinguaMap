@@ -30,8 +30,9 @@ NE_URL = (
     "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/"
     "master/geojson/ne_10m_admin_1_states_provinces.geojson"
 )
-COUNTRIES_PATH = Path("data/countries.geojson")
-OUT_DIR = Path("data/admin1")
+ROOT = Path(__file__).resolve().parent.parent
+COUNTRIES_PATH = ROOT / "data" / "countries.geojson"
+OUT_DIR = ROOT / "data" / "admin1"
 # The raw 10m outlines are 40 MB of coastline detail nobody can see at the zoom
 # levels a province choropleth is read at. ~0.005 deg is roughly 550 m.
 SIMPLIFY_TOLERANCE = 0.005
@@ -117,7 +118,7 @@ def natural_earth():
 def country_osm_ids():
     """iso2 -> country relation id, so each subdivision knows its parent."""
     if not COUNTRIES_PATH.exists():
-        sys.exit(f"Missing {COUNTRIES_PATH}. Run fetch_countries.py first.")
+        sys.exit(f"Missing {COUNTRIES_PATH}. Run tools/fetch_countries.py first.")
     with COUNTRIES_PATH.open(encoding="utf-8") as f:
         countries = json.load(f)
     ids = {}

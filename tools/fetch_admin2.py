@@ -9,9 +9,9 @@ authorities in the UK, US counties. Canada uses Statistics Canada census
 divisions — counties, MRCs, regional districts — instead of the 5,000
 municipalities (too fine) or 76 economic regions (too coarse).
 
-  python3 fetch_admin2.py
-  python3 fetch_admin2.py --iso major
-  python3 fetch_admin2.py --iso CA,UA,GB
+  python3 tools/fetch_admin2.py
+  python3 tools/fetch_admin2.py --iso major
+  python3 tools/fetch_admin2.py --iso CA,UA,GB
 """
 
 from __future__ import annotations
@@ -33,9 +33,10 @@ from fetch_admin1 import (
     simplify_geometry,
 )
 
-COUNTRIES_PATH = Path("data/countries.geojson")
-ADMIN1_DIR = Path("data/admin1")
-OUT_DIR = Path("data/admin2")
+ROOT = Path(__file__).resolve().parent.parent
+COUNTRIES_PATH = ROOT / "data" / "countries.geojson"
+ADMIN1_DIR = ROOT / "data" / "admin1"
+OUT_DIR = ROOT / "data" / "admin2"
 SIMPLIFY_TOLERANCE = 0.003
 GB_API = "https://www.geoboundaries.org/api/current/gbOpen/{iso3}/{level}/"
 
@@ -203,7 +204,7 @@ def admin1_too_deep(features: list[dict]) -> bool:
 
 def country_osm_ids() -> dict[str, dict]:
     if not COUNTRIES_PATH.exists():
-        sys.exit(f"Missing {COUNTRIES_PATH}. Run fetch_countries.py first.")
+        sys.exit(f"Missing {COUNTRIES_PATH}. Run tools/fetch_countries.py first.")
     with COUNTRIES_PATH.open(encoding="utf-8") as f:
         countries = json.load(f)
     out = {}
