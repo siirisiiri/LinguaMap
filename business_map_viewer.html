@@ -1071,15 +1071,28 @@
         return null;
       }
 
+      function viewingPresent() {
+        return !timeStops.length || currentMonth === timeStops[timeStops.length - 1];
+      }
+
       /** Push the selected month into the fields the rest of the app reads. */
       function applyTime() {
         if (!timeEnabled || !timedPlace) return;
         const stem = TIMED_PLACES[timedPlace].dataset;
+        // Latest stop is the crawled website/name snapshot — keep that map.
+        // OSM name history only replaces it when you move the slider back.
+        if (viewingPresent()) {
+          points.forEach((p) => {
+            if (datasetStem(p.dataset) !== stem) return;
+            p.langs = p.staticLangs.slice();
+            p.primaryLang = null;
+          });
+          assignPrimaryLanguages();
+          return;
+        }
         points.forEach((p) => {
           if (datasetStem(p.dataset) !== stem) return;
           if (!p.hist) {
-            // Sites in the timed dataset with no name history drop out so
-            // today's website language does not freeze the heatmap.
             p.langs = [];
             p.primaryLang = null;
             if (p.marker) {
@@ -1226,29 +1239,42 @@
       function updateTimeSummary() {
         if (!timeEnabled) return;
         document.getElementById("timeLabel").textContent = monthLabel(currentMonth);
-        const { counts, totals, order } = timeSeries();
-        const i = currentMonth - timeLo;
-        const total = totals[i] || 0;
-        if (!total) {
-          document.getElementById("timeSummary").textContent = "";
-          return;
-        }
         const preferred = timedPlace === "wales" ? ["welsh", "english"]
           : timedPlace === "ukraine" ? ["ukrainian", "russian"]
           : [];
-        const rows = order
-          .map((lang) => [lang, counts[i].get(lang) || 0])
-          .filter(([, c]) => c)
-          .sort((a, b) => {
-            const pa = preferred.indexOf(a[0]);
-            const pb = preferred.indexOf(b[0]);
-            if (pa !== -1 || pb !== -1) return (pa === -1 ? 99 : pa) - (pb === -1 ? 99 : pb);
-            return b[1] - a[1];
-          })
-          .slice(0, 2);
-        document.getElementById("timeSummary").textContent = rows
-          .map(([lang, c]) => `${titleCase(lang)} ${pct(c / total)}`)
-          .join(" · ");
+        const writeRows = (order, getCount, total) => {
+          if (!total) {
+            document.getElementById("timeSummary").textContent = "";
+            return;
+          }
+          const rows = order
+            .map((lang) => [lang, getCount(lang)])
+            .filter(([, c]) => c)
+            .sort((a, b) => {
+              const pa = preferred.indexOf(a[0]);
+              const pb = preferred.indexOf(b[0]);
+              if (pa !== -1 || pb !== -1) return (pa === -1 ? 99 : pa) - (pb === -1 ? 99 : pb);
+              return b[1] - a[1];
+            })
+            .slice(0, 2);
+          document.getElementById("timeSummary").textContent = rows
+            .map(([lang, c]) => `${titleCase(lang)} ${pct(c / total)}`)
+            .join(" · ");
+        };
+        if (viewingPresent()) {
+          const counts = new Map();
+          let total = 0;
+          points.forEach((p) => {
+            if (!inScope(p) || !p.langs.length) return;
+            total += 1;
+            p.langs.forEach((lang) => counts.set(lang, (counts.get(lang) || 0) + 1));
+          });
+          writeRows([...counts.keys()], (lang) => counts.get(lang) || 0, total);
+          return;
+        }
+        const { counts, totals, order } = timeSeries();
+        const i = currentMonth - timeLo;
+        writeRows(order, (lang) => counts[i].get(lang) || 0, totals[i] || 0);
       }
 
       function setPlaying(on) {
@@ -1415,6 +1441,7 @@
        */
       let areaStatsCache = null;
       let shareScaleCache = null;
+      let areaMonthCache = null;
 
       function authorityStats() {
         if (areaStatsCache) return areaStatsCache;
@@ -1441,20 +1468,126 @@
       }
 
       /**
-       * Minority-language shares rarely pass a third of a region, so ramping
-       * from 0% to 100% would leave every area near-white. The ramp tops out at
-       * the strongest area in view instead, which is what makes the relative
-       * pattern readable.
+       * Language the choropleth should track while the time slider is up.
+       * Wales with English+Welsh both on would otherwise paint "English lead",
+       * which shrinks (and washes Gwynedd out) as Welsh grows.
        */
-      function singleLanguageScale(lang) {
-        if (shareScaleCache !== null) return shareScaleCache;
-        let max = 0;
-        authorityStats().forEach((rec) => {
-          if (!rec.classified) return;
-          max = Math.max(max, (rec.counts.get(lang) || 0) / rec.classified);
+      function timelineFillLanguage() {
+        if (!activeLanguages.length) return null;
+        if (timedPlace === "wales" && activeLanguageSet.has("welsh")) return "welsh";
+        if (timedPlace === "ukraine" && activeLanguageSet.has("ukrainian") && activeLanguages.length === 1) {
+          return "ukrainian";
+        }
+        if (activeLanguages.length === 1) return activeLanguages[0];
+        return null;
+      }
+
+      /** Per-area language counts at every slider stop.
+       *
+       *  Raw share (welsh / all shops on the map) falls in places like Gwynedd
+       *  just because OSM added a wave of English shops later. The fill uses a
+       *  coverage-stable share instead: new Welsh shops still count, but new
+       *  English-only shops do not dilute the heartland.
+       */
+      function areaMonthStats() {
+        if (areaMonthCache) return areaMonthCache;
+        const stops = timeStops.length ? timeStops : [currentMonth];
+        const members = [];
+        const stem = timedPlace && TIMED_PLACES[timedPlace] ? TIMED_PLACES[timedPlace].dataset : null;
+        points.forEach((p) => {
+          if (!p.hist || !p.authorityId) return;
+          if (!datasetEnabled(p) || disabledCategories.has(p.category)) return;
+          if (stem && datasetStem(p.dataset) !== stem) return;
+          const langsByStop = stops.map((month) => langsAtState(stateAt(p, month), timedPlace));
+          const first = langsByStop.findIndex((langs) => langs.length);
+          if (first < 0) return;
+          members.push({ auth: p.authorityId, first, langsByStop });
         });
-        shareScaleCache = max || 1;
+        const byId = new Map();
+        authorityFeatures.forEach((f) => {
+          const id = featureId(f);
+          const mine = members.filter((m) => m.auth === id);
+          const areaFirst = mine.reduce((min, m) => Math.min(min, m.first), stops.length);
+          const slots = stops.map(() => ({
+            counts: new Map(),
+            classified: 0,
+            stable: new Map(),
+          }));
+          mine.forEach((m) => {
+            for (let i = 0; i < stops.length; i++) {
+              const langs = m.langsByStop[i];
+              if (!langs.length) continue;
+              slots[i].classified += 1;
+              langs.forEach((lang) => slots[i].counts.set(lang, (slots[i].counts.get(lang) || 0) + 1));
+            }
+          });
+          const langsSeen = new Set();
+          mine.forEach((m) => m.langsByStop.forEach((langs) => langs.forEach((lang) => langsSeen.add(lang))));
+          langsSeen.forEach((lang) => {
+            for (let i = 0; i < stops.length; i++) {
+              let focus = 0;
+              let cohortOther = 0;
+              mine.forEach((m) => {
+                const langs = m.langsByStop[i];
+                if (!langs.length) return;
+                if (langs.includes(lang)) focus += 1;
+                else if (m.first === areaFirst) cohortOther += 1;
+              });
+              const den = focus + cohortOther;
+              if (den) slots[i].stable.set(lang, focus / den);
+            }
+          });
+          byId.set(id, { slots, areaFirst });
+        });
+        areaMonthCache = { byId, stops };
+        return areaMonthCache;
+      }
+
+      function slotAtCurrentMonth(rec) {
+        if (!rec || !rec.feature) return null;
+        const { byId, stops } = areaMonthStats();
+        const row = byId.get(featureId(rec.feature));
+        if (!row) return null;
+        let i = stops.indexOf(currentMonth);
+        if (i < 0) i = stops.length - 1;
+        return row.slots[i] || null;
+      }
+
+      /**
+       * Min/max coverage-stable share of `lang` across every area × year, plus
+       * each area's own range so the heartland can still darken as it grows.
+       */
+      function temporalShareMeta(lang) {
+        if (shareScaleCache && shareScaleCache.mode === "temporal" && shareScaleCache.lang === lang) {
+          return shareScaleCache;
+        }
+        const { byId } = areaMonthStats();
+        const byArea = new Map();
+        let glo = Infinity;
+        let ghi = -Infinity;
+        byId.forEach((row, id) => {
+          let lo = Infinity;
+          let hi = -Infinity;
+          row.slots.forEach((s) => {
+            if (s.classified < 12 || !s.stable.has(lang)) return;
+            const share = s.stable.get(lang);
+            if (share < lo) lo = share;
+            if (share > hi) hi = share;
+            if (share < glo) glo = share;
+            if (share > ghi) ghi = share;
+          });
+          if (isFinite(lo)) byArea.set(id, { lo, hi });
+        });
+        if (!isFinite(glo)) {
+          glo = 0;
+          ghi = 1;
+        }
+        shareScaleCache = { mode: "temporal", lang, lo: glo, hi: Math.max(ghi, glo + 0.04), byArea };
         return shareScaleCache;
+      }
+
+      function clamp01(t) {
+        return Math.max(0, Math.min(1, t));
       }
 
       /**
@@ -1462,20 +1595,60 @@
        * sites, relative to the strongest area on screen. Two or more: hue is the
        * leading language, intensity is how far ahead it is in relative share
        * among the selected languages.
+       *
+       * With the time slider up, the ramp is locked to the whole timeline and
+       * mixed with each area's own min–max so a heartland like Gwynedd darkens
+       * as Welsh grows there instead of washing out when the rest of Wales catches up.
        */
       function areaFill(rec) {
         if (!rec || !rec.classified || !activeLanguages.length) return null;
+        const timedLang = timeEnabled && !viewingPresent() ? timelineFillLanguage() : null;
+        if (timedLang) {
+          const slot = slotAtCurrentMonth(rec);
+          const raw = (rec.counts.get(timedLang) || 0) / rec.classified;
+          const share = slot && slot.stable.has(timedLang) ? slot.stable.get(timedLang) : raw;
+          const meta = temporalShareMeta(timedLang);
+          const spatial = meta.hi > meta.lo ? (share - meta.lo) / (meta.hi - meta.lo) : 0.5;
+          const local = rec.feature ? meta.byArea.get(featureId(rec.feature)) : null;
+          let localT = 0.5;
+          if (local && local.hi - local.lo >= 0.012) {
+            localT = (share - local.lo) / (local.hi - local.lo);
+          }
+          let t = 0.62 * clamp01(spatial) + 0.38 * clamp01(localT);
+          if (share > 0) t = 0.16 + 0.84 * t;
+          return {
+            lang: timedLang,
+            color: colorForLanguage(timedLang),
+            intensity: clamp01(t),
+            share,
+            rawShare: raw,
+            lead: null,
+            scale: meta.hi,
+            localLo: local ? local.lo : null,
+            localHi: local ? local.hi : null,
+          };
+        }
         if (activeLanguages.length === 1) {
           const lang = activeLanguages[0];
           const share = (rec.counts.get(lang) || 0) / rec.classified;
-          const scale = singleLanguageScale(lang);
+          let max = 0;
+          if (shareScaleCache && shareScaleCache.mode === "static" && shareScaleCache.lang === lang && shareScaleCache.max != null) {
+            max = shareScaleCache.max;
+          } else {
+            authorityStats().forEach((other) => {
+              if (!other.classified) return;
+              max = Math.max(max, (other.counts.get(lang) || 0) / other.classified);
+            });
+            shareScaleCache = { mode: "static", lang, max: max || 1 };
+            max = shareScaleCache.max;
+          }
           return {
             lang,
             color: colorForLanguage(lang),
-            intensity: share / scale,
+            intensity: share / max,
             share,
             lead: null,
-            scale,
+            scale: max,
           };
         }
         const ranked = activeLanguages
@@ -1514,8 +1687,14 @@
           fill && fill.lang && fill.lead !== null
             ? `<div class="meta">${escapeHtml(titleCase(fill.lang))} leads by ${ptsLabel(fill.lead)}</div>`
             : "";
+        const changeLine =
+          fill && fill.localLo != null && fill.share != null
+            ? `<div class="meta">${escapeHtml(titleCase(fill.lang))} ${
+                fill.share - fill.localLo >= 0 ? "+" : ""
+              }${ptsLabel(fill.share - fill.localLo)} vs this area's low on the timeline</div>`
+            : "";
         return (
-          `<div class="area-tip"><b>${name}</b>${rows}${leadLine}` +
+          `<div class="area-tip"><b>${name}</b>${rows}${leadLine}${changeLine}` +
           `<div class="meta">${num(rec.classified)} classified of ${num(rec.total)} sites</div></div>`
         );
       }
@@ -1701,8 +1880,11 @@
 
       function render() {
         areaStatsCache = null;
-        shareScaleCache = null;
+        const wasTimed = timeEnabled;
         syncTimeline();
+        // Keep the locked timeline ramp while scrubbing; rebuild it when we
+        // enter/leave time mode or when a non-timed view needs a fresh max.
+        if (!timeEnabled || !wasTimed) shareScaleCache = null;
         refreshScope();
         if (viewMode === "areas") {
           markerLayer.clearLayers();
@@ -1719,6 +1901,7 @@
       /** Scope changed, so the per-month mix has to be recounted. */
       function invalidateTimeSeries() {
         seriesCache = null;
+        areaMonthCache = null;
       }
 
       function setOverlay(html) {

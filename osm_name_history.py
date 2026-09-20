@@ -268,10 +268,10 @@ def main() -> None:
         if rec.get("osm_id") is None:
             continue
         key = (rec.get("osm_type"), int(rec["osm_id"]))
-        if key not in series:
+        if key not in series or not series[key]:
             continue
         name = rec.get("name") or ""
-        last = series[key][-1] if series[key] else None
+        last = series[key][-1]
         # The JSON only stores the displayed name. If it has not changed since
         # the last yearly extract, keep that extract's name:* tags so a Welsh
         # (or Ukrainian) translation tag is not dropped at "today".
